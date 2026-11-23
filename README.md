@@ -9,9 +9,10 @@ DuurzaamKompas is een gratis Nederlandstalig consumentenplatform over energie th
 ## Platformstructuur
 
 - `index.html` — homepage en ingang naar het platform
+- `slimme-apparaten.html` + `slimme-apparaten.js` — overzicht van slimme apparaten voor energie, comfort, automatisering, huishouden en veiligheid; filterbare apparaatbibliotheek met eerste aandachtspunten per categorie
 - `advies.html` + `advies.js` — interactieve vooradviesroute op basis van woning, aansluiting, verbruik, doelen en plannen. De uitkomst is een eerste, regelgebaseerde richting; geen technisch ontwerp of persoonlijk financieel advies. Antwoorden blijven lokaal in de browser.
 - `tools.html` — overzicht van de gratis hulpmiddelen en hun huidige status
-- `vergelijker.html` + `vergelijker.js` — batterijcatalogus, zoeken, vergelijken en indicatieve scenariocalculator
+- `vergelijker.html` + `vergelijker.js` — thuisbatterijcatalogus, zoeken, vergelijken en indicatieve scenariocalculator; onderdeel van de bredere bibliotheek Slimme apparaten
 - `nieuws.html` — redactioneel overzicht van nieuws, achtergronden en uitlegdossiers. Dit is momenteel geen live nieuwsfeed.
 - `verdieping.html` — geselecteerde externe podcasts, webinars, kennisartikelen en onderzoeken met een eigen korte toelichting, doelgroep- en belangencontext
 - `kijken.html` + `kijken.js` — interactieve bibliotheek met video’s, webinars en podcasts; onderwerpfilters, zoekfunctie, lokale kijklijst en korte kennistest
