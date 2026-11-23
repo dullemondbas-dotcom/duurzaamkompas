@@ -31,8 +31,37 @@
     {title:"Kijken en luisteren",section:"Video & podcast",url:"kijken.html",description:"Uitlegvideo's, webinars, podcasts en korte kennistests.",tags:"video podcast webinar youtube quiz"},
     {title:"Nieuws en ontwikkelingen",section:"Actualiteit",url:"nieuws.html",description:"Wat verandert er in de energiewereld en wat betekent dat thuis?",tags:"nieuws actualiteit ontwikkelingen energie"},
     {title:"Bronnen en transparantie",section:"Redactionele werkwijze",url:"bronnen.html",description:"Hoe we bronnen, commerciële belangen en onzekerheden beoordelen.",tags:"bronnen transparantie onafhankelijk affiliate reclame"},
+    {title:"Energieleveranciers en slimme batterijaansturing",section:"Vergelijken",url:"energieleveranciers.html",description:"Ontdek welke leveranciers thuisbatterijen kunnen aansturen en onder welke voorwaarden.",tags:"energieleveranciers leverancier batterij batterijaansturing frank tibber eneco zonneplan nextenergy compatibiliteit"},
+    {title:"Batterijbibliotheek en praktijkprestaties",section:"Vergelijken",url:"batterijbibliotheek.html",description:"Bekijk sterke punten, aandachtspunten, integraties en de status van praktijkdata per batterij.",tags:"batterijbibliotheek merken reviews opbrengst verdiensten thuisbatterij batterijprestaties mijnbatterij"},
     {title:"Over DuurzaamKompas",section:"Het platform",url:"over.html",description:"Onze missie, uitgangspunten en wat de website wel en niet doet.",tags:"over missie visie platform"}
   ];
+
+  // Add the supplier and battery library to all existing pages.
+  if (nav && !nav.querySelector('a[href="energieleveranciers.html"]')) {
+    const group = document.createElement("details");
+    group.className = "nav-group";
+    group.innerHTML = '<summary>Vergelijken <span aria-hidden="true">⌄</span></summary><div class="nav-dropdown"><a href="energieleveranciers.html"><small>CONTRACTEN & STURING</small><b>Leveranciers & aansturing</b><span>Welke partijen kunnen jouw batterij sturen?</span></a><a href="batterijbibliotheek.html"><small>MERKEN & PRESTATIES</small><b>Batterijbibliotheek</b><span>Sterke punten, aandachtspunten en praktijkdata.</span></a><a href="vergelijker.html"><small>TECHNISCHE DETAILS</small><b>Technische batterijvergelijker</b><span>Capaciteit, vermogen en systeemkenmerken.</span></a></div>';
+    const cta = nav.querySelector(".nav-cta");
+    nav.insertBefore(group, cta || null);
+  }
+  const footerColumns = document.querySelectorAll(".dk-footer .footer-column");
+  footerColumns.forEach(column => {
+    const heading = column.querySelector("b");
+    if (heading && /Ontdek technologie|Ontdek en vergelijk/i.test(heading.textContent)) {
+      if (!column.querySelector('a[href="energieleveranciers.html"]')) {
+        const supplierLink = document.createElement("a");
+        supplierLink.href = "energieleveranciers.html";
+        supplierLink.textContent = "Energieleveranciers & sturing";
+        column.append(supplierLink);
+      }
+      if (!column.querySelector('a[href="batterijbibliotheek.html"]')) {
+        const batteryLink = document.createElement("a");
+        batteryLink.href = "batterijbibliotheek.html";
+        batteryLink.textContent = "Batterijbibliotheek";
+        column.append(batteryLink);
+      }
+    }
+  });
 
   const normalize = (value) => String(value || "").toLocaleLowerCase("nl").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   const popular = ["thuisbatterij", "salderen 2027", "slimme sturing", "energiecontract"];
