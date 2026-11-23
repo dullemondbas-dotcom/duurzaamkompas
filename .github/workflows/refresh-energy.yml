@@ -1,6 +1,12 @@
 name: Refresh public energy dashboard
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/refresh-energy.yml"
+      - ".github/scripts/update_energy_data.py"
   schedule:
     - cron: "*/15 * * * *"
   workflow_dispatch:
