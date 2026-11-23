@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#173c31">
+<meta name="description" content="Mijn Energie van DuurzaamKompas: krijg inzicht in je huishouden, volg je energieprestaties en doe mee aan Energie Challenges.">
+<title>Mijn Energie — DuurzaamKompas Energie Challenge</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="energie-challenge.css">
+<script defer src="energie-challenge.js"></script>
+</head>
+<body>
+<div class="app-topline"><a href="index.html" class="back-link">← Terug naar DuurzaamKompas</a><span class="prototype-label"><i></i> Eerste prototype · demo-omgeving</span></div>
+<header class="app-header">
+  <a class="app-brand" href="index.html"><span class="brand-mark">DK<span>↗</span></span><span>duurzaam<span>kompas</span></span><small>MIJN ENERGIE</small></a>
+  <nav class="app-nav" aria-label="Mijn Energie navigatie">
+    <button class="nav-tab active" data-view="dashboard">Overzicht</button>
+    <button class="nav-tab" data-view="household">Mijn huishouden</button>
+    <button class="nav-tab" data-view="challenges">Challenges</button>
+    <button class="nav-tab" data-view="connections">Koppelingen</button>
+  </nav>
+  <div class="app-user"><span class="avatar" id="avatarInitial">D</span><span id="headerNickname">Demo gebruiker</span></div>
+</header>
+
+<main class="app-main">
+  <section class="prototype-note" role="note">
+    <span class="note-icon">i</span>
+    <div><strong>Je bekijkt de eerste prototypeversie.</strong> Alle voorbeeldmetingen en deelnemers zijn fictief. Je profiel en acties worden alleen lokaal in deze browser opgeslagen. Er is nog geen account, gedeelde ranglijst of live meterverbinding.</div>
+    <button type="button" id="dismissNote" aria-label="Melding verbergen">×</button>
+  </section>
+
+  <section class="view active" id="view-dashboard">
+    <div class="welcome-row">
+      <div><p class="eyebrow">MIJN ENERGIE · PERSOONLIJK OVERZICHT</p><h1>Goed dat je er bent<span id="welcomeNickname">.</span></h1><p class="lead">Krijg grip op je energie en ontdek waar je slimmer kunt omgaan met verbruik.</p></div>
+      <button class="btn btn-secondary" data-go="household">Huishouden instellen <span>↗</span></button>
+    </div>
+    <div class="status-strip"><span class="status-dot"></span><strong>Demo-dashboard</strong><span>Voorbeelddata · niet verbonden met een slimme meter</span><button id="resetDemo" class="text-button">Demo resetten</button></div>
+    <div class="metric-grid">
+      <article class="metric-card"><div class="metric-top"><span>Elektriciteit gebruikt</span><span class="metric-icon">↘</span></div><strong>248 <small>kWh</small></strong><p class="metric-caption">Voorbeeld van deze maand</p><div class="metric-foot"><span class="positive">−8,2%</span><span>t.o.v. voorbeeld vorig jaar</span></div></article>
+      <article class="metric-card"><div class="metric-top"><span>Teruggeleverd</span><span class="metric-icon">↗</span></div><strong>96 <small>kWh</small></strong><p class="metric-caption">Voorbeeld van deze maand</p><div class="metric-foot"><span>Eigen opwekking</span><span>demo-waarde</span></div></article>
+      <article class="metric-card"><div class="metric-top"><span>Geschat kostenverschil</span><span class="metric-icon">€</span></div><strong>€ 24,80</strong><p class="metric-caption">Fictieve vergelijking</p><div class="metric-foot"><span class="positive">Lagere kosten</span><span>geen echte besparing vastgesteld</span></div></article>
+      <article class="metric-card accent-card"><div class="metric-top"><span>Challenge-score</span><span class="metric-icon">★</span></div><strong>76 <small>/ 100</small></strong><p class="metric-caption">Illustratieve score</p><div class="score-track"><span style="width:76%"></span></div><div class="metric-foot"><span>Demo-positie</span><span>#4 van 12</span></div></article>
+    </div>
+    <div class="dashboard-grid">
+      <article class="panel usage-panel">
+        <div class="panel-heading"><div><p class="eyebrow">ENERGIE INZICHT</p><h2>Je verbruik door de maand</h2></div><span class="demo-chip">Voorbeeld</span></div>
+        <div class="chart-legend"><span><i class="legend-current"></i>Deze maand</span><span><i class="legend-previous"></i>Zelfde maand vorig jaar</span></div>
+        <div class="bar-chart" aria-label="Fictieve vergelijking van het energieverbruik">
+          <div class="chart-y"><span>20</span><span>15</span><span>10</span><span>5</span><span>0 kWh</span></div>
+          <div class="chart-columns">
+            <div class="bar-group"><div class="bars"><i class="bar previous" style="height:82%"></i><i class="bar current" style="height:67%"></i></div><small>1–5</small></div>
+            <div class="bar-group"><div class="bars"><i class="bar previous" style="height:90%"></i><i class="bar current" style="height:72%"></i></div><small>6–10</small></div>
+            <div class="bar-group"><div class="bars"><i class="bar previous" style="height:76%"></i><i class="bar current" style="height:65%"></i></div><small>11–15</small></div>
+            <div class="bar-group"><div class="bars"><i class="bar previous" style="height:88%"></i><i class="bar current" style="height:70%"></i></div><small>16–20</small></div>
+            <div class="bar-group"><div class="bars"><i class="bar previous" style="height:68%"></i><i class="bar current" style="height:57%"></i></div><small>21–25</small></div>
+            <div class="bar-group"><div class="bars"><i class="bar previous" style="height:78%"></i><i class="bar current" style="height:66%"></i></div><small>26–30</small></div>
+          </div>
+        </div>
+        <p class="chart-footnote">De grafiek gebruikt verzonnen meetwaarden om de weergave te demonstreren. Echte vergelijking vereist complete meetgegevens en tariefinformatie.</p>
+      </article>
+      <article class="panel challenge-panel">
+        <div class="panel-heading"><div><p class="eyebrow">DOE MEE</p><h2>Jouw challenges</h2></div><button class="text-button" data-go="challenges">Alles bekijken →</button></div>
+        <div class="mini-challenge"><span class="challenge-symbol">🏡</span><div><strong>Buurt in beweging</strong><small>Openbare demo · 12 deelnemers</small><div class="mini-progress"><i style="width:62%"></i></div></div><b>#4</b></div>
+        <div class="mini-challenge"><span class="challenge-symbol">⚡</span><div><strong>Vrienden besparen samen</strong><small>Besloten demo · 6 deelnemers</small><div class="mini-progress"><i style="width:45%"></i></div></div><b>#2</b></div>
+        <button class="btn btn-primary full-btn" data-go="challenges">Ontdek challenges <span>↗</span></button>
+      </article>
+    </div>
+    <div class="bottom-grid">
+      <article class="tip-card"><div class="tip-art">☀</div><div><p class="eyebrow">KLEINE STAP, GROOT INZICHT</p><h2>Begin met weten wat je al hebt.</h2><p>Vul je woning en apparaten in. Dan kunnen we straks beter uitleggen welke vergelijkingen eerlijk zijn en welke verbeteringen bij jouw situatie passen.</p><button class="text-button" data-go="household">Mijn huishouden invullen →</button></div></article>
+      <article class="connect-card"><div class="connect-icon">⌁</div><p class="eyebrow">VOLGENDE STAP</p><h2>Koppel je energiedata</h2><p>In een volgende ontwikkelfase koppelen we een Home Assistant-installatie. De koppeling is in dit prototype nog niet actief.</p><button class="btn btn-secondary" data-go="connections">Bekijk koppelingen</button></article>
+    </div>
+  </section>
+
+  <section class="view" id="view-household">
+    <div class="page-heading"><p class="eyebrow">JOUW UITGANGSPUNT</p><h1>Vertel iets over je huishouden.</h1><p class="lead">Met deze gegevens kunnen we straks huishoudens eerlijker vergelijken. Je adres is niet nodig en je profiel is in deze prototypeversie alleen lokaal opgeslagen.</p></div>
+    <form id="householdForm" class="form-layout">
+      <article class="panel form-panel">
+        <div class="form-section-title"><span>01</span><div><h2>Je woning</h2><p>Een globale omschrijving is voldoende.</p></div></div>
+        <div class="form-grid">
+          <label>Type woning<select name="homeType"><option value="">Kies je woningtype</option><option>Appartement</option><option>Tussenwoning</option><option>Hoekwoning</option><option>Twee-onder-een-kap</option><option>Vrijstaand</option><option>Anders</option></select></label>
+          <label>Aantal bewoners<select name="residents"><option value="">Kies aantal</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5 of meer</option></select></label>
+          <label>Woonoppervlakte (m²)<input type="number" name="area" min="10" max="1000" placeholder="Bijvoorbeeld 110"></label>
+          <label>Bouwperiode<select name="buildPeriod"><option value="">Weet ik niet / kies later</option><option>Voor 1945</option><option>1945–1974</option><option>1975–1991</option><option>1992–2005</option><option>2006–2015</option><option>2016 of later</option></select></label>
+          <label>Isolatie<select name="insulation"><option value="">Kies isolatieniveau</option><option>Beperkt of onbekend</option><option>Gedeeltelijk geïsoleerd</option><option>Goed geïsoleerd</option><option>Zeer goed / nieuwbouw</option></select></label>
+          <label>Verwarming<select name="heating"><option value="">Kies verwarmingssysteem</option><option>CV-ketel op gas</option><option>Hybride warmtepomp</option><option>Volledig elektrische warmtepomp</option><option>Stadsverwarming</option><option>Anders / onbekend</option></select></label>
+        </div>
+      </article>
+      <article class="panel form-panel">
+        <div class="form-section-title"><span>02</span><div><h2>Wat heb je al in huis?</h2><p>Vink aan wat van toepassing is. Je kunt dit later aanpassen.</p></div></div>
+        <div class="equipment-grid">
+          <label class="check-card"><input type="checkbox" name="solar"><span class="check-icon">☀</span><span><b>Zonnepanelen</b><small>Eigen stroomopwekking</small></span></label>
+          <label class="check-card"><input type="checkbox" name="battery"><span class="check-icon">▣</span><span><b>Thuisbatterij</b><small>Stroom opslaan</small></span></label>
+          <label class="check-card"><input type="checkbox" name="ev"><span class="check-icon">↗</span><span><b>Elektrische auto</b><small>EV of plug-in hybride</small></span></label>
+          <label class="check-card"><input type="checkbox" name="chargePoint"><span class="check-icon">ϟ</span><span><b>Eigen laadpaal</b><small>Thuis laadpunt</small></span></label>
+          <label class="check-card"><input type="checkbox" name="heatPump"><span class="check-icon">♨</span><span><b>Warmtepomp</b><small>Hybride of volledig elektrisch</small></span></label>
+          <label class="check-card"><input type="checkbox" name="smartControl"><span class="check-icon">⌘</span><span><b>Slimme aansturing</b><small>EMS of automatisering</small></span></label>
+        </div>
+        <div class="form-grid secondary-fields">
+          <label>Vermogen zonnepanelen (kWp)<input type="number" name="solarKwp" min="0" max="100" step="0.1" placeholder="Bijvoorbeeld 4,2"></label>
+          <label>Thuisbatterij (kWh)<input type="number" name="batteryKwh" min="0" max="500" step="0.1" placeholder="Bijvoorbeeld 10"></label>
+          <label>Gemeente (optioneel)<input type="text" name="municipality" maxlength="70" placeholder="Bijvoorbeeld Gouda"></label>
+          <label>Energiecontract<select name="contract"><option value="">Weet ik niet / liever niet invullen</option><option>Vast</option><option>Variabel</option><option>Dynamisch</option><option>Anders</option></select></label>
+        </div>
+      </article>
+      <article class="panel form-panel">
+        <div class="form-section-title"><span>03</span><div><h2>Jouw profiel</h2><p>In de ranglijsten gebruiken we alleen je nickname.</p></div></div>
+        <div class="form-grid">
+          <label>Nickname<input name="nickname" maxlength="24" placeholder="Bijvoorbeeld EnergieBaas27" required></label>
+          <label>Vergelijkingsgroep<select name="comparison"><option value="automatic">Automatisch bepalen op basis van mijn profiel</option><option value="beginner">Ik begin zonder grote installaties</option><option value="solar">Ik heb zonnepanelen</option><option value="all-electric">Mijn woning is grotendeels elektrisch</option></select></label>
+        </div>
+        <label class="consent-line"><input type="checkbox" name="localConsent" required><span>Ik begrijp dat deze prototypeversie mijn ingevulde gegevens alleen lokaal in deze browser bewaart. Dit is nog geen online account en deelt niets met andere deelnemers.</span></label>
+        <div class="form-actions"><button class="btn btn-primary" type="submit">Profiel lokaal opslaan <span>↗</span></button><span id="profileStatus" class="form-status" aria-live="polite"></span></div>
+      </article>
+    </form>
+  </section>
+
+  <section class="view" id="view-challenges">
+    <div class="page-heading split-heading"><div><p class="eyebrow">SAMEN WORD JE SLIMMER</p><h1>Doe mee aan een challenge.</h1><p class="lead">Daag vrienden uit of werk met je buurt aan een lager en slimmer energieverbruik.</p></div><button class="btn btn-primary" id="showCreateChallenge">＋ Maak een challenge</button></div>
+    <div class="challenge-filters"><button class="filter active" data-filter="all">Alles</button><button class="filter" data-filter="public">Openbaar</button><button class="filter" data-filter="private">Besloten</button></div>
+    <div id="challengeList" class="challenge-list">
+      <article class="challenge-card" data-type="public"><div class="challenge-cover neighborhood-cover"><span>OPENBAAR · DEMO</span><b>🏡</b></div><div class="challenge-body"><div class="challenge-meta"><span>4 weken</span><span>12 deelnemers</span></div><h2>Buurt in beweging</h2><p>Wie verbetert zijn energiegebruik het meest ten opzichte van de eigen uitgangssituatie?</p><div class="challenge-bottom"><span class="challenge-category">Energie besparen</span><button class="btn btn-small btn-secondary join-challenge" data-id="neighborhood">Bekijk challenge</button></div></div></article>
+      <article class="challenge-card" data-type="private"><div class="challenge-cover friends-cover"><span>BESLOTEN · DEMO</span><b>⚡</b></div><div class="challenge-body"><div class="challenge-meta"><span>30 dagen</span><span>6 deelnemers</span></div><h2>Vrienden besparen samen</h2><p>Een vriendelijke competitie om samen bewuster met stroom om te gaan.</p><div class="challenge-bottom"><span class="challenge-category">Vriendengroep</span><button class="btn btn-small btn-secondary join-challenge" data-id="friends">Bekijk challenge</button></div></div></article>
+      <article class="challenge-card" data-type="public"><div class="challenge-cover solar-cover"><span>OPENBAAR · DEMO</span><b>☀</b></div><div class="challenge-body"><div class="challenge-meta"><span>6 weken</span><span>18 deelnemers</span></div><h2>Meer uit je eigen zon</h2><p>Ontdek hoe je opgewekte zonnestroom beter kunt afstemmen op je eigen verbruik.</p><div class="challenge-bottom"><span class="challenge-category">Eigen opwek</span><button class="btn btn-small btn-secondary join-challenge" data-id="solar">Bekijk challenge</button></div></div></article>
+    </div>
+    <section class="leaderboard-panel panel">
+      <div class="panel-heading"><div><p class="eyebrow">VOORBEELD RANGLIJST</p><h2>Buurt in beweging</h2><p>Fictieve deelnemers en scores. Alleen nicknames worden getoond.</p></div><span class="demo-chip">Demo</span></div>
+      <div class="leaderboard-head"><span>Positie</span><span>Deelnemer</span><span>Score</span><span>Verbetering</span></div>
+      <div class="leaderboard-row"><b class="rank rank-one">1</b><span class="leader-person"><i>G</i><b>GroeneGouda</b></span><strong>91</strong><span class="positive">+14,2%</span></div>
+      <div class="leaderboard-row"><b class="rank rank-two">2</b><span class="leader-person"><i>S</i><b>SlimmeStroom</b></span><strong>87</strong><span class="positive">+12,8%</span></div>
+      <div class="leaderboard-row"><b class="rank rank-three">3</b><span class="leader-person"><i>Z</i><b>ZonnetjeVooruit</b></span><strong>82</strong><span class="positive">+10,1%</span></div>
+      <div class="leaderboard-row my-demo-row"><b class="rank">4</b><span class="leader-person"><i>D</i><b id="leaderNickname">Demo gebruiker</b></span><strong>76</strong><span class="positive">+8,2%</span></div>
+    </section>
+    <section class="create-challenge-panel panel" id="createChallengePanel" hidden>
+      <div class="panel-heading"><div><p class="eyebrow">START SAMEN</p><h2>Maak je eigen challenge</h2><p>In dit prototype wordt de challenge alleen op dit apparaat bewaard.</p></div><button class="icon-button" id="closeCreateChallenge" aria-label="Sluiten">×</button></div>
+      <form id="createChallengeForm" class="form-grid">
+        <label>Naam van de challenge<input name="title" maxlength="50" required placeholder="Bijvoorbeeld: Familie bespaart samen"></label>
+        <label>Type<select name="type"><option value="private">Besloten – alleen op uitnodiging</option><option value="public">Openbaar – vindbaar voor iedereen</option></select></label>
+        <label>Looptijd<select name="duration"><option>4 weken</option><option>30 dagen</option><option>6 weken</option><option>3 maanden</option></select></label>
+        <label>Doel<select name="goal"><option>Verbeter je energiegebruik</option><option>Verlaag piekverbruik</option><option>Gebruik meer eigen zonnestroom</option></select></label>
+        <div class="form-actions"><button class="btn btn-primary" type="submit">Challenge aanmaken</button></div>
+      </form>
+      <p class="form-status" id="challengeStatus" aria-live="polite"></p>
+    </section>
+  </section>
+
+  <section class="view" id="view-connections">
+    <div class="page-heading"><p class="eyebrow">SLIMME KOPPELINGEN</p><h1>Verbind je energiegegevens.</h1><p class="lead">Straks komen meetgegevens automatisch binnen. We beginnen met een privacyvriendelijke koppeling via Home Assistant.</p></div>
+    <article class="connection-feature panel">
+      <div class="ha-mark">⌂</div><div class="connection-main"><span class="connection-status">BINNENKORT BESCHIKBAAR</span><h2>Home Assistant</h2><p>Home Assistant kan gegevens van verschillende slimme meters, zonnepanelen, batterijen en apparaten samenbrengen. De gebruiker kiest zelf welke energiemetingen gedeeld worden.</p><ul><li>Geen openbare toegang tot je thuisnetwerk nodig in de beoogde uitgaande koppeling.</li><li>Alleen geselecteerde meetwaarden delen.</li><li>Toegang per huishouden kunnen intrekken.</li></ul><button class="btn btn-secondary" id="notifyHa">Houd mij op de hoogte</button><p class="form-status" id="haStatus" aria-live="polite"></p></div>
+    </article>
+    <div class="connection-grid">
+      <article class="connection-card panel"><span class="connection-symbol">P1</span><h3>P1-meter</h3><p>Inzicht in afname en teruglevering via de slimme meter. Een lokale of geschikte gekoppelde dataroute is nodig.</p><span class="coming-label">Nog niet gekoppeld</span></article>
+      <article class="connection-card panel"><span class="connection-symbol">☀</span><h3>Zonnepanelen</h3><p>Opwekking en eigen verbruik vergelijken wanneer geschikte sensordata beschikbaar is.</p><span class="coming-label">Nog niet gekoppeld</span></article>
+      <article class="connection-card panel"><span class="connection-symbol">▣</span><h3>Thuisbatterij</h3><p>Laden, ontladen en beschikbare capaciteit volgen indien het systeem deze waarden veilig deelt.</p><span class="coming-label">Nog niet gekoppeld</span></article>
+    </div>
+    <div class="privacy-box"><span>♧</span><div><h3>Jij bepaalt wat je deelt.</h3><p>Dit prototype vraagt nog geen Home Assistant-token en maakt geen verbinding met apparatuur. Deel nooit een toegangstoken in een formulier of e-mail. De echte koppeling krijgt een beveiligde autorisatie- en intrekprocedure.</p><a href="bronnen.html">Lees onze uitgangspunten voor privacy en transparantie ↗</a></div></div>
+  </section>
+</main>
+<footer class="app-footer"><a href="index.html">DuurzaamKompas</a><span>Mijn Energie · Eerste prototype</span><a href="bronnen.html">Privacy & transparantie</a></footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
