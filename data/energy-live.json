@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": null,
+  "generated_at": "2026-11-23T14:50:36Z",
   "refresh_interval_minutes": 15,
-  "description": "Openbare energiesnapshot. Alleen bronnen met passende hergebruiksvoorwaarden worden gepubliceerd.",
+  "description": "Openbare energiesnapshot; API-sleutels worden alleen server-side door GitHub Actions gebruikt.",
   "sources": {
     "ned": {
       "status": "permission_required",
@@ -12,8 +12,8 @@
       "data": null
     },
     "knmi": {
-      "status": "setup_required",
-      "message": "Voeg KNMI_API_KEY toe via GitHub Settings → Secrets and variables → Actions.",
+      "status": "error",
+      "message": "KNMI API: HTTP Error 403: Forbidden",
       "updated_at": null,
       "data": {
         "station": "De Bilt",
@@ -26,15 +26,15 @@
     },
     "tennet": {
       "status": "permission_required",
-      "message": "TenneT staat het delen van API-data met derden niet toe, tenzij dit expliciet is toegestaan in de API-documentatie. Publieke koppeling volgt pas na schriftelijke toestemming.",
+      "message": "TenneT staat het delen van API-data met derden niet toe tenzij dit expliciet is toegestaan in de API-documentatie. Publieke koppeling volgt pas na schriftelijke toestemming.",
       "updated_at": null,
       "source_url": "https://developer.tennet.eu/fair-use-policy",
       "data": null
     },
     "pvgis": {
-      "status": "waiting",
-      "message": "PVGIS wordt server-side periodiek opgehaald; dit is een historische modelberekening, geen live paneelmeting.",
-      "updated_at": null,
+      "status": "model",
+      "message": "PVGIS langjarige modelberekening voor een referentiesysteem van 1 kWp, zuidgericht, 35° helling en 14% systeemverlies. Geen actuele meting of opbrengstgarantie.",
+      "updated_at": "2026-11-23T14:50:38Z",
       "data": {
         "location": {
           "name": "Midden-Nederland (referentie)",
@@ -47,8 +47,70 @@
           "orientation": "Zuid",
           "loss_percent": 14
         },
-        "annual_yield_kwh": null,
-        "monthly": []
+        "annual_yield_kwh": 1013.62,
+        "monthly": [
+          {
+            "month": 1,
+            "yield_kwh": 34.01,
+            "irradiation_kwh_m2": 39.98
+          },
+          {
+            "month": 2,
+            "yield_kwh": 49.79,
+            "irradiation_kwh_m2": 58.51
+          },
+          {
+            "month": 3,
+            "yield_kwh": 88.83,
+            "irradiation_kwh_m2": 106.57
+          },
+          {
+            "month": 4,
+            "yield_kwh": 119.43,
+            "irradiation_kwh_m2": 147.18
+          },
+          {
+            "month": 5,
+            "yield_kwh": 127.23,
+            "irradiation_kwh_m2": 159.91
+          },
+          {
+            "month": 6,
+            "yield_kwh": 126.51,
+            "irradiation_kwh_m2": 162.08
+          },
+          {
+            "month": 7,
+            "yield_kwh": 124.43,
+            "irradiation_kwh_m2": 160.71
+          },
+          {
+            "month": 8,
+            "yield_kwh": 113.65,
+            "irradiation_kwh_m2": 145.5
+          },
+          {
+            "month": 9,
+            "yield_kwh": 95.42,
+            "irradiation_kwh_m2": 119.57
+          },
+          {
+            "month": 10,
+            "yield_kwh": 67.2,
+            "irradiation_kwh_m2": 81.89
+          },
+          {
+            "month": 11,
+            "yield_kwh": 39.5,
+            "irradiation_kwh_m2": 47.22
+          },
+          {
+            "month": 12,
+            "yield_kwh": 27.63,
+            "irradiation_kwh_m2": 32.82
+          }
+        ],
+        "source": "PVGIS v5.3 · European Commission Joint Research Centre"
       }
     }
   }
