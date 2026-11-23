@@ -138,12 +138,12 @@ De officiële Home Assistant-integratie ondersteunt de HomeWizard P1 Meter en le
 
 ## Dagelijkse rekenengine en beheeromgeving (november 2026)
 
-- `private.process_energy_daily_aggregates`: berekent dagelijkse stroomafname, teruglevering, gasverbruik en piekvermogen uit opeenvolgende meterstanden en/of gemeten vermogen. Intervallen langer dan 15 minuten, meterresets en onwaarschijnlijke registersprongen worden niet als betrouwbare verbruiksintervallen opgenomen. Intervalenergie wordt naar lokale kalenderdagen in Europe/Amsterdam verdeeld.
+- `private.process_energy_daily_aggregates`: berekent dagelijkse stroomafname, teruglevering, gasverbruik en piekvermogen uit opeenvolgende meterstanden en/of gemeten vermogen. Stroomintervallen langer dan 15 minuten en gasintervallen langer dan twee uur, meterresets en onwaarschijnlijke registersprongen worden niet als betrouwbare verbruiksintervallen opgenomen. Het langere gasvenster houdt rekening met minder frequente gasregisterupdates via de P1-poort. Intervalenergie wordt naar lokale kalenderdagen in Europe/Amsterdam verdeeld.
 - Per huishouden en dag wordt voor stroom en gas afzonderlijk de bron met de beste dekking gekozen. Dagdekking wordt expliciet vastgelegd; alleen dagen met minimaal 80% dekking tellen mee voor de referentie.
 - `private.refresh_active_energy_baselines`: bouwt een eerste persoonlijke stroomreferentie op uit 28 geldige dagen binnen een venster van 56 dagen, verdeeld naar ISO-weekdag. Er zijn minimaal drie geldige observaties per weekdag nodig.
-- `private.compute_energy_savings_period`: berekent week- en maandperioden met de persoonlijke weekdagreferentie. De meetgrens blijft netafname. Gas krijgt pas een vergelijkingswaarde wanneer er een passende seizoens- en weerbasis wordt toegevoegd; geld en CO₂ worden niet geschat zonder gecontroleerde factoren.
+- `private.compute_energy_savings_period`: berekent week-, maand- en jaarperioden met de persoonlijke weekdagreferentie. De meetgrens blijft netafname. Gas krijgt pas een vergelijkingswaarde wanneer er een passende seizoens- en weerbasis wordt toegevoegd; geld en CO₂ worden niet geschat zonder gecontroleerde factoren.
 - `private.generate_weekly_energy_tips`: kiest één passende, bronvermelde tip per huishouden per week, met 12 weken afkoelperiode per tipcode.
-- `private.run_energy_analytics`: verwerkt de laatste 70 dagen, vernieuwt nulmetingen, schrijft gesloten week-/maandresultaten en selecteert de weektips.
+- `private.run_energy_analytics`: verwerkt de laatste 70 dagen, vernieuwt nulmetingen, schrijft gesloten week-/maand-/jaarresultaten en selecteert de weektips.
 - Supabase Cron `mijn-energie-daily-analytics` voert de verwerking dagelijks uit om 03:15 UTC.
 - De tipcatalogus en factortabel staan in `private`. Een database allowlist in `private.platform_admins` bepaalt wie het interne beheer kan openen. De eerste huishouden-eigenaar is hiervoor gemachtigd; normale gebruikers krijgen geen beheerrechten.
 - De beheerpagina kan tips toevoegen/wijzigen, bronnen en triggers beheren, factoren met geldigheidsdata vastleggen en de rekenengine handmatig starten.
@@ -152,3 +152,7 @@ De officiële Home Assistant-integratie ondersteunt de HomeWizard P1 Meter en le
 
 ### Beperkingen van de eerste rekenversie
 De stroomreferentie is voorlopig een indicatieve, weekdaggesplitste historische baseline zonder weerscorrectie. Er worden nog geen gasbesparingen, kostenbesparingen of CO₂-besparingen geclaimd. Voor huishoudens met zonnepanelen of batterijen wordt netafname niet gelijkgesteld aan totaal stroomverbruik. De eerste engine moet nog end-to-end met echte P1-meetdata worden gevalideerd.
+
+
+### P1-intervalbehandeling
+Stroomafname, teruglevering en vermogen worden alleen uit intervallen tot 15 minuten berekend. Gasregisterverschillen mogen uit intervallen tot maximaal twee uur komen; langere gaten worden niet als verbruik geïnterpreteerd. Deze aparte limieten voorkomen dat een minder frequent bijgewerkt gasregister onnodig wordt weggegooid of dat een lang stroomgat een schijnbaar verbruik oplevert.
