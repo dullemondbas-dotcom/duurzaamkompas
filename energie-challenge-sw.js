@@ -7,6 +7,7 @@ const APP_FILES = [
   "./energie-challenge.js",
   "./energie-challenge.webmanifest",
   "./assets/energie-challenge-icon.svg",
+  "./assets/energie-challenge-icon-180.png",
   "./favicon.svg"
 ];
 const APP_PATHS = new Set(APP_FILES.map(path => new URL(path, self.registration.scope).pathname));
