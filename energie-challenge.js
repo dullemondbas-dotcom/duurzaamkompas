@@ -106,10 +106,20 @@
   window.addEventListener("dk-account-changed", event => {
     const accountProfile = event.detail?.profile;
     if (event.detail?.user && accountProfile) {
-      fillProfileForm(accountProfile);
+      const localProfile = profile();
+      const remoteHasHousehold = ["homeType","residents","area","buildPeriod","insulation","heating","solar","battery","ev","chargePoint","heatPump","smartControl","solarKwp","batteryKwh","municipality","contract"]
+        .some(key => accountProfile[key] !== undefined && accountProfile[key] !== null && accountProfile[key] !== "" && accountProfile[key] !== false);
+      if (localProfile && !remoteHasHousehold) {
+        fillProfileForm(localProfile);
+        $("#profileStatus").textContent = "Je eerder lokaal opgeslagen huishouden staat klaar. Druk op Profiel opslaan om het veilig over te zetten naar je account.";
+      } else {
+        fillProfileForm(accountProfile);
+        if (remoteHasHousehold) localStorage.removeItem(PROFILE_KEY);
+        $("#profileStatus").textContent = remoteHasHousehold
+          ? "Je huishoudenprofiel is gekoppeld aan je account."
+          : "Je account is gekoppeld. Vul je huishouden in of zet je lokale profiel over.";
+      }
       if (accountProfile.nickname) updateNickname(accountProfile.nickname);
-      $("#profileStatus").textContent = "Je huishoudenprofiel is gekoppeld aan je account.";
-      localStorage.removeItem(PROFILE_KEY);
     } else if (!event.detail?.user) {
       const localProfile = profile();
       if (localProfile) {
