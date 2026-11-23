@@ -16,8 +16,8 @@ DuurzaamKompas is een gratis Nederlandstalig consumentenplatform over energie th
 - `nieuws.html` — redactioneel overzicht van nieuws, achtergronden en uitlegdossiers. Dit is momenteel geen live nieuwsfeed.
 - `verdieping.html` — geselecteerde externe podcasts, webinars, kennisartikelen en onderzoeken met een eigen korte toelichting, doelgroep- en belangencontext
 - `kijken.html` + `kijken.js` — interactieve bibliotheek met video’s, webinars en podcasts; onderwerpfilters, zoekfunctie, lokale kijklijst en korte kennistest
-- `onderzoek.html` — synthese van relevante praktijkproeven, modelstudies, marktdata en wetenschappelijke publicaties, met een bronnenregister en praktische koppelingen naar de kennisbank
-- `kennisbank.html` — uitgebreide consumentenkennisbank over vaste en plug-in thuisbatterijen, batterij-aansturing, EMS, verdienmodellen en energiehandel, contracttypen, salderen per 2027, koppelen aan energiediensten, zonnepanelen, netcongestie, laden en veiligheid
+- `onderzoek.html` — synthese van praktijkproeven, modelstudies, marktdata en wetenschappelijke publicaties; begint met conclusies in gewone taal, met uitklapbare onderzoeksblokken en bronnenregister voor wie dieper wil lezen
+- `kennisbank.html` — beginnersvriendelijke consumentenkennisbank: per onderwerp eerst een korte uitleg in gewone taal, daarna optioneel open te klappen technische verdieping, voorbeelden en bronnen; inclusief eenvoudige begrippenlijst
 - `regelgeving.html` — salderen, terugleveren, contracttypen, registratie, batterij-integratie, flexibiliteitsvergoedingen en relevante consumenteninformatie
 - `keuzehulp.html` + `keuzehulp.js` — interactieve checklist om een aankoop- of offertegesprek voor te bereiden; de vinkjes worden lokaal opgeslagen
 - `bronnen.html` — bronbeleid, redactionele werkwijze, commerciële transparantie en publicatiestatus
