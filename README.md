@@ -108,4 +108,4 @@ Het eerste testaccount is aangemaakt en het opslaan van het huishoudprofiel is b
 
 
 ### Besparing en persoonlijke begeleiding
-De interne basis bevat persoonlijke nulmetingen, berekende week-/maandresultaten, een tipcatalogus en een logboek voor uitgevoerde acties. De interface bevat een eerste geschiedenisweergave en een plek voor de weektip. Er worden nog geen besparingsbedragen of tips verzonnen: echte uitkomsten verschijnen pas na voldoende gevalideerde meetdata en een berekening met een vastgelegde modelversie.
+De dagelijkse rekenengine, persoonlijke stroomreferentie, week-/maandresultaten, tipselectie en Cron-planning zijn ingericht. De dashboardkaarten gebruiken echte dagaggregaten en blijven leeg totdat er een meter is gekoppeld. De eigenaar kan in een afgeschermde beheerpagina tips en bronvermelde rekenfactoren beheren. Er staan nog geen meterregels of besparingsperioden in de database.
