@@ -94,3 +94,7 @@ De accountinterface is voorbereid met Supabase Auth (registratie, e-mailbevestig
 - configureer Site URL en Redirect URLs zoals beschreven in docs/MIJN_ENERGIE_PWA_EN_INFRASTRUCTUUR.md.
 
 Plaats nooit service_role keys of andere geheime sleutels in deze publieke repository. Zonder Supabase-config blijft de app in lokale demo-modus.
+
+
+## Supabase-project gekoppeld
+Het project is actief in de EU en de twee database-migraties zijn toegepast. De frontend gebruikt de publieke publishable key. De tabellen zijn afgeschermd met RLS. Rond Auth URL Configuration nog af zoals beschreven in docs/MIJN_ENERGIE_PWA_EN_INFRASTRUCTUUR.md en test daarna registratie en profielsynchronisatie.
