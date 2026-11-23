@@ -512,3 +512,10 @@ button{cursor:pointer}
  html{scroll-behavior:auto}
  *,*::before,*::after{transition:none!important;animation:none!important}
 }
+
+.site-header{display:block!important}
+.nav-group[data-current="true"]>summary{color:#2f704c;font-weight:800}
+.search-is-open{overflow:hidden}
+@media(max-width:820px){
+ .nav.open{display:flex!important}
+}
