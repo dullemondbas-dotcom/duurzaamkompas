@@ -422,6 +422,20 @@ create policy "consents_insert_own" on public.consent_records
   for insert to authenticated with check (user_id = auth.uid());
 -- Consent revocation uses the narrow revoke_consent RPC.
 
+
+-- Explicit Data API grants: privileges are necessary but RLS still decides which rows
+-- the authenticated user can access. Keep writes narrow and only grant what policies support.
+grant select, insert, update on public.profiles to authenticated;
+grant select, insert, update, delete on public.households to authenticated;
+grant select, delete on public.household_members to authenticated;
+grant select, insert, update, delete on public.home_profiles to authenticated;
+grant select on public.integrations to authenticated;
+grant select on public.energy_measurements to authenticated;
+grant select on public.energy_aggregates to authenticated;
+grant select, insert, update, delete on public.challenges to authenticated;
+grant select on public.challenge_members to authenticated;
+grant select, insert on public.consent_records to authenticated;
+
 grant execute on function public.is_household_member(uuid) to authenticated;
 grant execute on function public.is_household_admin(uuid) to authenticated;
 grant execute on function public.is_challenge_member(uuid) to authenticated;
