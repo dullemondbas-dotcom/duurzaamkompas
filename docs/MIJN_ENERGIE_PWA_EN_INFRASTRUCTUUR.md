@@ -1,82 +1,76 @@
 # Mijn Energie — PWA en infrastructuur
 
 ## PWA / mobiele app
-De Energie Challenge is voorbereid als Progressive Web App:
+De Energie Challenge is een Progressive Web App:
 - energie-challenge.webmanifest bevat naam, startadres, thema, weergavemodus en snelkoppelingen.
 - energie-challenge-sw.js cachet alleen de publieke app-shell voor offline openen.
 - assets/energie-challenge-icon.svg en de PNG app-iconen zijn de app-iconen.
-- energie-challenge.html bevat installatie-informatie en mobiele navigatie.
-- Het profiel en zelfgemaakte demo-challenges worden nog lokaal in de browser bewaard.
+- Android, iPhone en desktop kunnen Mijn Energie toevoegen aan het beginscherm of als app installeren.
+- Demo-challenges blijven lokaal in de browser. Ingelogde huishoudprofielen worden bij Supabase opgeslagen en opgehaald.
 
 ### Installeren
 - Android / Chrome: open de app-URL, kies indien beschikbaar App installeren of via browsermenu Toevoegen aan startscherm.
 - iPhone / iPad: open de URL in Safari, kies Deel en daarna Zet op beginscherm.
 - Desktop Chrome/Edge: gebruik het installatie-icoon in de adresbalk of browsermenu wanneer dit verschijnt.
 
-PWA-installatie vereist HTTPS. De publieke GitHub Pages-URL gebruikt HTTPS.
-
 ## Supabase backend
-Een voorbereid databaseschema staat in:
-supabase/migrations/202611230001_initial_mijn_energie.sql
+Het project is aangemaakt in de EU (eu-west-1), actief en gekoppeld aan de publieke frontendconfiguratie in supabase-config.js.
 
-Het schema bevat:
+Toegepaste migraties:
+- supabase/migrations/202611230001_initial_mijn_energie.sql
+- supabase/migrations/202611230002_mijn_energie_security_hardening.sql
+
+De database bevat:
 - profielen met unieke nickname;
 - huishoudens, leden en woningprofielen;
 - integratiemetadata zonder opgeslagen provider-token;
 - private meetwaarden en geaggregeerde tijdreeksen;
 - openbare en besloten challenges;
 - challengeleden en server-berekende scores;
-- toestemmingsregistratie en beperkte intrekkingsfunctie.
+- toestemmingsregistratie.
 
-Row Level Security staat aan voor alle tabellen. Meetdata, aggregaten, integratie-credentials en scores hebben geen schrijfbeleid voor gewone gebruikers. De daarvoor bedoelde verwerking moet via gecontroleerde server-side functies gebeuren.
+Alle elf publieke tabellen hebben Row Level Security ingeschakeld. De security advisor gaf na de hardening geen bevindingen. Anonieme rollen hebben geen SELECT-toegang tot de tabellen; challenge-scores zijn ook voor ingelogde gebruikers niet rechtstreeks uitleesbaar. De publieke leaderboard-RPC geeft uitsluitend nicknames en scoregegevens terug.
 
-### Nog benodigde handelingen voordat echte accounts werken
-1. Maak een apart Supabase-project aan.
-2. Pas de SQL-migratie toe via Supabase SQL Editor of Supabase CLI.
-3. Stel Auth e-mailbevestiging, wachtwoordbeleid en redirect-URL's in.
-4. Voeg alleen de Supabase project-URL en anon/publishable key toe aan de frontendconfiguratie; de service-role key blijft uitsluitend server-side.
-5. Test RLS met minimaal twee testaccounts en huishoudens voordat echte gebruikers worden toegelaten.
-6. Voeg accountaanmaak, login, wachtwoordherstel en profielsynchronisatie toe aan de app.
-7. Voeg beveiligde server-side meetdata-ingestie en Home Assistant-authorisatie toe.
-
-## Dataveiligheid
-- Nooit een service-role key of Home Assistant-token in browser-JavaScript, GitHub Pages, localStorage of een openbare repository plaatsen.
-- Provider-tokens worden niet in de publieke database opgeslagen. Ze horen in een server-side secret store of beveiligde vault, buiten de browser en de publieke tabellen.
-- Challenge-ranglijsten worden via een nickname-only RPC opgehaald; er wordt geen e-mail, woonadres of ruwe meetdata teruggegeven.
-- De service worker cachet geen API-verzoeken of privégegevens.
-- De huidige app bewaart huishoudprofiel en test-challenges lokaal. Gebruik dit prototype niet voor gevoelige gegevens tot accountsynchronisatie en privacyprocessen actief zijn.
-
-## Huidige status
-De PWA is voorbereid voor mobiel en desktop, maar is geen native app uit de App Store/Google Play. De eerste versie blijft via de browser installeerbaar. Een native app store release kan later via Capacitor of een andere wrapper worden overwogen.
-
-
-## Accountlaag (frontend gereed, backend nog te activeren)
-De app bevat nu een accountvenster met:
-- e-mailregistratie en bevestigingsmail (client-side browserflow);
+## Accountlaag
+De frontend bevat:
+- e-mailregistratie en bevestigingsmail;
 - e-mail + wachtwoord inloggen;
 - uitloggen;
 - wachtwoord-herstellink en nieuw wachtwoord;
-- Supabase sessieherstel op hetzelfde apparaat;
-- ophalen en opslaan van het huishoudprofiel in de database, zodat het met dezelfde login op een tweede apparaat beschikbaar is.
+- Supabase sessieherstel;
+- ophalen en opslaan van het huishoudprofiel, zodat het met dezelfde login op meerdere apparaten beschikbaar is.
 
-### Frontendconfiguratie
-Bestand: supabase-config.js. Vul na het aanmaken van het Supabase-project uitsluitend in:
-- projectUrl: de Project URL uit Project Settings → API;
-- publishableKey: de publieke publishable key (of legacy anon key als het dashboard die nog toont).
+De project-URL en publishable key zijn ingevuld in supabase-config.js. De publishable key is bedoeld voor frontendgebruik en mag publiek zijn. Gebruik nooit de service_role key, databasewachtwoord of provider-/Home Assistant-tokens in deze repository.
 
-Deze twee waarden zijn bedoeld voor frontendgebruik. Gebruik nooit de service_role key, databasewachtwoord of provider-/Home Assistant-tokens in dit bestand.
+### Nog handmatig instellen in Supabase Dashboard
+De Auth-instellingen kunnen niet via de gekoppelde beheerverbinding worden aangepast. Rond daarom dit laatste dashboardonderdeel af:
+1. Open Authentication → URL Configuration.
+2. Zet Site URL op:
+   https://dullemondbas-dotcom.github.io/duurzaamkompas/
+3. Voeg bij Redirect URLs toe:
+   https://dullemondbas-dotcom.github.io/duurzaamkompas/energie-challenge.html
+   https://dullemondbas-dotcom.github.io/duurzaamkompas/energie-challenge.html?reset=1
+4. Open Authentication → Providers → Email en controleer of e-mail/wachtwoord aan staat en e-mailbevestiging is ingeschakeld.
+5. Voor publiek gebruik: configureer een eigen SMTP-provider onder Authentication → SMTP Settings. De standaard verzenddienst is alleen geschikt voor beperkte tests.
+6. Test registratie, bevestiging, login, wachtwoordherstel en profielsynchronisatie op twee verschillende apparaten.
 
-### Supabase-project instellen
-1. Maak een project aan in Supabase.
-2. Open SQL Editor en voer de volledige migratie uit: supabase/migrations/202611230001_initial_mijn_energie.sql.
-3. Stel Authentication → URL Configuration in:
-   - Site URL: https://dullemondbas-dotcom.github.io
-   - Redirect URL: https://dullemondbas-dotcom.github.io/duurzaamkompas/energie-challenge.html
-   - Password reset URL: https://dullemondbas-dotcom.github.io/duurzaamkompas/energie-challenge.html?reset=1
-4. Laat e-mailbevestiging ingeschakeld. Configureer voor productie een eigen SMTP-provider; de standaard verzenddienst heeft beperkte testquota.
-5. Vul de project-URL en publishable key in supabase-config.js.
-6. Test registratie, bevestiging, login, wachtwoordreset en profielsync met twee testaccounts en op twee verschillende apparaten.
+De app gebruikt een browsergerichte impliciete Auth-flow, zodat een bevestigingslink ook op een ander apparaat kan worden geopend. De Supabase-client detecteert de sessie vanuit de URL-hash. De redirectallowlist hierboven moet dus overeenkomen met de app-URL.
 
-De publieke GitHub Pages-app is een client-only SPA. Daarom wordt de Supabase JavaScript client in implicit browser-flow gebruikt; PKCE vereist voor de e-mailbevestiging een server-side token-exchange endpoint of een aparte verifyOtp callback. De resetflow gebruikt de door Supabase teruggegeven recovery-sessie.
+De database is geïnstalleerd, maar bij controle stonden er nog nul app-gebruikers en nul huishoudprofielen in Auth en de publieke tabellen. Er is dus nog geen echte registratie/synchronisatie praktijktest uitgevoerd.
 
-De registratie- en logininterface is gepubliceerd, maar accountaanmaak en synchronisatie blijven uitgeschakeld zolang bovenstaande projectconfiguratie ontbreekt. De frontend laat dat expliciet zien.
+## Dataveiligheid
+- Nooit een service_role key of Home Assistant-token in browser-JavaScript, GitHub Pages, localStorage of een openbare repository plaatsen.
+- Provider-tokens horen in server-side secret storage, buiten browsercode en publieke tabellen.
+- Challenge-ranglijsten tonen geen e-mail, woonadres of ruwe meetdata.
+- De service worker cachet geen API-verzoeken of privégegevens.
+- Meetdata, aggregaten en scores kunnen niet door gewone clients worden geschreven; ingestie en berekeningen vereisen server-side functies.
+
+## Huidige status
+De PWA werkt als installeerbare webapp, maar is geen native app uit de App Store/Google Play. Een native app store release kan later via Capacitor of een andere wrapper worden overwogen.
+
+## Volgende technische fasen
+1. Auth redirectinstellingen controleren en eerste testaccount aanmaken.
+2. Registratie, login, wachtwoordherstel en profielsync daadwerkelijk testen.
+3. Online challenge-aanmaak en deelname koppelen.
+4. Server-side P1-ingestie, autorisatie en validatie bouwen.
+5. Meetdata-aggregatie en eerlijke challenge-scoreberekening implementeren.
