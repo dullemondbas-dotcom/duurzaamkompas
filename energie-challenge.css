@@ -132,3 +132,5 @@
  .history-period-switch{width:100%;justify-content:space-between}
  .history-period-switch button{flex:1}
 }
+
+.weekly-tip-action-text{margin:8px 0 0;color:#45664b;font-size:10px;font-weight:700;line-height:1.6}
