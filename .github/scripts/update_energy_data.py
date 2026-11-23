@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Refresh the public DuurzaamKompas energy data snapshot.
 
-Secrets required in GitHub Actions:
-  NED_API_KEY, KNMI_API_KEY, TENNET_API_KEY
-PVGIS is public and does not require a key.
+Secret required in GitHub Actions:
+  KNMI_API_KEY
+PVGIS is public and does not require a key. NED and TenneT are not redistributed without permission.
 
 This runs server-side in GitHub Actions. API credentials are never sent to the browser.
 """
