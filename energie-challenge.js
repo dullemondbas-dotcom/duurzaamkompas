@@ -46,7 +46,7 @@
     button.addEventListener("click", () => setView(button.dataset.view));
   });
   const requestedView = new URLSearchParams(location.search).get("view");
-  if (["dashboard","history","household","challenges","connections"].includes(requestedView)) setView(requestedView);
+  if (["dashboard","history","household","challenges","connections","admin"].includes(requestedView)) setView(requestedView);
   $$("[data-go]").forEach(button => button.addEventListener("click", () => setView(button.dataset.go)));
 
   const note = $(".prototype-note");
@@ -403,6 +403,148 @@
     $("#integrationTokenCode").textContent = "";
     $("#integrationTokenPanel").hidden = true;
   });
+  function localDateKey(date) {
+    const parts = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Europe/Amsterdam", year: "numeric", month: "2-digit", day: "2-digit"
+    }).formatToParts(date);
+    const part = key => parts.find(item => item.type === key)?.value || "";
+    return part("year") + "-" + part("month") + "-" + part("day");
+  }
+
+  function setMetricValue(id, value, unit, decimals = 1) {
+    const node = $("#" + id);
+    if (!node) return;
+    node.replaceChildren();
+    const strongText = document.createTextNode(value == null || !Number.isFinite(Number(value))
+      ? "—" : new Intl.NumberFormat("nl-NL", { maximumFractionDigits: decimals }).format(Number(value)));
+    node.append(strongText);
+    const small = document.createElement("small");
+    small.textContent = unit;
+    node.append(small);
+  }
+
+  function renderEnergyChart(rows) {
+    const columns = $("#energyChartColumns");
+    const yAxis = $("#energyChartYAxis");
+    if (!columns || !yAxis) return;
+    columns.replaceChildren();
+
+    const today = new Date();
+    const dates = [];
+    for (let offset = 7; offset >= 1; offset--) {
+      dates.push(localDateKey(new Date(today.getTime() - offset * 86400000)));
+    }
+    const byDate = new Map(rows.map(row => [localDateKey(new Date(row.bucket_start)), row]));
+    const validValues = dates.map(date => {
+      const row = byDate.get(date);
+      return row && Number(row.grid_coverage_ratio) >= 0.8 && row.grid_import_kwh != null
+        ? Number(row.grid_import_kwh) : null;
+    });
+    const maximum = Math.max(0, ...validValues.filter(value => value != null));
+    const scale = maximum > 0 ? Math.ceil(maximum * 1.15 * 10) / 10 : 5;
+    const ticks = [scale, scale * 0.75, scale * 0.5, scale * 0.25, 0];
+    yAxis.replaceChildren();
+    ticks.forEach((tick, index) => {
+      const label = document.createElement("span");
+      label.textContent = index === 4 ? "0 kWh" : new Intl.NumberFormat("nl-NL", { maximumFractionDigits: 1 }).format(tick);
+      yAxis.append(label);
+    });
+    dates.forEach((date, index) => {
+      const value = validValues[index];
+      const group = document.createElement("div");
+      group.className = "bar-group";
+      const bars = document.createElement("div");
+      bars.className = "bars";
+      const bar = document.createElement("i");
+      bar.className = "bar current";
+      const height = value == null ? 0 : Math.max(2, (value / scale) * 100);
+      bar.style.height = height + "%";
+      bar.title = value == null ? "Geen complete meting" : new Intl.NumberFormat("nl-NL", { maximumFractionDigits: 2 }).format(value) + " kWh";
+      bars.append(bar);
+      const label = document.createElement("small");
+      const dayDate = new Date(date + "T12:00:00+01:00");
+      label.textContent = new Intl.DateTimeFormat("nl-NL", {
+        weekday: "short", day: "numeric", timeZone: "Europe/Amsterdam"
+      }).format(dayDate);
+      group.append(bars, label);
+      columns.append(group);
+    });
+    const validCount = validValues.filter(value => value != null).length;
+    $("#energyChartLabel").textContent = validCount ? validCount + " meetdagen" : "Geen data";
+    $("#energyChartFootnote").textContent = validCount
+      ? "Alleen complete meetdagen met minimaal 80% meetdekking. Dit is netafname, niet automatisch het totale stroomverbruik van een woning met zonnepanelen of batterij."
+      : "Er zijn nog geen complete meetdagen beschikbaar. Na het koppelen van een meter verschijnen hier je werkelijke waarden.";
+  }
+
+  async function refreshDashboardMetrics() {
+    if (!window.DK_ACCOUNT?.isSignedIn?.()) {
+      setMetricValue("metricGridImport", null, "kWh");
+      setMetricValue("metricGridExport", null, "kWh");
+      setMetricValue("metricGas", null, "m³");
+      setMetricValue("metricDataCoverage", null, "%");
+      $("#metricGridImportCaption").textContent = "Log in en koppel een meter";
+      $("#metricGridExportCaption").textContent = "Log in en koppel een meter";
+      $("#metricGasCaption").textContent = "Log in en koppel een meter";
+      $("#metricDataCoverageCaption").textContent = "Nog geen persoonlijke meetgegevens";
+      $("#metricValidDays").textContent = "0 geldige dagen";
+      $("#energyStatusTitle").textContent = "Nog geen meterdata";
+      $("#energyStatusText").textContent = "Koppel Home Assistant of HomeWizard P1 om te beginnen.";
+      renderEnergyChart([]);
+      return;
+    }
+    try {
+      const [rows, integrations] = await Promise.all([
+        window.DK_ACCOUNT.listEnergyDailyAggregates(50),
+        window.DK_ACCOUNT.listEnergyIntegrations()
+      ]);
+      const now = new Date();
+      const monthPrefix = localDateKey(new Date(now.getFullYear(), now.getMonth(), 1)).slice(0, 7);
+      const monthRows = rows.filter(row => localDateKey(new Date(row.bucket_start)).slice(0, 7) === monthPrefix);
+      const gridRows = monthRows.filter(row => row.grid_import_kwh != null && Number(row.grid_coverage_ratio || 0) >= 0.8);
+      const exportRows = monthRows.filter(row => row.grid_export_kwh != null && Number(row.grid_coverage_ratio || 0) >= 0.8);
+      const gasRows = monthRows.filter(row => row.gas_m3 != null && Number(row.gas_coverage_ratio || 0) >= 0.8);
+      const importTotal = gridRows.reduce((sum, row) => sum + Number(row.grid_import_kwh || 0), 0);
+      const exportTotal = exportRows.reduce((sum, row) => sum + Number(row.grid_export_kwh || 0), 0);
+      const gasTotal = gasRows.reduce((sum, row) => sum + Number(row.gas_m3 || 0), 0);
+      const coverageValues = gridRows.map(row => Number(row.grid_coverage_ratio || 0));
+      const averageCoverage = coverageValues.length
+        ? coverageValues.reduce((sum, value) => sum + value, 0) / coverageValues.length : null;
+      const monthLabel = new Intl.DateTimeFormat("nl-NL", { month: "long" }).format(now);
+
+      setMetricValue("metricGridImport", gridRows.length ? importTotal : null, "kWh");
+      setMetricValue("metricGridExport", exportRows.length ? exportTotal : null, "kWh");
+      setMetricValue("metricGas", gasRows.length ? gasTotal : null, "m³");
+      setMetricValue("metricDataCoverage", averageCoverage == null ? null : averageCoverage * 100, "%", 0);
+      $("#metricGridImportCaption").textContent = gridRows.length ? monthLabel + " · " + gridRows.length + " complete meetdagen" : "Deze maand · nog geen complete metingen";
+      $("#metricGridExportCaption").textContent = exportRows.length ? monthLabel + " · gemeten teruglevering" : "Deze maand · geen terugleverdata";
+      $("#metricGasCaption").textContent = gasRows.length ? monthLabel + " · " + gasRows.length + " complete meetdagen" : "Deze maand · geen complete gasmeting";
+      $("#metricDataCoverageCaption").textContent = averageCoverage == null
+        ? "Wacht op complete meetdagen" : "Gemiddelde dekking van geldige stroomdagen";
+      $("#metricValidDays").textContent = gridRows.length + " geldige dagen";
+
+      const hasConnected = integrations.some(item => item.status === "connected");
+      const hasPending = integrations.some(item => item.status === "pending");
+      if (gridRows.length || gasRows.length) {
+        $("#energyStatusTitle").textContent = "Je metergegevens zijn beschikbaar";
+        $("#energyStatusText").textContent = gridRows.length + " complete stroomdagen en " + gasRows.length + " complete gasdagen deze maand.";
+      } else if (hasConnected) {
+        $("#energyStatusTitle").textContent = "Koppeling actief";
+        $("#energyStatusText").textContent = "De koppeling is actief. De eerste complete meetdag wordt verwerkt zodra er genoeg metingen zijn.";
+      } else if (hasPending) {
+        $("#energyStatusTitle").textContent = "Koppelcode aangemaakt";
+        $("#energyStatusText").textContent = "De meter moet nog met Mijn Energie worden verbonden.";
+      } else {
+        $("#energyStatusTitle").textContent = "Nog geen meter gekoppeld";
+        $("#energyStatusText").textContent = "Koppel Home Assistant of HomeWizard P1 om je werkelijke energiegebruik te zien.";
+      }
+      renderEnergyChart(rows);
+    } catch (error) {
+      console.warn("Mijn Energie meetwaarden:", error);
+      $("#energyStatusTitle").textContent = "Meetgegevens tijdelijk niet beschikbaar";
+      $("#energyStatusText").textContent = "We konden je meetoverzicht nu niet ophalen.";
+    }
+  }
+
   let activeHistoryPeriod = "month";
 
   function formatMeasure(value, unit) {
@@ -572,6 +714,208 @@
     void refreshHistory();
   }));
 
+  let adminTipsCache = [];
+  let adminFactorsCache = [];
+
+  function showAdminStatus(id, message) {
+    const node = $("#" + id);
+    if (node) node.textContent = message;
+  }
+
+  function resetAdminTipForm() {
+    const form = $("#adminTipForm");
+    if (!form) return;
+    form.reset();
+    form.elements.tip_code.readOnly = false;
+    form.elements.enabled.checked = true;
+    form.elements.priority.value = "100";
+    form.elements.version.value = "1";
+    form.elements.trigger_parameters.value = "{}";
+    $("#adminTipFormTitle").textContent = "Nieuwe tip toevoegen";
+    $("#saveAdminTipButton").textContent = "Tip opslaan";
+    showAdminStatus("adminTipStatus", "");
+  }
+
+  function editAdminTip(code) {
+    const tip = adminTipsCache.find(item => item.tip_code === code);
+    if (!tip) return;
+    const form = $("#adminTipForm");
+    Object.entries({
+      tip_code: tip.tip_code, category: tip.category, title: tip.title,
+      source_name: tip.source_name || "", summary: tip.summary,
+      why_template: tip.why_template || "", action_text: tip.action_text,
+      expected_effect_template: tip.expected_effect_template || "",
+      trigger_type: tip.trigger_type,
+      trigger_parameters: JSON.stringify(tip.trigger_parameters || {}),
+      cost_band: tip.cost_band, effort_band: tip.effort_band,
+      priority: tip.priority, version: tip.version,
+      source_url: tip.source_url || "", source_checked_at: tip.source_checked_at || ""
+    }).forEach(([key, value]) => { if (form.elements[key]) form.elements[key].value = value; });
+    form.elements.enabled.checked = Boolean(tip.enabled);
+    form.elements.requires_measurement.checked = Boolean(tip.requires_measurement);
+    form.elements.tip_code.readOnly = true;
+    $("#adminTipFormTitle").textContent = "Tip aanpassen";
+    $("#saveAdminTipButton").textContent = "Wijzigingen opslaan";
+    form.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
+  function renderAdminTips() {
+    const list = $("#adminTipList");
+    list.replaceChildren();
+    adminTipsCache.forEach(tip => {
+      const row = document.createElement("article");
+      row.className = "admin-list-row";
+      const copy = document.createElement("div");
+      const title = document.createElement("strong");
+      title.textContent = tip.title;
+      const meta = document.createElement("small");
+      meta.textContent = tip.tip_code + " · " + tip.trigger_type + " · prioriteit " + tip.priority;
+      const state = document.createElement("span");
+      state.className = "admin-state";
+      state.textContent = tip.enabled ? "Actief" : "Concept";
+      copy.append(title, meta, state);
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "btn btn-secondary btn-small";
+      button.textContent = "Bewerken";
+      button.addEventListener("click", () => editAdminTip(tip.tip_code));
+      row.append(copy, button);
+      list.append(row);
+    });
+    if (!adminTipsCache.length) list.textContent = "Er zijn nog geen tips aangemaakt.";
+  }
+
+  function renderAdminFactors() {
+    const list = $("#adminFactorList");
+    list.replaceChildren();
+    adminFactorsCache.forEach(factor => {
+      const row = document.createElement("article");
+      row.className = "admin-list-row";
+      const copy = document.createElement("div");
+      const title = document.createElement("strong");
+      title.textContent = factor.factor_type.replaceAll("_", " ");
+      const value = document.createElement("small");
+      value.textContent = factor.factor_value + " " + factor.unit + " · geldig vanaf " + factor.valid_from;
+      const source = document.createElement("a");
+      source.href = factor.source_url;
+      source.target = "_blank";
+      source.rel = "noopener noreferrer";
+      source.textContent = factor.source_name + " ↗";
+      source.className = "admin-factor-source";
+      copy.append(title, value, source);
+      row.append(copy);
+      list.append(row);
+    });
+    if (!adminFactorsCache.length) list.textContent = "Nog geen rekenfactoren. Dit is bewust leeg totdat een gecontroleerde bron en methode zijn ingevoerd.";
+  }
+
+  async function loadAdminConsole() {
+    try {
+      const [tips, factors] = await Promise.all([
+        window.DK_ACCOUNT.listAdminEnergyTips(),
+        window.DK_ACCOUNT.listAdminEnergyFactors()
+      ]);
+      adminTipsCache = tips;
+      adminFactorsCache = factors;
+      renderAdminTips();
+      renderAdminFactors();
+    } catch (error) {
+      console.warn("Mijn Energie beheer:", error);
+      showAdminStatus("adminEngineStatus", error?.message || "De beheerdata kon niet worden geladen.");
+    }
+  }
+
+  async function refreshAdminAccess() {
+    const nav = $("#adminNavTab");
+    const controls = $("#adminControls");
+    if (nav) nav.hidden = true;
+    if (!window.DK_ACCOUNT?.isSignedIn?.()) {
+      if (controls) controls.hidden = true;
+      if ($("#view-admin")?.classList.contains("active")) setView("dashboard");
+      return;
+    }
+    try {
+      const allowed = await window.DK_ACCOUNT.isPlatformAdmin();
+      if (nav) nav.hidden = !allowed;
+      if (controls) controls.hidden = !allowed;
+      $("#adminAccessDenied").hidden = allowed;
+      if (allowed) await loadAdminConsole();
+      else if ($("#view-admin")?.classList.contains("active")) setView("dashboard");
+    } catch (error) {
+      if (controls) controls.hidden = true;
+      $("#adminAccessDenied").hidden = false;
+      console.warn("Mijn Energie beheerrechten:", error);
+    }
+  }
+
+  $("#adminTipForm")?.addEventListener("submit", async event => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const data = Object.fromEntries(new FormData(form).entries());
+    try {
+      data.trigger_parameters = JSON.parse(data.trigger_parameters || "{}");
+      if (!data.trigger_parameters || Array.isArray(data.trigger_parameters) || typeof data.trigger_parameters !== "object") {
+        throw new Error("Voorwaarde-parameters moeten een JSON-object zijn.");
+      }
+    } catch (error) {
+      showAdminStatus("adminTipStatus", error?.message || "Ongeldige JSON-parameters.");
+      return;
+    }
+    data.priority = Number(data.priority);
+    data.version = Number(data.version);
+    data.enabled = form.elements.enabled.checked;
+    data.requires_measurement = form.elements.requires_measurement.checked;
+    data.source_checked_at = data.source_checked_at || null;
+    const button = $("#saveAdminTipButton");
+    button.disabled = true;
+    try {
+      await window.DK_ACCOUNT.saveAdminEnergyTip(data);
+      showAdminStatus("adminTipStatus", "Tip opgeslagen.");
+      resetAdminTipForm();
+      await loadAdminConsole();
+      showToast("De tip is bijgewerkt.");
+    } catch (error) {
+      showAdminStatus("adminTipStatus", error?.message || "De tip kon niet worden opgeslagen.");
+    } finally { button.disabled = false; }
+  });
+
+  $("#resetAdminTipForm")?.addEventListener("click", resetAdminTipForm);
+
+  $("#adminFactorForm")?.addEventListener("submit", async event => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const data = Object.fromEntries(new FormData(form).entries());
+    data.factor_value = Number(data.factor_value);
+    data.valid_until = data.valid_until || null;
+    try {
+      const result = await window.DK_ACCOUNT.saveAdminEnergyFactor(data);
+      showAdminStatus("adminFactorStatus", "Factor opgeslagen: " + result.factor_type + " vanaf " + result.valid_from + ".");
+      form.reset();
+      adminFactorsCache = await window.DK_ACCOUNT.listAdminEnergyFactors();
+      renderAdminFactors();
+      showToast("De rekenfactor is opgeslagen.");
+    } catch (error) {
+      showAdminStatus("adminFactorStatus", error?.message || "De factor kon niet worden opgeslagen.");
+    }
+  });
+
+  $("#runEnergyEngineButton")?.addEventListener("click", async buttonEvent => {
+    const button = buttonEvent.currentTarget;
+    button.disabled = true;
+    showAdminStatus("adminEngineStatus", "De verwerking wordt gestart…");
+    try {
+      const result = await window.DK_ACCOUNT.runAdminEnergyAnalytics();
+      showAdminStatus("adminEngineStatus",
+        "Klaar · " + result.daily_rows_upserted + " dagregels bijgewerkt · " +
+        result.active_baselines_refreshed + " nulmetingen ververst · " +
+        result.savings_periods_upserted + " perioden bijgewerkt · " +
+        result.weekly_tips_created + " nieuwe weektips.");
+      await Promise.all([loadAdminConsole(),refreshDashboardMetrics(),refreshLearningViews()]);
+    } catch (error) {
+      showAdminStatus("adminEngineStatus", error?.message || "De verwerking is niet gelukt.");
+    } finally { button.disabled = false; }
+  });
+
   async function refreshLearningViews() {
     await Promise.all([refreshHistory(), renderDashboardWeeklyTip()]);
   }
@@ -583,9 +927,13 @@
     }
     void refreshIntegrationStatuses();
     void refreshLearningViews();
+    void refreshDashboardMetrics();
+    void refreshAdminAccess();
   });
   void refreshIntegrationStatuses();
   void refreshLearningViews();
+  void refreshDashboardMetrics();
+  void refreshAdminAccess();
 
   $("#resetDemo")?.addEventListener("click", () => {
     if (!window.confirm("Je lokaal opgeslagen profiel en zelfgemaakte demo-challenges verwijderen?")) return;
