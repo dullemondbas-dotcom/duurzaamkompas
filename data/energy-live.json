@@ -2,51 +2,68 @@
   "schema_version": 1,
   "generated_at": null,
   "refresh_interval_minutes": 15,
-  "note": "Geen live bronwaarden beschikbaar totdat de benodigde API-sleutels als GitHub Actions secrets zijn ingesteld en de eerste update is uitgevoerd.",
+  "description": "Openbare energiesnapshot; API-sleutels worden alleen server-side door GitHub Actions gebruikt.",
   "sources": {
     "ned": {
       "status": "setup_required",
       "message": "Voeg NED_API_KEY toe via GitHub Settings → Secrets and variables → Actions.",
       "updated_at": null,
-      "solar": null,
-      "wind": null,
-      "load": null,
-      "series": []
-    },
-    "tennet": {
-      "status": "setup_required",
-      "message": "Voeg TENNET_API_KEY toe via GitHub Settings → Secrets and variables → Actions.",
-      "updated_at": null,
-      "latest": null,
-      "series": []
+      "data": {
+        "solar": {
+          "latest": null,
+          "series": []
+        },
+        "wind": {
+          "latest": null,
+          "series": []
+        },
+        "load": {
+          "latest": null,
+          "series": []
+        }
+      }
     },
     "knmi": {
       "status": "setup_required",
       "message": "Voeg KNMI_API_KEY toe via GitHub Settings → Secrets and variables → Actions.",
       "updated_at": null,
-      "observations": null
+      "data": {
+        "station": "De Bilt",
+        "station_id": "0-20000-0-06260",
+        "time": null,
+        "temperature_c": null,
+        "solar_radiation_w_m2": null,
+        "wind_speed_m_s": null
+      }
+    },
+    "tennet": {
+      "status": "setup_required",
+      "message": "Voeg TENNET_API_KEY toe via GitHub Settings → Secrets and variables → Actions.",
+      "updated_at": null,
+      "data": {
+        "latest": null,
+        "series": []
+      }
     },
     "pvgis": {
       "status": "waiting",
       "message": "PVGIS wordt server-side periodiek opgehaald; dit is een historische modelberekening, geen live paneelmeting.",
       "updated_at": null,
-      "location": {
-        "name": "Midden-Nederland",
-        "latitude": 52.1,
-        "longitude": 5.3
-      },
-      "system": {
-        "peak_power_kwp": 1,
-        "surface_tilt_degrees": 35,
-        "surface_orientation": "Zuid",
-        "system_efficiency": 0.86
-      },
-      "period": {
-        "start": 2014,
-        "end": 2025
-      },
-      "annual_yield_kwh": null,
-      "monthly": []
+      "data": {
+        "location": {
+          "name": "Midden-Nederland (referentie)",
+          "latitude": 52.1,
+          "longitude": 5.3
+        },
+        "system": {
+          "peak_power_kwp": 1,
+          "tilt_degrees": 35,
+          "orientation": "Zuid",
+          "loss_percent": 14
+        },
+        "annual_yield_kwh": null,
+        "monthly": []
+      }
     }
   }
 }
