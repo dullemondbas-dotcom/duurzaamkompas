@@ -8,7 +8,9 @@ DuurzaamKompas is een gratis Nederlandstalig consumentenplatform over energie th
 
 ## Platformstructuur
 
-- `index.html` — homepage en ingang naar het platform
+- `index.html` — publieke homepage met drie leesroutes (beginner, eigen woning en verdieping), vijf inhoudelijke pijlers, hulpmiddelen, veelgestelde vragen, onderzoek en deelknop
+- `launch.css` + `launch.js` — gedeelde responsive vormgeving, toegankelijke dropdownnavigatie, lokale onderwerpszoekfunctie en mobiel menu
+- `assets/energie-thuis.svg` + `assets/social-preview.svg` — eigen illustratie van het energiesysteem thuis en afbeelding voor social sharing
 - `slimme-apparaten.html` + `slimme-apparaten.js` — overzicht van slimme apparaten voor energie, comfort, automatisering, huishouden en veiligheid; filterbare apparaatbibliotheek met eerste aandachtspunten per categorie
 - `advies.html` + `advies.js` — interactieve vooradviesroute op basis van woning, aansluiting, verbruik, doelen en plannen. De uitkomst is een eerste, regelgebaseerde richting; geen technisch ontwerp of persoonlijk financieel advies. Antwoorden blijven lokaal in de browser.
 - `tools.html` — overzicht van de gratis hulpmiddelen en hun huidige status
@@ -35,9 +37,9 @@ DuurzaamKompas is een gratis Nederlandstalig consumentenplatform over energie th
 
 ## Huidige technische status
 
-De website is een statische site die via GitHub Actions op GitHub Pages wordt gepubliceerd vanuit de `main`-branch. De workflow staat in `.github/workflows/deploy.yml`. De huidige architectuur is bewust eenvoudig en kosteloos.
+De website is een statische site die via GitHub Actions op GitHub Pages wordt gepubliceerd vanuit de `main`-branch. De workflow staat in `.github/workflows/deploy.yml`. De openbare presentatie gebruikt een consistente navigatie met uitklapbare onderwerpmenu’s, een lokale zoekfunctie en een gedeelde footer. De architectuur is bewust eenvoudig en kosteloos; de zoekfunctie raadpleegt alleen een vaste onderwerpenindex in de browser en stuurt geen zoekopdrachten naar een server.
 
-Op dit moment zijn er geen gebruikersaccounts, centrale database, live energieprijs-API, gekoppelde slimme meter, automatische nieuwsfeed, reviewformulier, nieuwsbriefsysteem of redactie-CMS. De adviesroute verwerkt antwoorden lokaal in de browser. De batterijcalculator geeft een scenario-indicatie op basis van ingevoerde aannames; geen garantie op besparing of terugverdientijd.
+Op dit moment zijn er geen gebruikersaccounts, centrale database, live energieprijs-API, gekoppelde slimme meter of live stroomanalyse. Er is geen automatische nieuwsfeed, reviewformulier, nieuwsbriefsysteem of redactie-CMS. De knop Delen gebruikt de deelmogelijkheid van de browser of kopieert de actuele paginalink. De adviesroute verwerkt antwoorden lokaal in de browser. De batterijcalculator geeft een scenario-indicatie op basis van ingevoerde aannames; geen garantie op besparing of terugverdientijd.
 
 De nieuws-, onderzoeks-, verdiepings- en kijk/luisterpagina's zijn handmatig onderhouden. Externe podcasts, webinars en artikelen worden niet gekopieerd of gehost; de site biedt een korte eigen toelichting en linkt naar de oorspronkelijke maker. Video's en audio kunnen door de externe aanbieder worden gewijzigd of verwijderd.
 
