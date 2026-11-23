@@ -438,7 +438,7 @@
     if (!client || !currentUser || !householdId || typeof callback !== "function") return () => {};
     const channel = client.channel("dk-energy-measurements-" + householdId)
       .on("postgres_changes", {
-        event: "INSERT",
+        event: "*",
         schema: "public",
         table: "energy_measurements",
         filter: "household_id=eq." + householdId
