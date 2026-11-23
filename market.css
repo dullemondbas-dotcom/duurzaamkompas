@@ -1,0 +1,41 @@
+/* DuurzaamKompas — leveranciers- en batterijbibliotheek */
+.market-page{background:#f7f9f5}.market-wrap{width:min(1200px,calc(100% - 48px));margin:0 auto}
+.market-alert{display:grid;grid-template-columns:26px 1fr;gap:13px;padding:17px 19px;border:1px solid #d9e4d5;background:#f1f6ed;border-radius:12px;color:#314c3b;margin:24px 0 0}
+.market-alert>span{font-size:19px;color:#517f58}.market-alert p{margin:0;font-size:12px;line-height:1.7}.market-alert b{color:#203d30}
+.market-highlights{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:28px 0 8px}.market-highlight{padding:19px;border:1px solid #dfe8dc;background:#fff;border-radius:13px}
+.market-highlight small{display:block;color:#6b876c;font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}.market-highlight b{display:block;margin:7px 0 4px;color:#234333;font:800 15px "Manrope",Arial,sans-serif}.market-highlight p{margin:0;color:#718077;font-size:11px;line-height:1.65}
+.market-section{padding:64px 0}.market-section.alt{background:#edf3e9}.market-section.dark{background:linear-gradient(120deg,#15382f,#204b3d 70%,#315e46);color:#fff}
+.market-section.dark h2,.market-section.dark h3{color:#fff}.market-section-head{display:flex;justify-content:space-between;align-items:end;gap:28px;margin:0 0 24px}
+.market-section-head>div{max-width:680px}.market-section-head h2{margin:8px 0 9px;color:#203d30;font:800 clamp(27px,3vw,39px)/1.14 "Manrope",Arial,sans-serif;letter-spacing:-1.2px}
+.market-section-head h2 em{font:400 1em Georgia,serif;color:#5e8a62}.market-section-head p{max-width:660px;margin:0;color:#68796f;font-size:12px;line-height:1.8}
+.market-tools{display:grid;grid-template-columns:minmax(220px,1fr) 220px;gap:10px;margin:20px 0}.market-search,.market-select{width:100%;min-height:46px;padding:0 14px;border:1px solid #d7e2d5;border-radius:9px;background:#fff;color:#213b30;font-size:12px}
+.market-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.market-card{display:flex;flex-direction:column;gap:12px;padding:19px;background:#fff;border:1px solid #dce6dc;border-radius:14px;box-shadow:0 5px 17px rgba(20,49,36,.035)}
+.market-card-top{display:flex;align-items:center;justify-content:space-between;gap:8px}.market-badge{display:inline-flex;align-items:center;padding:5px 8px;border-radius:20px;background:#edf3e9;color:#416a48;font-size:9px;font-weight:800;letter-spacing:.035em}
+.market-badge.info{background:#eef2f6;color:#536a7e}.market-badge.warning{background:#fbf3e6;color:#8c6b35}.market-card h3{margin:0;color:#203d30;font:800 17px "Manrope",Arial,sans-serif}
+.market-card p{margin:0;color:#68796f;font-size:11px;line-height:1.7}.market-card-meta{display:grid;gap:7px;padding:11px;background:#f6f9f4;border-radius:9px}
+.market-card-meta div{display:grid;grid-template-columns:105px 1fr;gap:8px;font-size:10px;line-height:1.55}.market-card-meta small{color:#819084}.market-card-meta b{color:#344f3d;font-weight:700}
+.market-card a,.market-source-link{color:#386e4b;font-size:10px;font-weight:800;text-decoration:underline;text-underline-offset:3px}.market-card a:hover,.market-source-link:hover{color:#1d4932}
+.market-foot{margin:15px 0 0;color:#809086;font-size:10px;line-height:1.7}.matrix-shell{overflow:auto;border:1px solid #d8e4d7;border-radius:13px;background:#fff}
+.matrix-table{width:100%;min-width:760px;border-collapse:collapse;font-size:11px}.matrix-table th,.matrix-table td{padding:12px 13px;border-bottom:1px solid #e7eee4;text-align:left;vertical-align:top}
+.matrix-table thead th{background:#edf4e9;color:#294a35;font-size:10px;white-space:nowrap}.matrix-table tbody th{color:#254333;font-size:11px;min-width:130px}
+.matrix-table tbody tr:last-child th,.matrix-table tbody tr:last-child td{border-bottom:0}.matrix-status{display:inline-block;padding:5px 7px;border-radius:6px;background:#edf6eb;color:#2e7146;font-size:9px;font-weight:800;line-height:1.35}
+.matrix-status.bridge{background:#eef2f8;color:#47617b}.matrix-status.conditional{background:#fbf3e6;color:#86652c}.matrix-status.unknown{background:#f0f2ef;color:#66746a;font-weight:650}
+.matrix-legend{display:flex;gap:9px 17px;flex-wrap:wrap;margin:13px 0;color:#6f7e73;font-size:10px}.matrix-legend span{display:inline-flex;align-items:center;gap:6px}.matrix-legend i{width:8px;height:8px;border-radius:50%;background:#5e9a64}
+.matrix-legend .blue{background:#7a95b2}.matrix-legend .amber{background:#caa15c}.matrix-legend .grey{background:#a4aea6}
+.market-details{margin-top:22px;padding:20px;background:#fff;border:1px solid #dce6dc;border-radius:13px}.market-details summary{cursor:pointer;color:#244433;font:800 13px "Manrope",Arial,sans-serif}
+.license-toolbar{margin:15px 0 12px}.license-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px 16px;padding:0;margin:0;list-style:none}.license-grid li{padding:7px 9px;border-radius:7px;background:#f5f8f3;color:#4f6357;font-size:10px;line-height:1.5}
+.battery-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.battery-card{display:flex;flex-direction:column;gap:13px;padding:21px;background:#fff;border:1px solid #dce6dc;border-radius:15px;box-shadow:0 5px 17px rgba(20,49,36,.035)}
+.battery-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.battery-brand{color:#6b876c;font-size:9px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
+.battery-card h3{margin:4px 0 0;color:#203d30;font:800 20px/1.2 "Manrope",Arial,sans-serif}.battery-card .battery-sub{margin:6px 0 0;color:#77857a;font-size:10px}
+.battery-feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.battery-feature{padding:12px;border-radius:9px;background:#f4f8f1}.battery-feature.warn{background:#fbf5e9}
+.battery-feature b{display:block;margin-bottom:5px;color:#31533c;font-size:10px}.battery-feature.warn b{color:#84652f}.battery-feature p{margin:0;color:#69796e;font-size:10px;line-height:1.65}
+.battery-control-list{display:grid;gap:7px}.battery-control-list div{display:grid;grid-template-columns:95px 1fr;gap:8px;font-size:10px;line-height:1.55}.battery-control-list small{color:#829087}.battery-control-list b{color:#405a48;font-weight:600}
+.battery-review-status{display:flex;align-items:center;gap:7px;flex-wrap:wrap;padding-top:11px;border-top:1px solid #e6ede3;color:#718075;font-size:9px}.battery-review-status strong{color:#8a6a35}
+.performance-panel{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:stretch}.performance-card{padding:23px;border:1px solid #dbe6d9;background:#fff;border-radius:14px}
+.performance-card h3{margin:0 0 9px;color:#234333;font:800 17px "Manrope",Arial,sans-serif}.performance-card p{margin:0 0 12px;color:#68796f;font-size:11px;line-height:1.75}
+.performance-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.performance-list span{padding:9px 10px;background:#f4f8f1;border-radius:8px;color:#53685a;font-size:10px}
+.market-cta-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:18px}.market-button{display:inline-flex;align-items:center;justify-content:center;min-height:43px;padding:0 15px;border-radius:8px;background:#234d3a;color:#fff;font-size:10px;font-weight:800}
+.market-button:hover{background:#173a2b;color:#fff}.market-button.secondary{background:#edf4e9;color:#31583d;border:1px solid #d8e4d4}.market-button.secondary:hover{background:#dfead8;color:#244b33}
+.market-empty{grid-column:1/-1;padding:25px;border:1px dashed #bdcdbb;border-radius:10px;color:#6b7b70;text-align:center;font-size:12px}
+@media(max-width:900px){.market-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.license-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.market-wrap{width:min(100% - 32px,1200px)}.market-highlights{grid-template-columns:1fr}.market-section{padding:46px 0}.market-section-head{display:block}.market-section-head p{margin-top:9px}.market-tools{grid-template-columns:1fr}.market-grid,.battery-grid,.performance-panel{grid-template-columns:1fr}.battery-feature-grid,.performance-list{grid-template-columns:1fr}.license-grid{grid-template-columns:1fr}.market-card-meta div,.battery-control-list div{grid-template-columns:90px 1fr}.market-section-head h2{font-size:29px}.market-alert{padding:14px}}
