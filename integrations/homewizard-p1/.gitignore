@@ -1,0 +1,8 @@
+# Never commit live device or connector credentials.
+duurzaamkompas-homewizard-config.json
+homewizard-device.json
+homewizard-ca-cert.pem
+__pycache__/
+*.py[cod]
+.venv/
+venv/
