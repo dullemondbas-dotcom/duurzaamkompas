@@ -29,18 +29,24 @@
   function profile() { return readStore(PROFILE_KEY, null); }
 
   function setView(view) {
-    const target = $("#view-" + view);
+    const target = document.getElementById("view-" + view);
     if (!target) {
       console.warn("Onbekende Mijn Energie-pagina:", view);
       return false;
     }
-    $(".view").forEach(section => section.classList.toggle("active", section === target));
-    $(".nav-tab").forEach(button => button.classList.toggle("active", button.dataset.view === view));
+    document.querySelectorAll(".view").forEach(section => {
+      section.classList.toggle("active", section === target);
+    });
+    document.querySelectorAll(".nav-tab").forEach(button => {
+      button.classList.toggle("active", button.dataset.view === view);
+    });
     window.scrollTo({ top: 0, behavior: "smooth" });
     return true;
   }
   window.DK_APP = Object.freeze({ navigateToView: setView });
-  $(".nav-tab").forEach(button => button.addEventListener("click", () => setView(button.dataset.view)));
+  document.querySelectorAll(".nav-tab").forEach(button => {
+    button.addEventListener("click", () => setView(button.dataset.view));
+  });
   const requestedView = new URLSearchParams(location.search).get("view");
   if (["dashboard","household","challenges","connections"].includes(requestedView)) setView(requestedView);
   $$("[data-go]").forEach(button => button.addEventListener("click", () => setView(button.dataset.go)));
