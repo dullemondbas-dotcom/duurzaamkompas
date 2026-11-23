@@ -103,6 +103,30 @@
     });
   }
 
+  window.addEventListener("dk-account-changed", event => {
+    const accountProfile = event.detail?.profile;
+    if (event.detail?.user && accountProfile) {
+      fillProfileForm(accountProfile);
+      if (accountProfile.nickname) updateNickname(accountProfile.nickname);
+      $("#profileStatus").textContent = "Je huishoudenprofiel is gekoppeld aan je account.";
+      localStorage.removeItem(PROFILE_KEY);
+    } else if (!event.detail?.user) {
+      const localProfile = profile();
+      if (localProfile) {
+        fillProfileForm(localProfile);
+        updateNickname(localProfile.nickname);
+      } else {
+        updateNickname("Demo gebruiker");
+      }
+      $("#profileStatus").textContent = "";
+    }
+  });
+
+  const consentLabel = $('label.consent-line span');
+  if (consentLabel) consentLabel.textContent = window.DK_ACCOUNT?.isSignedIn()
+    ? "Ik geef toestemming om mijn huishoudprofiel aan mijn account te koppelen en beveiligd op te slaan. Mijn adres wordt niet gevraagd."
+    : "Ik begrijp dat dit profiel lokaal op dit apparaat wordt opgeslagen. Maak een account om het tussen apparaten te synchroniseren.";
+
   const savedProfile = profile();
   if (savedProfile) {
     updateNickname(savedProfile.nickname);
@@ -119,10 +143,29 @@
       if (!field.name) return;
       data[field.name] = field.type === "checkbox" ? field.checked : field.value.trim();
     });
-    if (!data.localConsent) return;
+    if (!data.profileConsent) return;
+    if (window.DK_ACCOUNT?.isSignedIn()) {
+      const submitButton = form.querySelector('button[type="submit"]');
+      submitButton.disabled = true;
+      $("#profileStatus").textContent = "Je huishouden wordt beveiligd opgeslagen…";
+      try {
+        await window.DK_ACCOUNT.saveHousehold(data);
+        localStorage.removeItem(PROFILE_KEY);
+        updateNickname(data.nickname);
+        $("#profileStatus").textContent = "Je profiel is opgeslagen bij je account en wordt gesynchroniseerd tussen je apparaten.";
+        showToast("Je huishouden is online opgeslagen.");
+      } catch (error) {
+        console.error("Opslaan huishouden:", error);
+        $("#profileStatus").textContent = error.message || "Online opslaan is niet gelukt.";
+        showToast("Opslaan is niet gelukt. Controleer je accountinstellingen.");
+      } finally {
+        submitButton.disabled = false;
+      }
+      return;
+    }
     if (!writeStore(PROFILE_KEY, data)) return;
     updateNickname(data.nickname);
-    $("#profileStatus").textContent = "Opgeslagen op dit apparaat. Nog niet online gedeeld.";
+    $("#profileStatus").textContent = "Opgeslagen op dit apparaat. Maak een account om het op meerdere apparaten te gebruiken.";
     showToast("Je huishouden is lokaal opgeslagen.");
   });
 
