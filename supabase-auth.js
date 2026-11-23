@@ -318,12 +318,43 @@
     return refreshed;
   }
 
+  async function listEnergyIntegrations() {
+    if (!client || !currentUser || !householdId) return [];
+    const { data, error } = await client.from("integrations")
+      .select("id,provider,status,display_label,connected_at,last_seen_at,created_at")
+      .eq("household_id", householdId).order("created_at", { ascending: true });
+    if (error) throw error;
+    return data || [];
+  }
+
+  async function createEnergyIntegration(provider, displayLabel, tokenHash) {
+    if (!client || !currentUser || !householdId) throw new Error("Log in en sla eerst je huishoudenprofiel op voordat je een koppeling maakt.");
+    if (!["home_assistant", "homewizard"].includes(provider)) throw new Error("Deze koppelroute is nog niet beschikbaar.");
+    if (!/^[a-f0-9]{64}$/.test(tokenHash || "")) throw new Error("De koppelcode kon niet veilig worden verwerkt.");
+    const { data, error } = await client.rpc("create_my_energy_integration", {
+      p_provider: provider, p_display_label: displayLabel, p_token_hash: tokenHash
+    });
+    if (error) throw error;
+    return data;
+  }
+
+  async function revokeEnergyIntegration(integrationId) {
+    if (!client || !currentUser || !householdId) throw new Error("Log opnieuw in om deze koppeling te beheren.");
+    const { data, error } = await client.rpc("revoke_my_energy_integration", { p_integration_id: integrationId });
+    if (error) throw error;
+    if (!data) throw new Error("De koppeling kon niet worden gevonden.");
+    return true;
+  }
+
   window.DK_ACCOUNT = Object.freeze({
     isConfigured: () => isConfigured && Boolean(client),
     isSignedIn: () => Boolean(currentUser),
     getUser: () => currentUser,
     getProfile: () => latestProfile,
     saveHousehold,
+    listEnergyIntegrations,
+    createEnergyIntegration,
+    revokeEnergyIntegration,
     signOut: async () => {
       if (!client) return;
       const { error } = await client.auth.signOut();
