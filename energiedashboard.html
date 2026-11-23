@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#173c31">
+<meta name="description" content="Bekijk het Nederlandse energiesysteem met actuele opwek, elektriciteitsvraag, KNMI-weermetingen, TenneT-onbalansprijzen en PVGIS-zonneproductiemodellen.">
+<meta property="og:type" content="website"><meta property="og:site_name" content="DuurzaamKompas"><meta property="og:title" content="Live energiedashboard Nederland | DuurzaamKompas"><meta property="og:description" content="Wat gebeurt er op het Nederlandse stroomnet? Bekijk energiedata, weerwaarnemingen, onbalansprijzen en zonneproductiemodellen.">
+<title>Live energiedashboard Nederland | DuurzaamKompas</title>
+<link rel="canonical" href="https://dullemondbas-dotcom.github.io/duurzaamkompas/energiedashboard.html">
+<link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="launch.css"><link rel="stylesheet" href="live-energy.css">
+<script defer src="site.js"></script><script defer src="launch.js"></script><script defer src="energiedashboard.js"></script>
+</head>
+<body class="live-page">
+<div class="topline"><span class="pulse"></span><span>Gratis en onafhankelijk consumentenplatform</span><span class="topline-divider">·</span><span>Van eerste vraag tot technische verdieping</span></div>
+<header class="site-header"><div class="header-inner">
+<a class="brand" href="index.html" aria-label="DuurzaamKompas startpagina"><span class="brand-mark">DK<span>↗</span></span><span class="brand-name">duurzaam<span>kompas</span></span></a>
+<nav class="nav" aria-label="Hoofdnavigatie">
+<a href="slimme-apparaten.html">Slimme apparaten</a>
+<details class="nav-group"><summary>Energie begrijpen <span aria-hidden="true">⌄</span></summary><div class="nav-dropdown"><a href="kennisbank.html"><small>IN GEWONE TAAL</small><b>Kennisbank</b><span>Begrijp hoe energie en techniek werken.</span></a><a href="regelgeving.html"><small>REGELS & KOSTEN</small><b>Contracten en salderen</b><span>Wat verandert er en waar betaal je voor?</span></a><a href="onderzoek.html"><small>CIJFERS & ONDERZOEK</small><b>Wat zeggen de onderzoeken?</b><span>Lees conclusies, aannames en bronnen.</span></a></div></details>
+<details class="nav-group"><summary>Zelf aan de slag <span aria-hidden="true">⌄</span></summary><div class="nav-dropdown"><a href="advies.html"><small>JOUW WONING</small><b>Persoonlijk vooradvies</b><span>Begin bij je situatie, niet bij een product.</span></a><a href="tools.html"><small>GRATIS HULPMIDDELEN</small><b>Tools en berekeningen</b><span>Verken keuzes en scenario's.</span></a><a href="keuzehulp.html"><small>GOED VOORBEREID</small><b>Offerte- en aankoopcheck</b><span>Neem de juiste vragen mee.</span></a></div></details>
+<details class="nav-group"><summary>Ontdekken <span aria-hidden="true">⌄</span></summary><div class="nav-dropdown"><a href="nieuws.html"><small>ACTUALITEIT</small><b>Nieuws en duiding</b><span>Wat speelt er in de energiewereld?</span></a><a href="kijken.html"><small>VIDEO & PODCAST</small><b>Kijken en luisteren</b><span>Leer met uitleg, voorbeelden en quizzen.</span></a><a href="verdieping.html"><small>EXTRA BRONNEN</small><b>Verdieping</b><span>Webinars, podcasts en publicaties.</span></a><a href="over.html"><small>HET PLATFORM</small><b>Over DuurzaamKompas</b><span>Onze missie en redactionele aanpak.</span></a></div></details>
+<a class="nav-cta" href="advies.html">Start met jouw woning <span>↗</span></a>
+</nav>
+<button class="search-trigger" type="button" id="site-search-open" aria-label="Zoeken op DuurzaamKompas"><span aria-hidden="true">⌕</span><span>Zoeken</span></button><button class="menu-toggle" type="button" aria-label="Menu openen" aria-expanded="false">☰</button>
+</div></header>
+<div class="site-search-overlay" id="site-search" hidden><button class="site-search-backdrop" type="button" data-search-close aria-label="Zoekvenster sluiten"></button><section class="site-search-dialog" role="dialog" aria-modal="true" aria-labelledby="site-search-title"><div class="site-search-top"><div><span class="section-kicker">DUURZAAMKOMPAS ZOEKEN</span><h2 id="site-search-title">Waar ben je naar op zoek?</h2></div><button type="button" class="site-search-close" data-search-close aria-label="Sluiten">×</button></div><label class="site-search-input"><span aria-hidden="true">⌕</span><input id="site-search-query" type="search" placeholder="Bijvoorbeeld: thuisbatterij, EMS of salderen…" autocomplete="off"><kbd>ESC</kbd></label><div class="site-search-results" id="site-search-results" role="listbox" aria-label="Zoekresultaten"><p class="site-search-hint">Populaire onderwerpen: thuisbatterij · salderen 2027 · slim aansturen · energiecontract</p></div></section></div>
+<main>
+<section class="page-hero"><div class="section-kicker light-kicker">LIVE ENERGIEDATA · NEDERLAND</div><h1>Wat gebeurt er op<br><em>het Nederlandse stroomnet?</em></h1><p>Bekijk hoeveel duurzame stroom wordt opgewekt, wat het weer doet met zonne-energie, welke onbalansprijzen TenneT publiceert en wat PVGIS als zonneopbrengst modelleert. Bronnen, eenheden en meetmomenten staan erbij.</p><div class="page-hero-meta"><span>✓ Bronnen rechtstreeks vermeld</span><span>✓ Automatische gegevensupdate</span><span>✓ Geen fictieve live-cijfers</span></div></section>
+<div class="live-wrap">
+<div class="live-topline"><span><i class="live-pulse"></i><strong class="live-status-main" id="overall-status">Gegevensstatus ophalen…</strong><span id="snapshot-time">Laatste gegevenssnapshot controleren</span></span><button class="live-action" id="refresh-dashboard" type="button">↻ Ververs dashboard</button></div>
+<div class="live-explainer"><strong>Hoe actueel is live?</strong> Het dashboard leest een openbare gegevenssnapshot die server-side automatisch wordt vernieuwd, gepland iedere 15 minuten. De databronnen publiceren niet allemaal op hetzelfde tempo: NED en KNMI leveren snelle metingen, TenneT publiceert settlementgegevens per balanceringsperiode en PVGIS is een modelberekening op basis van historische weerdata.</div>
+</div>
+<section class="market-section">
+<div class="live-wrap">
+<div class="market-section-head"><div><div class="section-kicker">NED · NATIONAAL ENERGIE DASHBOARD</div><h2>Opwek en vraag in <em>Nederland.</em></h2></div><p>Near-real-time gegevens op basis van de NED API. Vermogen wordt weergegeven in MW. Opwek en vraag zijn landelijke totalen, niet de productie van één woning.</p></div>
+<div class="live-grid">
+<article class="live-card"><div class="live-card-head"><div><small>Landelijke zonne-opwek</small><h2>Zonne-energie</h2></div><span class="live-pill off" id="ned-solar-status">Wacht op data</span></div><div class="live-big" id="ned-solar-value">— <span class="live-unit">MW</span></div><div class="live-sub" id="ned-solar-caption">Laatste beschikbare 10-minutenwaarde</div><div class="live-source-time" id="ned-solar-time">Bron: Nationaal Energie Dashboard</div></article>
+<article class="live-card"><div class="live-card-head"><div><small>Landelijke wind-opwek</small><h2>Windenergie</h2></div><span class="live-pill off" id="ned-wind-status">Wacht op data</span></div><div class="live-big" id="ned-wind-value">— <span class="live-unit">MW</span></div><div class="live-sub" id="ned-wind-caption">Laatste beschikbare 10-minutenwaarde</div><div class="live-source-time" id="ned-wind-time">Bron: Nationaal Energie Dashboard</div></article>
+<article class="live-card"><div class="live-card-head"><div><small>Landelijke elektriciteitsvraag</small><h2>Stroomverbruik</h2></div><span class="live-pill off" id="ned-load-status">Wacht op data</span></div><div class="live-big" id="ned-load-value">— <span class="live-unit">MW</span></div><div class="live-sub" id="ned-load-caption">Laatste beschikbare landelijke waarde</div><div class="live-source-time" id="ned-load-time">Bron: Nationaal Energie Dashboard</div></article>
+<article class="live-card full"><div class="live-card-head"><div><small>Ontwikkeling over de laatste metingen</small><h2>Opwek uit zon en wind</h2></div><span class="live-pill off" id="ned-chart-status">Nog geen meetreeks</span></div><div id="ned-chart" class="live-message">Zodra de NED API-sleutel is ingesteld, verschijnen hier de laatste 10-minutenwaarden.</div><div class="live-legend"><span><i></i>Zonne-energie</span><span><i class="wind"></i>Windenergie</span></div><p class="live-chart-note">De grafiek toont de laatste beschikbare meetpunten uit de NED API. Ontbrekende intervallen worden niet opgevuld.</p></article>
+</div>
+</div>
+</section>
+<section class="market-section alt">
+<div class="live-wrap">
+<div class="market-section-head"><div><div class="section-kicker">KNMI · METINGEN BIJ DE BILT</div><h2>Het weer achter <em>de zonne-opwek.</em></h2></div><p>Actuele 10-minuten-waarnemingen van KNMI-station De Bilt. Dit zijn snelle waarnemingen die nog niet volledig gevalideerd hoeven te zijn; het station is een representatief referentiepunt, geen nationale gemiddelde meting.</p></div>
+<div class="live-grid">
+<article class="live-card"><div class="live-card-head"><div><small>Temperatuur</small><h2>Bij De Bilt</h2></div><span class="live-pill off" id="knmi-status">Wacht op data</span></div><div class="live-big" id="knmi-temperature">— <span class="live-unit">°C</span></div><div class="live-sub">10-minuten gemiddelde luchttemperatuur</div><div class="live-source-time" id="knmi-time">Bron: KNMI</div></article>
+<article class="live-card"><div class="live-card-head"><div><small>Globale zonnestraling</small><h2>Zonnestraling</h2></div><span class="live-pill off" id="knmi-radiation-status">Wacht op data</span></div><div class="live-big" id="knmi-radiation">— <span class="live-unit">W/m²</span></div><div class="live-sub">Gemiddelde instraling over 10 minuten</div><div class="live-source-time">Bron: KNMI, station De Bilt</div></article>
+<article class="live-card"><div class="live-card-head"><div><small>Wind</small><h2>Windsnelheid</h2></div><span class="live-pill off" id="knmi-wind-status">Wacht op data</span></div><div class="live-big" id="knmi-wind">— <span class="live-unit">m/s</span></div><div class="live-sub">Gemiddelde windsnelheid op 10 meter</div><div class="live-source-time">Bron: KNMI, station De Bilt</div></article>
+</div>
+</div>
+</section>
+<section class="market-section">
+<div class="live-wrap">
+<div class="market-section-head"><div><div class="section-kicker">TENNET · ONBALANS</div><h2>Wat is de laatst gepubliceerde <em>onbalansprijs?</em></h2></div><p>TenneT settlementprijzen laten zien tegen welke prijzen onbalansvolumes per balanceringsperiode worden afgerekend. Dit is marktinformatie achteraf en geen consumentenstroomtarief of gegarandeerde thuisbatterijvergoeding.</p></div>
+<div class="live-grid">
+<article class="live-card double"><div class="live-card-head"><div><small>Settlementprijzen</small><h2>Onbalans op de elektriciteitsmarkt</h2></div><span class="live-pill off" id="tennet-status">Wacht op data</span></div><div class="live-big" id="tennet-price">— <span class="live-unit">€/MWh</span></div><div class="live-sub" id="tennet-price-caption">Laatste gepubliceerde prijs per balanceringsperiode</div><div class="live-source-time" id="tennet-time">Bron: TenneT Settlement Prices API</div></article>
+<article class="live-card"><div class="live-card-head"><div><small>Interpretatie</small><h2>Wat zegt dit?</h2></div></div><p class="live-sub">Een positieve of negatieve settlementprijs hangt samen met de richting en prijs van de onbalansafrekening. Een batterij-aanstuurder kan hierop inspelen, maar de vergoeding voor een huishouden hangt ook af van contract, aggregator, batterijbeperkingen, kosten en verdeling van inkomsten.</p><a class="live-link" href="https://developer.tennet.eu/specs/v1/settlement-prices" target="_blank" rel="noopener">TenneT API-specificatie ↗</a></article>
+<article class="live-card full"><div class="live-card-head"><div><small>Laatste publicaties</small><h2>Recente settlementprijzen</h2></div><span class="live-pill off" id="tennet-table-status">Wacht op data</span></div><div id="tennet-table" class="live-message">Settlementgegevens verschijnen zodra de TenneT API-sleutel is ingesteld.</div></article>
+</div>
+</div>
+</section>
+<section class="market-section alt">
+<div class="live-wrap">
+<div class="market-section-head"><div><div class="section-kicker">PVGIS · EUROPESE COMMISSIE</div><h2>Wat kan een zonnepaneelsysteem <em>gemiddeld opwekken?</em></h2></div><p>Een vaste referentieberekening voor Midden-Nederland: 1 kWp, zuidgericht, 35° helling en 14% systeemverlies. PVGIS gebruikt historische klimaat- en stralingsgegevens. Dit is dus geen actuele productie van zonnepanelen op dit moment.</p></div>
+<div class="live-grid">
+<article class="live-card double"><div class="live-card-head"><div><small>Langjarige modelberekening</small><h2>Jaaropbrengst referentiesysteem</h2></div><span class="live-pill off" id="pvgis-status">Model wacht op update</span></div><div class="live-big" id="pvgis-annual">— <span class="live-unit">kWh/jaar</span></div><div class="live-sub" id="pvgis-caption">Model voor een PV-systeem van 1 kWp op een referentielocatie in Midden-Nederland.</div><div class="live-source-time" id="pvgis-time">Bron: PVGIS v5.3 · European Commission Joint Research Centre</div></article>
+<article class="live-card"><h3>Referentie-instellingen</h3><div class="live-mini-stats"><div class="live-mini-stat"><small>Vermogen</small><b>1 kWp</b></div><div class="live-mini-stat"><small>Oriëntatie</small><b>Zuid</b></div><div class="live-mini-stat"><small>Hellingshoek</small><b>35°</b></div><div class="live-mini-stat"><small>Systeemverlies</small><b>14%</b></div></div></article>
+<article class="live-card full"><div class="live-card-head"><div><small>Modelmatige verdeling</small><h2>Verwachte opbrengst per maand</h2></div><span class="live-pill off" id="pvgis-chart-status">Geen modeldata</span></div><div id="pvgis-chart" class="live-message">De maandverdeling verschijnt na de eerste PVGIS-update.</div><p class="live-chart-note">De maandwaarden zijn een klimatologische modelschatting voor het opgegeven referentiesysteem. Werkelijke opbrengst hangt onder meer af van locatie, schaduw, oriëntatie, systeemontwerp, weer en beschikbaarheid.</p></article>
+</div>
+</div>
+</section>
+<section class="market-section">
+<div class="live-wrap">
+<div class="market-section-head"><div><div class="section-kicker">BRONSTATUS & METHODE</div><h2>Waar komen de cijfers <em>vandaan?</em></h2></div><p>We tonen bronstatus en laatste update per leverancier. Als een sleutel ontbreekt of een API tijdelijk niet reageert, blijft dat zichtbaar en vullen we geen cijfers zelf in.</p></div>
+<div class="live-source-grid">
+<div class="live-source-item"><b>NED</b><span id="source-ned">Status wordt geladen…</span><a class="live-link" href="https://ned.nl/nl/handleiding-api" target="_blank" rel="noopener">API-documentatie ↗</a></div>
+<div class="live-source-item"><b>KNMI</b><span id="source-knmi">Status wordt geladen…</span><a class="live-link" href="https://developer.dataplatform.knmi.nl/edr-api" target="_blank" rel="noopener">EDR-documentatie ↗</a></div>
+<div class="live-source-item"><b>TenneT</b><span id="source-tennet">Status wordt geladen…</span><a class="live-link" href="https://developer.tennet.eu/" target="_blank" rel="noopener">Developer portal ↗</a></div>
+<div class="live-source-item"><b>PVGIS</b><span id="source-pvgis">Status wordt geladen…</span><a class="live-link" href="https://joint-research-centre.ec.europa.eu/photovoltaic-geographical-information-system-pvgis/using-pvgis-5/api-non-interactive-service_en" target="_blank" rel="noopener">API-documentatie ↗</a></div>
+</div>
+<details class="market-details"><summary>API-toegang instellen (eenmalig)</summary>
+<p class="live-sub">De live sleutels worden veilig als GitHub Actions secrets opgeslagen. Open in GitHub de repository-instellingen → Secrets and variables → Actions. Voeg daar NED_API_KEY, KNMI_API_KEY en TENNET_API_KEY toe. Je hoeft de sleutelwaarden niet in de website of browser te plaatsen.</p>
+<p class="live-sub">Start daarna de workflow <strong>Refresh public energy dashboard</strong> via GitHub Actions. De workflow ververst de publieke gegevenssnapshot daarna automatisch iedere 15 minuten. GitHub kan geplande uitvoering soms vertragen.</p>
+<a class="live-link" href="https://github.com/dullemondbas-dotcom/duurzaamkompas/blob/main/LIVE_ENERGY_SETUP.md" target="_blank" rel="noopener">Open de volledige installatie-instructies ↗</a>
+</details>
+<p class="live-note">Een automatische update betekent niet dat iedere bron exact iedere 15 minuten nieuwe gegevens publiceert. NED en KNMI hebben hun eigen meet- en validatievertraging. TenneT settlementgegevens worden per balanceringsperiode gepubliceerd. PVGIS is een modelwaarde die maximaal maandelijks opnieuw wordt berekend.</p>
+</div>
+</section>
+</main>
+<footer class="footer dk-footer"><div class="footer-main">
+<div class="footer-brand-block"><a class="brand footer-brand" href="index.html"><span class="brand-mark">DK<span>↗</span></span><span class="brand-name">duurzaam<span>kompas</span></span></a><p>Energie begrijpelijk maken. Zodat je betere keuzes kunt maken voor jouw woning.</p></div>
+<div class="footer-column"><b>Begin hier</b><a href="advies.html">Persoonlijk vooradvies</a><a href="tools.html">Gratis tools</a><a href="keuzehulp.html">Offertechecklist</a></div>
+<div class="footer-column"><b>Ontdek en vergelijk</b><a href="energieleveranciers.html">Energieleveranciers & sturing</a><a href="batterijbibliotheek.html">Batterijbibliotheek</a><a href="vergelijker.html">Technische batterijvergelijker</a></div>
+<div class="footer-column"><b>Blijf begrijpen</b><a href="energiedashboard.html">Live energiedashboard</a><a href="nieuws.html">Nieuws en duiding</a><a href="kijken.html">Kijken en luisteren</a><a href="onderzoek.html">Onderzoek en cijfers</a></div>
+</div><div class="footer-bottom"><span>© <span id="year"></span> DuurzaamKompas · Gratis toegankelijk</span><div><a href="bronnen.html">Bronnen & transparantie</a><a href="over.html">Over het platform</a></div><span>Geen verkooppraat. Eerst begrijpen, dan kiezen.</span></div></footer>
+</body></html>
