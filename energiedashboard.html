@@ -8,7 +8,7 @@
 <link rel="canonical" href="https://dullemondbas-dotcom.github.io/duurzaamkompas/energiedashboard.html">
 <link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="launch.css"><link rel="stylesheet" href="live-energy.css">
+<link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="launch.css"><link rel="stylesheet" href="market.css"><link rel="stylesheet" href="live-energy.css">
 <script defer src="site.js"></script><script defer src="launch.js"></script><script defer src="energiedashboard.js"></script>
 </head>
 <body class="live-page">
@@ -42,7 +42,7 @@
 </div>
 </div>
 </section>
-<section class="market-section alt">
+<section class="market-section alt" id="knmi">
 <div class="live-wrap">
 <div class="market-section-head"><div><div class="section-kicker">KNMI · METINGEN BIJ DE BILT</div><h2>Het weer achter <em>de zonne-opwek.</em></h2></div><p>Actuele 10-minuten-waarnemingen van KNMI-station De Bilt. Dit zijn snelle waarnemingen die nog niet volledig gevalideerd hoeven te zijn; het station is een representatief referentiepunt, geen nationale gemiddelde meting.</p></div>
 <div class="live-grid">
@@ -62,7 +62,7 @@
 </div>
 </div>
 </section>
-<section class="market-section alt">
+<section class="market-section alt" id="pvgis">
 <div class="live-wrap">
 <div class="market-section-head"><div><div class="section-kicker">PVGIS · EUROPESE COMMISSIE</div><h2>Wat kan een zonnepaneelsysteem <em>gemiddeld opwekken?</em></h2></div><p>Een vaste referentieberekening voor Midden-Nederland: 1 kWp, zuidgericht, 35° helling en 14% systeemverlies. PVGIS gebruikt historische klimaat- en stralingsgegevens. Dit is dus geen actuele productie van zonnepanelen op dit moment.</p></div>
 <div class="live-grid">
