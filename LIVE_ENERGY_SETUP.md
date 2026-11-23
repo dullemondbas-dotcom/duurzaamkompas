@@ -8,7 +8,7 @@ Open de repository in GitHub: **Settings → Secrets and variables → Actions �
 
 Voeg deze repository secret toe:
 
-- `KNMI_API_KEY`: API-sleutel voor de KNMI EDR API. KNMI biedt ook een anonieme sleutel aan voor normaal gebruik. De dataset wordt gebruikt onder de datasetlicentie; voor de meeste KNMI-datasets is dat CC BY 4.0. De website vermeldt KNMI als bron en linkt naar de dataset.
+- `KNMI_API_KEY`: een geregistreerde API-sleutel voor de KNMI EDR API. Vraag deze aan via de KNMI API-catalogus nadat je account toegang heeft. De anonieme sleutel die KNMI publiceert voor de Open Data API werkt niet automatisch voor de aparte EDR API. De website vermeldt KNMI als bron en respecteert de datasetlicentie.
 
 ## 2. Eenmalig de workflow starten
 
