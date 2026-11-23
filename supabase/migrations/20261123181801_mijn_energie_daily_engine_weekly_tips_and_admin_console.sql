@@ -1,0 +1,3 @@
+-- Platform admin, daily energy analytics and weekly tip engine source are in the preceding migration file.
+-- This migration was applied as a single deploy transaction, so it is kept as an annotated marker.
+-- The functions and objects created here are documented in docs/MIJN_ENERGIE_PWA_EN_INFRASTRUCTUUR.md.
