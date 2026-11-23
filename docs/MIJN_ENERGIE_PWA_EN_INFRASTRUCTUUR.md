@@ -26,6 +26,10 @@ Toegepaste migraties:
 - supabase/migrations/20261123172136_mijn_energie_home_assistant_homewizard_ingest.sql
 - supabase/migrations/20261123172326_add_duurzaamkompas_p1_provider_and_revoke_energy_consent.sql
 - supabase/migrations/20261123173710_rate_limit_energy_ingestion_and_deny_direct_token_access.sql
+- supabase/migrations/20261123174208_mijn_energie_savings_history_and_weekly_tips_foundation.sql
+- supabase/migrations/20261123174627_grant_energy_model_version_service_access.sql
+- supabase/migrations/20261123174731_index_energy_internal_foreign_keys.sql
+- supabase/migrations/20261123173710_rate_limit_energy_ingestion_and_deny_direct_token_access.sql
 - supabase/migrations/20261123172136_mijn_energie_home_assistant_homewizard_ingest.sql
 - supabase/migrations/20261123172326_add_duurzaamkompas_p1_provider_and_revoke_energy_consent.sql
 
@@ -120,4 +124,13 @@ Databasefundament toegevoegd:
 - `energy_tip_events`: geschiedenis van bewaren, accepteren, afronden, uitstellen en afwijzen.
 - `private.energy_tip_catalog`, `private.energy_calculation_factors` en `private.energy_model_versions`: interne catalogus, bronversies en rekenregels. Alleen server-side verwerking mag deze beheren.
 
-De app bevat een eerste lege Geschiedenis-weergave en een plek voor de weektip. De uitlees- en status-RPC's zijn klaar; het vullen van de tabellen door de reken- en tip-engine volgt nog. Tot die tijd worden geen fictieve besparingen of willekeurige tips getoond.
+De app bevat een eerste lege Geschiedenis-weergave en een plek voor de weektip. Ingelogde gebruikers kunnen hun berekende periodeoverzicht ophalen en een tip bewaren, accepteren, afronden of afwijzen. Het vullen van de tabellen door de reken- en tip-engine volgt nog. Tot die tijd worden geen fictieve besparingen of willekeurige tips getoond.
+
+
+### Gemiddelden en meetgrens
+Per periode wordt de besparing berekend als de som van (genormaliseerd referentieverbruik minus werkelijk verbruik) over uitsluitend geldige meetdagen. Het gemiddelde per geldige dag is die totale besparing gedeeld door het aantal geldige dagen. De procentuele besparing is de totale afwijking gedeeld door het totale referentieverbruik; dagelijkse percentages worden niet ongewogen gemiddeld. Positieve verschillen betekenen lager verbruik/netafname dan de referentie; negatieve verschillen blijven zichtbaar.
+
+Een P1-meter meet netafname en teruglevering, niet automatisch het totale huishoudelijke stroomverbruik. De app gebruikt daarom de formulering 'lagere netafname' zolang de lokale opwekking en batterijbalans niet compleet zijn. Ook een prijsvoordeel door het verschuiven van verbruik wordt apart gehouden van minder kWh.
+
+### HomeWizard commerciële randvoorwaarde
+De officiële Home Assistant-integratie ondersteunt de HomeWizard P1 Meter en levert onder meer cumulatieve import/export (kWh) en actief vermogen (W). De HomeWizard lokale API-licentie is volgens HomeWizard beperkt tot persoonlijk, niet-commercieel gebruik. Voor een commerciële DuurzaamKompas-dienst die de HomeWizard API gebruikt, moet vooraf schriftelijke toestemming of een passende licentie worden geregeld. Voor een eigen DuurzaamKompas P1-meter wordt daarom een eigen firmware-/API-route ontworpen, niet een kopie van de HomeWizard API.

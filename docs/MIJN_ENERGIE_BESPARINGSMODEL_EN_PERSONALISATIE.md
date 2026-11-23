@@ -165,3 +165,42 @@ Pas nadat een volledige meetketen end-to-end getest is, vervangen echte waarden 
 - Measurement & Verification-baselines en normalisatie: https://www.energy.gov/sites/default/files/2024-03/femp-mv-5-0-guidelines_DRAFT.pdf
 
 Dit zijn ontwerpprincipes. De definitieve algoritmen, Nederlandse emissiefactoren en tarieven moeten voor implementatie met actuele, passende Nederlandse bronnen worden ingevuld.
+
+
+## 11. Definitieve rekenconventie voor gemiddelden
+
+Voor iedere geldige dag (d) bepaalt de engine:
+- (B_d): het voorspelde referentieverbruik voor die dag, aangepast aan de relevante omstandigheden;
+- (A_d): het werkelijk gemeten verbruik binnen dezelfde meetgrens;
+- (D): uitsluitend de dagen waarvoor zowel de meting als de referentie geldig zijn.
+
+Over een periode geldt:
+
+`Besparing (eenheid) = Σ(B_d − A_d), voor d ∈ D`
+
+`Gemiddelde besparing per geldige dag = Σ(B_d − A_d) / aantal geldige dagen`
+
+`Relatieve besparing (%) = 100 × Σ(B_d − A_d) / Σ(B_d)`
+
+Percentages worden dus niet simpelweg per dag gemiddeld. De totale besparing wordt gedeeld door het totale referentieverbruik, zodat dagen met meer verbruik niet even zwaar tellen als dagen met weinig verbruik. Ontbrekende dagen worden uitgesloten en nooit als nulverbruik behandeld. Negatieve uitkomsten blijven zichtbaar als extra verbruik.
+
+### Verschil tussen netafname en totaal verbruik
+
+Met alleen een P1-meter kennen we de stroom die het huishouden van het net afneemt en teruglevert. Dat is niet automatisch het totale elektriciteitsgebruik. Met zonnepanelen of een batterij kan netafname dalen zonder dat het huishouden minder stroom gebruikt. Daarom:
+- P1 zonder volledige opwek-/batterijbalans → rapporteer **verschil in netafname**;
+- P1 plus complete lokale opwek en batterijstromen → bereken waar mogelijk **totaal huishoudelijk elektriciteitsverbruik**;
+- ontbreekt die balans → toon geen claim over totale stroom-besparing.
+
+### Vergelijking tussen huishoudens
+
+Een vergelijking met andere huishoudens is een aparte, opt-in benchmark. We vergelijken alleen voldoende vergelijkbare woningen (bijvoorbeeld op woningtype, oppervlakte, bewoners, isolatie, verwarming en lokale weersomstandigheden). We gebruiken een mediaan en bandbreedte, geen simpele gemiddelde som die door uitschieters wordt vertekend. Een benchmark verschijnt pas als de groep groot genoeg is om individuele huishoudens niet herkenbaar te maken. De minimale groepsgrootte en statistische regels worden vóór publieke lancering vastgelegd.
+
+### Wat betekent het effect van een besparing?
+
+De app toont effecten los van elkaar:
+1. **Energie:** kWh netafname, totaal kWh indien meetbaar, en m³ gas.
+2. **Kosten:** alleen vermijdbare variabele energiekosten, met tariefbron en geldigheidsperiode. Vaste kosten worden niet als besparing geclaimd. Bij dynamische tarieven wordt de vergelijking op intervalniveau berekend.
+3. **CO₂:** pas tonen wanneer de passende Nederlandse emissiefactoren, bron en peildatum zijn vastgelegd.
+4. **Piek en verschuiving:** lager piekvermogen of verplaatst verbruik wordt niet als minder kWh gepresenteerd.
+
+De eerste productieversie start met gemeten netafname en gas. Totaalverbruik, kosten en CO₂ worden alleen geactiveerd wanneer de nodige meet- en factorbronnen beschikbaar zijn.
