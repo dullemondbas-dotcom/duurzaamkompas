@@ -52,7 +52,7 @@ De PWA is voorbereid voor mobiel en desktop, maar is geen native app uit de App 
 
 ## Accountlaag (frontend gereed, backend nog te activeren)
 De app bevat nu een accountvenster met:
-- e-mailregistratie en bevestigingsmail;
+- e-mailregistratie en bevestigingsmail (client-side browserflow);
 - e-mail + wachtwoord inloggen;
 - uitloggen;
 - wachtwoord-herstellink en nieuw wachtwoord;
@@ -76,5 +76,7 @@ Deze twee waarden zijn bedoeld voor frontendgebruik. Gebruik nooit de service_ro
 4. Laat e-mailbevestiging ingeschakeld. Configureer voor productie een eigen SMTP-provider; de standaard verzenddienst heeft beperkte testquota.
 5. Vul de project-URL en publishable key in supabase-config.js.
 6. Test registratie, bevestiging, login, wachtwoordreset en profielsync met twee testaccounts en op twee verschillende apparaten.
+
+De publieke GitHub Pages-app is een client-only SPA. Daarom wordt de Supabase JavaScript client in implicit browser-flow gebruikt; PKCE vereist voor de e-mailbevestiging een server-side token-exchange endpoint of een aparte verifyOtp callback. De resetflow gebruikt de door Supabase teruggegeven recovery-sessie.
 
 De registratie- en logininterface is gepubliceerd, maar accountaanmaak en synchronisatie blijven uitgeschakeld zolang bovenstaande projectconfiguratie ontbreekt. De frontend laat dat expliciet zien.
