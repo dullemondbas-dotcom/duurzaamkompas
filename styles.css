@@ -220,3 +220,7 @@
 .brand-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
 .brand-tags span{padding:8px 11px;background:#f8f9f5;border:1px solid #dce4d7;color:#52694f;font-size:9px}
 .watchlist-status{margin-top:15px;font-size:8px;color:#849084;letter-spacing:.04em}
+
+.share-actions{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.linkedin-share{font-size:9px;font-weight:700;color:#55764d}
+@media(max-width:600px){.share-actions{align-items:flex-start;flex-direction:column;gap:13px}}
