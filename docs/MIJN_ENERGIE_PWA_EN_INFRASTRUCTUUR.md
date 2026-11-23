@@ -25,6 +25,9 @@ Toegepaste migraties:
 - supabase/migrations/202611230006_refresh_household_rpc_schema_cache.sql
 - supabase/migrations/20261123172136_mijn_energie_home_assistant_homewizard_ingest.sql
 - supabase/migrations/20261123172326_add_duurzaamkompas_p1_provider_and_revoke_energy_consent.sql
+- supabase/migrations/20261123173710_rate_limit_energy_ingestion_and_deny_direct_token_access.sql
+- supabase/migrations/20261123172136_mijn_energie_home_assistant_homewizard_ingest.sql
+- supabase/migrations/20261123172326_add_duurzaamkompas_p1_provider_and_revoke_energy_consent.sql
 
 De database bevat:
 - profielen met unieke nickname;
@@ -67,7 +70,7 @@ E-mail/wachtwoord en e-mailbevestiging zijn voor de testomgeving ingeschakeld. V
 - Meetdata, aggregaten en scores kunnen niet door gewone clients worden geschreven; ingestie en berekeningen vereisen server-side functies.
 
 ## Huidige status
-De PWA werkt als installeerbare webapp, maar is geen native app uit de App Store/Google Play. Het eerste testaccount is aangemaakt en e-mailbevestiging en inloggen zijn gecontroleerd. De eerste opslagpogingen van het huishoudprofiel liepen vast doordat de directe huishoudinsert door RLS werd geweigerd. De beveiligde huishoud-RPC is toegevoegd; de volledige profielopslag moet na deze wijziging opnieuw met het testaccount worden gevalideerd.
+De PWA werkt als installeerbare webapp, maar is geen native app uit de App Store/Google Play. Het eerste testaccount is aangemaakt en het opslaan van het huishoudprofiel is bevestigd. De synchronisatie op een tweede apparaat moet nog afzonderlijk worden getest.
 
 De gezamenlijke meetdata-ingestie is voorbereid en de Supabase Edge Function `ingest-energy-reading` is live. Home Assistant en HomeWizard hebben elk een eigen koppelroute; ruwe koppelcodes worden niet opgeslagen. HomeWizard P1 gebruikt een lokale API op het thuisnetwerk en kan eerst via de officiële Home Assistant-integratie worden aangesloten. De HomeWizard API-licentie bevat een beperking voor commercieel gebruik; voor een commerciële DuurzaamKompas-dienst is vooraf schriftelijke toestemming of een passende licentie nodig. De DuurzaamKompas P1 is als provider opgenomen, maar hardware, firmware en tests bestaan nog niet. Er zijn nog geen fysieke meters of echte meetwaarden aangesloten en er is nog geen gedeelde live challenge-competitie.
 
@@ -96,4 +99,13 @@ De gezamenlijke meetdata-ingestie is voorbereid en de Supabase Edge Function `in
 - `homewizard`: voorbereid voor de HomeWizard P1. De eerste route is HomeWizard → officiële Home Assistant-integratie → Mijn Energie. De HomeWizard-integratie leest lokaal meetwaarden van ondersteunde apparaten; de P1 Meter levert cumulatieve import/export en actief vermogen.
 - `duurzaamkompas_p1`: als eigen provider in het datamodel opgenomen. Hardware, firmware, lokale beveiliging en een installatieprocedure moeten nog worden ontworpen en getest.
 
-HomeWizard publiceert een lokale API en ondersteunt de P1 Meter in API v2.3.0. Die lokale API is bedoeld om op hetzelfde wifi-netwerk als de meter te gebruiken. De officiële Home Assistant-integratie levert de meterstanden en vermogens als sensoren. De HomeWizard API-licentie beperkt echter commercieel gebruik; vóór het aanbieden van een commerciële koppeldienst moet het gebruiksrecht schriftelijk zijn afgestemd met HomeWizard. De browserapp probeert de lokale meter dus niet rechtstreeks vanaf internet aan te spreken.
+De officiële Home Assistant-integratie ondersteunt de HomeWizard P1 Meter en levert onder meer cumulatieve import/export (kWh) en actief vermogen (W) als sensoren. De eerste praktische testroute is daarom HomeWizard P1 → Home Assistant → Mijn Energie. De HomeWizard API-documentatie beperkt het gebruik van de lokale API tot persoonlijk, niet-commercieel gebruik; voor een commerciële DuurzaamKompas-dienst die deze API gebruikt is vooraf schriftelijke toestemming of een passende licentie nodig. De browserapp benadert de meter nooit rechtstreeks vanaf internet.
+
+
+### Ingestiebeveiliging
+De private tabel `private.energy_ingest_tokens` heeft een deny-all RLS-policy; geen browserrol kan de tabel lezen of wijzigen. De meetdata-ingestie accepteert maximaal één meetpunt per vijf seconden per koppeling. Bron-event-ID's maken herhaalde aanlevering idempotent. Deze route is een technische basis en is nog niet met een echte meterinstallatie end-to-end getest.
+
+De belangrijkste randvoorwaarde bij commerciële HomeWizard-integratie staat in de [HomeWizard API-voorwaarden](https://api-documentation.homewizard.com/docs/introduction/): het API-gebruik is gelicentieerd voor persoonlijk, niet-commercieel gebruik. Voor zakelijke distributie moet het licentierecht vooraf worden geregeld.
+
+### Interne applicaties — volgende fase
+De berekeningsmethode, tipselectie en gewenste schermstructuur zijn vastgelegd in `docs/MIJN_ENERGIE_BESPARINGSMODEL_EN_PERSONALISATIE.md`. De besparingsengine en gepersonaliseerde weektips zijn nog niet geïmplementeerd. Dashboardwaarden blijven demo zolang er geen echte meetdata en berekeningen beschikbaar zijn.

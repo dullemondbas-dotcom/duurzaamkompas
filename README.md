@@ -90,10 +90,14 @@ Mijn Energie gebruikt Supabase Auth voor registratie, e-mailbevestiging, login, 
 De project-URL en publieke publishable key staan in `supabase-config.js`. Plaats nooit service_role keys of andere geheime sleutels in deze publieke repository.
 
 ### Status en grenzen
-Het eerste testaccount is aangemaakt en e-mailbevestiging en login zijn gecontroleerd. Een eerste opslagtest bracht een RLS-blokkade bij de directe huishoudinsert aan het licht. De beveiligde huishoud-RPC is toegevoegd; de complete opslagflow moet na de reparatie opnieuw met het testaccount worden bevestigd.
+Het eerste testaccount is aangemaakt en het opslaan van het huishoudprofiel is bevestigd. De PWA toont op het dashboard nog voorbeeldcijfers. De beveiligde meetdata-ontvangstroute voor Home Assistant en HomeWizard is voorbereid en gedeployed, maar nog niet met een echte meterinstallatie getest. Er is nog geen live besparingsberekening of challengecompetitie. Zie `docs/MIJN_ENERGIE_PWA_EN_INFRASTRUCTUUR.md` voor de actuele status.
 
-De PWA toont voorlopig nog voorbeeldcijfers. Er is nog geen echte meterdata, Home Assistant-koppeling of live challengecompetitie. Zie `docs/MIJN_ENERGIE_PWA_EN_INFRASTRUCTUUR.md` voor de actuele status.
 
+### Volgende fase: besparing en persoonlijk advies
+- Bereken besparing op basis van een persoonlijke, waar mogelijk weersgenormaliseerde referentie; scheid energiegebruik, kosten en CO₂-effect.
+- Toon maximaal één onderbouwde, gepersonaliseerde verduurzamingstip per week.
+- Voeg besparingsgeschiedenis, behaalde acties en lichte voortgangsinteractie toe zonder het startscherm vol te zetten.
+- Ontwerp en uitgangspunten: `docs/MIJN_ENERGIE_BESPARINGSMODEL_EN_PERSONALISATIE.md`.
 
 ### Energie-integraties Mijn Energie
 - Server-side meetdata-ingestie voorbereid voor Home Assistant en HomeWizard P1 via een Supabase Edge Function.
