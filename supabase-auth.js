@@ -79,6 +79,11 @@
     else dialog?.removeAttribute("open");
   }
 
+  function navigateToHousehold() {
+    const householdTab = document.querySelector('.nav-tab[data-view="household"]');
+    if (householdTab) householdTab.click();
+  }
+
   async function loadHouseholdProfile(user) {
     if (!client || !user) return null;
     const { data: profileRow, error: profileError } = await client
@@ -172,6 +177,8 @@
       ? "Je huishoudenprofiel is beschikbaar voor synchronisatie."
       : "Je account staat klaar. Vul je huishouden in om je profiel te bewaren.";
     window.dispatchEvent(new CustomEvent("dk-account-changed", { detail: { user: currentUser, profile } }));
+    // New accounts without a household are guided directly to the first setup step.
+    if (profile && !householdId) navigateToHousehold();
   }
 
   async function refreshSession(session) {
@@ -300,7 +307,7 @@
   });
   $("#accountHouseholdButton")?.addEventListener("click", () => {
     closeDialog();
-    document.querySelector('[data-go="household"]')?.click();
+    navigateToHousehold();
   });
   $("#accountSignOutButton")?.addEventListener("click", async () => {
     if (!requireClient()) return;
@@ -328,6 +335,7 @@
       form.reset();
       setStatus("Je bent ingelogd.", "success");
       closeDialog();
+      navigateToHousehold();
     } catch (error) {
       setStatus(getAccountError(error), "error");
     } finally { button.disabled = false; }
@@ -363,6 +371,7 @@
       if (data.session) {
         setStatus("Je account is aangemaakt en je bent ingelogd.", "success");
         closeDialog();
+        navigateToHousehold();
       } else {
         switchAuthView("login");
         setStatus("Bijna klaar. Controleer je e-mail en bevestig je adres om in te loggen.", "success");
