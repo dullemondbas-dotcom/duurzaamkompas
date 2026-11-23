@@ -33,6 +33,7 @@
     {title:"Bronnen en transparantie",section:"Redactionele werkwijze",url:"bronnen.html",description:"Hoe we bronnen, commerciële belangen en onzekerheden beoordelen.",tags:"bronnen transparantie onafhankelijk affiliate reclame"},
     {title:"Energieleveranciers en slimme batterijaansturing",section:"Vergelijken",url:"energieleveranciers.html",description:"Ontdek welke leveranciers thuisbatterijen kunnen aansturen en onder welke voorwaarden.",tags:"energieleveranciers leverancier batterij batterijaansturing frank tibber eneco zonneplan nextenergy compatibiliteit"},
     {title:"Batterijbibliotheek en praktijkprestaties",section:"Vergelijken",url:"batterijbibliotheek.html",description:"Bekijk sterke punten, aandachtspunten, integraties en de status van praktijkdata per batterij.",tags:"batterijbibliotheek merken reviews opbrengst verdiensten thuisbatterij batterijprestaties mijnbatterij"},
+    {title:"Live energiedashboard Nederland",section:"Live energiedata",url:"energiedashboard.html",description:"Bekijk landelijke zonne- en windopwek, elektriciteitsvraag, KNMI-weermetingen, TenneT-onbalansprijzen en PVGIS-modelberekeningen.",tags:"live energiedashboard energiedata elektriciteitsnet nederland stroomvraag zonne-opwek windenergie knmi tennet pvgis netbalans"},
     {title:"Over DuurzaamKompas",section:"Het platform",url:"over.html",description:"Onze missie, uitgangspunten en wat de website wel en niet doet.",tags:"over missie visie platform"}
   ];
 
@@ -60,6 +61,27 @@
         batteryLink.textContent = "Batterijbibliotheek";
         column.append(batteryLink);
       }
+    }
+  });
+
+  // Add the live energy dashboard to the comparison menu and footer.
+  if (nav) {
+    const compareGroup = [...nav.querySelectorAll("details.nav-group")].find(group => group.querySelector('a[href="energieleveranciers.html"]'));
+    const dropdown = compareGroup?.querySelector(".nav-dropdown");
+    if (dropdown && !dropdown.querySelector('a[href="energiedashboard.html"]')) {
+      const dashboardLink = document.createElement("a");
+      dashboardLink.href = "energiedashboard.html";
+      dashboardLink.innerHTML = '<small>LIVE ENERGIEDATA</small><b>Live energiedashboard</b><span>Bekijk opwek, stroomvraag, weer en onbalans.</span>';
+      dropdown.prepend(dashboardLink);
+    }
+  }
+  document.querySelectorAll(".dk-footer .footer-column").forEach(column => {
+    const heading = column.querySelector("b");
+    if (heading && /Blijf begrijpen|Ontdek technologie|Ontdek en vergelijk/i.test(heading.textContent) && !column.querySelector('a[href="energiedashboard.html"]')) {
+      const link = document.createElement("a");
+      link.href = "energiedashboard.html";
+      link.textContent = "Live energiedashboard";
+      column.append(link);
     }
   });
 
