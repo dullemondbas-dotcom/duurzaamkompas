@@ -330,7 +330,7 @@ $$;
 
 create or replace function public.get_challenge_leaderboard(target_challenge_id uuid)
 returns table (
-  position bigint,
+  rank_position bigint,
   nickname text,
   score numeric,
   improvement_pct numeric,
@@ -375,7 +375,7 @@ as $$
 begin
   if auth.uid() is null then raise exception 'Authentication required'; end if;
   update public.consent_records
-  set revoked_at = pg_catalog.coalesce(revoked_at, pg_catalog.now())
+  set revoked_at = coalesce(revoked_at, pg_catalog.now())
   where id = target_consent_id and user_id = auth.uid();
   return found;
 end;
