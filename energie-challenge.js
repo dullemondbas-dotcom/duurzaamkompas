@@ -495,6 +495,7 @@
     if (!window.DK_ACCOUNT?.isSignedIn?.()) {
       $("#dashboardWeeklyTipTitle").textContent = "Log in voor je persoonlijke voortgang.";
       $("#dashboardWeeklyTipSummary").textContent = "Je energiegeschiedenis en weektips worden aan je huishouden gekoppeld.";
+      $("#dashboardWeeklyTipAction").textContent = "";
       container.replaceChildren();
       return;
     }
@@ -503,6 +504,7 @@
       if (!tip) {
         $("#dashboardWeeklyTipTitle").textContent = "We bouwen eerst een eerlijke nulmeting op.";
         $("#dashboardWeeklyTipSummary").textContent = "Zodra we je energiegebruik betrouwbaar kunnen vergelijken, krijg je iedere week één persoonlijke tip. Zonder meetdata geven we alleen profielgerichte adviezen.";
+        $("#dashboardWeeklyTipAction").textContent = "";
         const link = document.createElement("button");
         link.type = "button";
         link.className = "text-button";
@@ -513,6 +515,7 @@
       }
       $("#dashboardWeeklyTipTitle").textContent = tip.title;
       $("#dashboardWeeklyTipSummary").textContent = tip.summary + " " + tip.why_this_tip;
+      $("#dashboardWeeklyTipAction").textContent = "Deze week: " + tip.action_text + (tip.expected_effect ? " · " + tip.expected_effect : "");
       container.replaceChildren();
       const addAction = (label, status, className = "text-button") => {
         const button = document.createElement("button");
