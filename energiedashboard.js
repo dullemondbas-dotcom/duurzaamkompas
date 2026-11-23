@@ -36,6 +36,7 @@
   }
   function barChart(items, targetId){
     const target=byId(targetId); if(!target)return;
+    if(target.nextElementSibling?.classList.contains("live-bar-labels")) target.nextElementSibling.remove();
     if(!items?.length){target.className="live-message";target.textContent="Nog geen meetreeks beschikbaar.";return;}
     const max=Math.max(1,...items.flatMap(x=>[Number(x.solar)||0,Number(x.wind)||0]));
     target.className="live-bars";
