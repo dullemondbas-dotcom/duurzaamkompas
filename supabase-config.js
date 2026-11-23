@@ -1,8 +1,7 @@
-/* Public frontend configuration for Supabase.
-   The project URL and publishable (anon) key are intended to be public in a browser app.
-   NEVER add a service_role key, database password, or Home Assistant token here.
-   Fill these two values after creating the Supabase project. */
+/* Public Supabase frontend configuration.
+   This project URL and publishable key are designed to be public in a browser app.
+   NEVER add a service_role key, secret key, database password or Home Assistant token here. */
 window.DK_SUPABASE_CONFIG = Object.freeze({
-  projectUrl: "",
-  publishableKey: ""
+  projectUrl: "https://qntmcqrwftrrrbyjlqis.supabase.co",
+  publishableKey: "sb_publishable_onQpwyJsQBNXa7JUaTMuuQ_C5fDBNcg"
 });
