@@ -32,6 +32,7 @@
     <button class="nav-tab" data-view="household"><span class="tab-icon">⌑</span><span>Huishouden</span></button>
     <button class="nav-tab" data-view="challenges"><span class="tab-icon">★</span><span>Challenges</span></button>
     <button class="nav-tab" data-view="connections"><span class="tab-icon">⌁</span><span>Koppelen</span></button>
+    <button class="nav-tab" data-view="admin" id="adminNavTab" hidden><span class="tab-icon">⚙</span><span>Beheer</span></button>
   </nav>
   <button type="button" class="app-user account-trigger" id="accountOpenButton" aria-haspopup="dialog" aria-controls="accountDialog"><span class="avatar" id="avatarInitial">D</span><span id="headerNickname">Demo gebruiker</span><small id="accountButtonLabel">Mijn account</small></button>
 </header>
@@ -53,29 +54,22 @@
       <div><p class="eyebrow">MIJN ENERGIE · PERSOONLIJK OVERZICHT</p><h1>Goed dat je er bent<span id="welcomeNickname">.</span></h1><p class="lead">Krijg grip op je energie en ontdek waar je slimmer kunt omgaan met verbruik.</p></div>
       <button class="btn btn-secondary" data-go="household">Huishouden instellen <span>↗</span></button>
     </div>
-    <div class="status-strip"><span class="status-dot"></span><strong>Demo-dashboard</strong><span>Voorbeelddata · niet verbonden met een slimme meter</span><button id="resetDemo" class="text-button">Demo resetten</button></div>
+    <div class="status-strip" id="energyStatusStrip"><span class="status-dot"></span><strong id="energyStatusTitle">Nog geen meterdata</strong><span id="energyStatusText">Koppel een databron om je werkelijke energiegebruik te zien.</span><button id="resetDemo" class="text-button">Demo resetten</button></div>
     <div class="metric-grid">
-      <article class="metric-card"><div class="metric-top"><span>Elektriciteit gebruikt</span><span class="metric-icon">↘</span></div><strong>248 <small>kWh</small></strong><p class="metric-caption">Voorbeeld van deze maand</p><div class="metric-foot"><span class="positive">−8,2%</span><span>t.o.v. voorbeeld vorig jaar</span></div></article>
-      <article class="metric-card"><div class="metric-top"><span>Teruggeleverd</span><span class="metric-icon">↗</span></div><strong>96 <small>kWh</small></strong><p class="metric-caption">Voorbeeld van deze maand</p><div class="metric-foot"><span>Eigen opwekking</span><span>demo-waarde</span></div></article>
-      <article class="metric-card"><div class="metric-top"><span>Geschat kostenverschil</span><span class="metric-icon">€</span></div><strong>€ 24,80</strong><p class="metric-caption">Fictieve vergelijking</p><div class="metric-foot"><span class="positive">Lagere kosten</span><span>geen echte besparing vastgesteld</span></div></article>
-      <article class="metric-card accent-card"><div class="metric-top"><span>Challenge-score</span><span class="metric-icon">★</span></div><strong>76 <small>/ 100</small></strong><p class="metric-caption">Illustratieve score</p><div class="score-track"><span style="width:76%"></span></div><div class="metric-foot"><span>Demo-positie</span><span>#4 van 12</span></div></article>
+      <article class="metric-card"><div class="metric-top"><span>Netafname stroom</span><span class="metric-icon">↘</span></div><strong id="metricGridImport">— <small>kWh</small></strong><p class="metric-caption" id="metricGridImportCaption">Deze maand · wacht op meterdata</p><div class="metric-foot"><span>Werkelijke meting</span><span>geen schatting</span></div></article>
+      <article class="metric-card"><div class="metric-top"><span>Teruggeleverd</span><span class="metric-icon">↗</span></div><strong id="metricGridExport">— <small>kWh</small></strong><p class="metric-caption" id="metricGridExportCaption">Deze maand · wacht op meterdata</p><div class="metric-foot"><span>Netteruglevering</span><span>geen eigen opwek-schatting</span></div></article>
+      <article class="metric-card"><div class="metric-top"><span>Gasverbruik</span><span class="metric-icon">♨</span></div><strong id="metricGas">— <small>m³</small></strong><p class="metric-caption" id="metricGasCaption">Deze maand · wacht op meterdata</p><div class="metric-foot"><span>Werkelijke meterstand</span><span>geen schatting</span></div></article>
+      <article class="metric-card accent-card"><div class="metric-top"><span>Meetdekking</span><span class="metric-icon">✓</span></div><strong id="metricDataCoverage">— <small>%</small></strong><p class="metric-caption" id="metricDataCoverageCaption">Geen complete meetdagen</p><div class="metric-foot"><span id="metricValidDays">0 geldige dagen</span><span>deze maand</span></div></article>
     </div>
     <div class="dashboard-grid">
       <article class="panel usage-panel">
-        <div class="panel-heading"><div><p class="eyebrow">ENERGIE INZICHT</p><h2>Je verbruik door de maand</h2></div><span class="demo-chip">Voorbeeld</span></div>
-        <div class="chart-legend"><span><i class="legend-current"></i>Deze maand</span><span><i class="legend-previous"></i>Zelfde maand vorig jaar</span></div>
-        <div class="bar-chart" aria-label="Fictieve vergelijking van het energieverbruik">
-          <div class="chart-y"><span>20</span><span>15</span><span>10</span><span>5</span><span>0 kWh</span></div>
-          <div class="chart-columns">
-            <div class="bar-group"><div class="bars"><i class="bar previous" style="height:82%"></i><i class="bar current" style="height:67%"></i></div><small>1–5</small></div>
-            <div class="bar-group"><div class="bars"><i class="bar previous" style="height:90%"></i><i class="bar current" style="height:72%"></i></div><small>6–10</small></div>
-            <div class="bar-group"><div class="bars"><i class="bar previous" style="height:76%"></i><i class="bar current" style="height:65%"></i></div><small>11–15</small></div>
-            <div class="bar-group"><div class="bars"><i class="bar previous" style="height:88%"></i><i class="bar current" style="height:70%"></i></div><small>16–20</small></div>
-            <div class="bar-group"><div class="bars"><i class="bar previous" style="height:68%"></i><i class="bar current" style="height:57%"></i></div><small>21–25</small></div>
-            <div class="bar-group"><div class="bars"><i class="bar previous" style="height:78%"></i><i class="bar current" style="height:66%"></i></div><small>26–30</small></div>
-          </div>
+        <div class="panel-heading"><div><p class="eyebrow">ENERGIE INZICHT</p><h2>Je laatste meetdagen</h2></div><span class="demo-chip" id="energyChartLabel">Werkelijke data</span></div>
+        <div class="chart-legend"><span><i class="legend-current"></i>Netafname per dag</span></div>
+        <div class="bar-chart" aria-label="Gemeten netafname per dag">
+          <div class="chart-y" id="energyChartYAxis"><span>—</span><span>—</span><span>—</span><span>—</span><span>0 kWh</span></div>
+          <div class="chart-columns" id="energyChartColumns"></div>
         </div>
-        <p class="chart-footnote">De grafiek gebruikt verzonnen meetwaarden om de weergave te demonstreren. Echte vergelijking vereist complete meetgegevens en tariefinformatie.</p>
+        <p class="chart-footnote" id="energyChartFootnote">Zodra een meter is gekoppeld, verschijnen hier je gemeten waarden. Onvolledige meetdagen worden niet als nulverbruik geteld.</p>
       </article>
       <article class="panel challenge-panel">
         <div class="panel-heading"><div><p class="eyebrow">DOE MEE</p><h2>Jouw challenges</h2></div><button class="text-button" data-go="challenges">Alles bekijken →</button></div>
@@ -122,6 +116,73 @@
         <div class="history-period-list" id="historyPeriodList"></div>
       </div>
     </section>
+  </section>
+
+  <section class="view" id="view-admin">
+    <div class="page-heading">
+      <p class="eyebrow">DUURZAAMKOMPAS · INTERN BEHEER</p>
+      <h1>Beheer Mijn Energie.</h1>
+      <p class="lead">Beheer de tipbibliotheek en bronvermelde rekenfactoren. Berekeningen en wijzigingen worden alleen server-side uitgevoerd.</p>
+    </div>
+    <div class="history-notice" id="adminAccessDenied" hidden>Deze omgeving is alleen beschikbaar voor geautoriseerde beheerders.</div>
+    <div id="adminControls" hidden>
+      <div class="admin-engine-panel panel">
+        <div><p class="eyebrow">DAGELIJKSE VERWERKING</p><h2>Energiemeting en advies bijwerken</h2><p>De verwerking draait automatisch iedere nacht. Je kunt hem hier ook handmatig starten.</p></div>
+        <button type="button" class="btn btn-primary" id="runEnergyEngineButton">Verwerking nu uitvoeren</button>
+        <p id="adminEngineStatus" class="form-status" aria-live="polite">De laatste uitvoering verschijnt hier.</p>
+      </div>
+
+      <div class="panel admin-section-panel">
+        <div class="panel-heading"><div><p class="eyebrow">TIPBIBLIOTHEEK</p><h2>Gepersonaliseerde weektips</h2><p>Pas inhoud, bron, selectievoorwaarde en volgorde aan.</p></div></div>
+        <div class="admin-tip-list" id="adminTipList"></div>
+        <form id="adminTipForm" class="admin-form">
+          <div class="form-section-title"><span>✎</span><div><h2 id="adminTipFormTitle">Nieuwe tip toevoegen</h2><p>Gebruik een unieke code om dezelfde tip later bij te werken.</p></div></div>
+          <div class="form-grid">
+            <label>Tipcode<input name="tip_code" required pattern="[a-z0-9_]{3,64}" placeholder="bijvoorbeeld solar_shift"></label>
+            <label>Categorie<select name="category"><option value="electricity">Elektriciteit</option><option value="heating">Verwarming</option><option value="hot_water">Warm water</option><option value="general">Algemeen</option></select></label>
+            <label>Titel<input name="title" required maxlength="120"></label>
+            <label>Bronnaam<input name="source_name" maxlength="100" placeholder="Milieu Centraal"></label>
+            <label class="admin-full">Korte uitleg<textarea name="summary" rows="2" required></textarea></label>
+            <label class="admin-full">Waarom past dit bij de gebruiker?<textarea name="why_template" rows="2"></textarea></label>
+            <label class="admin-full">Concrete actie<textarea name="action_text" rows="2" required></textarea></label>
+            <label class="admin-full">Verwacht effect / nuance<textarea name="expected_effect_template" rows="2"></textarea></label>
+            <label>Voorwaarde<select name="trigger_type"><option value="profile_solar">Zonnepanelen</option><option value="profile_solar_ev">Zonnepanelen + EV</option><option value="profile_partial_insulation_gas">Gedeeltelijke isolatie + gas</option><option value="profile_gas_heating">Gasverwarming</option><option value="profile_heat_pump">Warmtepomp</option><option value="measured_peak">Gemeten piekvermogen</option><option value="measured_export">Gemeten teruglevering</option><option value="profile_general">Algemene tip</option></select></label>
+            <label>Voorwaarde-parameters (JSON)<input name="trigger_parameters" value="{}" placeholder='{"min_peak_kw":4}'></label>
+            <label>Kostenband<select name="cost_band"><option value="none">Geen</option><option value="low">Laag</option><option value="medium">Gemiddeld</option><option value="high">Hoog</option><option value="unknown">Onbekend</option></select></label>
+            <label>Moeite<select name="effort_band"><option value="easy">Makkelijk</option><option value="moderate">Gemiddeld</option><option value="high">Veel moeite</option></select></label>
+            <label>Prioriteit (lager = eerder)<input name="priority" type="number" min="1" max="999" value="100"></label>
+            <label>Versie<input name="version" type="number" min="1" value="1"></label>
+            <label class="admin-full">Bron-URL (HTTPS)<input name="source_url" type="url" placeholder="https://..."></label>
+            <label>Bron gecontroleerd op<input name="source_checked_at" type="date"></label>
+          </div>
+          <div class="admin-checkbox-row">
+            <label><input name="enabled" type="checkbox" checked> Actief</label>
+            <label><input name="requires_measurement" type="checkbox"> Meetgegevens vereist</label>
+          </div>
+          <div class="form-actions"><button type="submit" class="btn btn-primary" id="saveAdminTipButton">Tip opslaan</button><button type="button" class="btn btn-secondary" id="resetAdminTipForm">Nieuw formulier</button><span id="adminTipStatus" class="form-status" aria-live="polite"></span></div>
+        </form>
+      </div>
+
+      <div class="panel admin-section-panel">
+        <div class="panel-heading"><div><p class="eyebrow">REKENFACTOREN</p><h2>Tarieven en emissiefactoren</h2><p>Een factor is altijd gekoppeld aan een bron en geldigheidsdatum. Er staan nog geen ongecontroleerde standaardwaarden in.</p></div></div>
+        <div id="adminFactorList" class="admin-factor-list"></div>
+        <form id="adminFactorForm" class="admin-form">
+          <div class="form-section-title"><span>＋</span><div><h2>Factor toevoegen</h2><p>Gebruik uitsluitend een gecontroleerde bron.</p></div></div>
+          <div class="form-grid">
+            <label>Factortype<select name="factor_type"><option value="electricity_variable_price">Variabele stroomprijs</option><option value="gas_variable_price">Variabele gasprijs</option><option value="electricity_emission">Emissiefactor elektriciteit</option><option value="gas_emission">Emissiefactor gas</option><option value="heating_degree_days">Graaddagen</option></select></label>
+            <label>Energietype<select name="fuel_type"><option value="electricity">Elektriciteit</option><option value="gas">Gas</option><option value="weather">Weer</option></select></label>
+            <label>Waarde<input name="factor_value" type="number" step="0.000001" required></label>
+            <label>Eenheid<input name="unit" required maxlength="30" placeholder="€/kWh, kg CO₂/kWh..."></label>
+            <label>Geldig vanaf<input name="valid_from" type="date" required></label>
+            <label>Geldig tot (optioneel)<input name="valid_until" type="date"></label>
+            <label>Bronnaam<input name="source_name" required maxlength="120"></label>
+            <label>Bron-URL (HTTPS)<input name="source_url" type="url" required></label>
+            <label class="admin-full">Methodologie / toelichting<textarea name="methodology" rows="2"></textarea></label>
+          </div>
+          <div class="form-actions"><button type="submit" class="btn btn-primary">Factor opslaan</button><span id="adminFactorStatus" class="form-status" aria-live="polite"></span></div>
+        </form>
+      </div>
+    </div>
   </section>
 
   <section class="view" id="view-household">
