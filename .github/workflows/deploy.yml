@@ -34,6 +34,13 @@ jobs:
         uses: actions/checkout@v6
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
+      - name: Validate app JavaScript and PWA manifest
+        run: |
+          node --check energie-challenge.js
+          node --check supabase-auth.js
+          node --check supabase-config.js
+          node --check energie-challenge-sw.js
+          python -m json.tool energie-challenge.webmanifest > /dev/null
       - name: Upload website files
         uses: actions/upload-pages-artifact@v4
         with:
