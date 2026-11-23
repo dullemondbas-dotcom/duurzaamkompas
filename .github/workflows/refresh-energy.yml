@@ -32,9 +32,7 @@ jobs:
 
       - name: Refresh live and model data
         env:
-          NED_API_KEY: ${{ secrets.NED_API_KEY }}
           KNMI_API_KEY: ${{ secrets.KNMI_API_KEY }}
-          TENNET_API_KEY: ${{ secrets.TENNET_API_KEY }}
         run: python .github/scripts/update_energy_data.py
 
       - name: Commit public data snapshot
