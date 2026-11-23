@@ -382,6 +382,64 @@
     return true;
   }
 
+  async function listEnergyDailyAggregates(days = 45) {
+    if (!client || !currentUser || !householdId) return [];
+    const start = new Date();
+    start.setDate(start.getDate() - Math.max(1, Math.min(120, Number(days) || 45)));
+    start.setHours(0, 0, 0, 0);
+    const { data, error } = await client.from("energy_aggregates")
+      .select("bucket_start,grid_import_kwh,grid_export_kwh,gas_m3,peak_import_kw,coverage_ratio,grid_coverage_ratio,gas_coverage_ratio,quality")
+      .eq("household_id", householdId)
+      .eq("resolution", "day")
+      .gte("bucket_start", start.toISOString())
+      .order("bucket_start", { ascending: true })
+      .limit(150);
+    if (error) throw error;
+    return data || [];
+  }
+
+  async function isPlatformAdmin() {
+    if (!client || !currentUser) return false;
+    const { data, error } = await client.rpc("is_my_platform_admin");
+    if (error) throw error;
+    return Boolean(data);
+  }
+
+  async function listAdminEnergyTips() {
+    if (!client || !currentUser) throw new Error("Log in om de beheeromgeving te openen.");
+    const { data, error } = await client.rpc("admin_list_energy_tips");
+    if (error) throw error;
+    return Array.isArray(data) ? data : [];
+  }
+
+  async function saveAdminEnergyTip(payload) {
+    if (!client || !currentUser) throw new Error("Log in om tips te beheren.");
+    const { data, error } = await client.rpc("admin_save_energy_tip", { p_payload: payload });
+    if (error) throw error;
+    return data;
+  }
+
+  async function listAdminEnergyFactors() {
+    if (!client || !currentUser) throw new Error("Log in om rekenfactoren te beheren.");
+    const { data, error } = await client.rpc("admin_list_energy_factors");
+    if (error) throw error;
+    return Array.isArray(data) ? data : [];
+  }
+
+  async function saveAdminEnergyFactor(payload) {
+    if (!client || !currentUser) throw new Error("Log in om rekenfactoren te beheren.");
+    const { data, error } = await client.rpc("admin_save_energy_factor", { p_payload: payload });
+    if (error) throw error;
+    return data;
+  }
+
+  async function runAdminEnergyAnalytics() {
+    if (!client || !currentUser) throw new Error("Log in om de rekenengine uit te voeren.");
+    const { data, error } = await client.rpc("admin_run_energy_analytics");
+    if (error) throw error;
+    return data;
+  }
+
   window.DK_ACCOUNT = Object.freeze({
     isConfigured: () => isConfigured && Boolean(client),
     isSignedIn: () => Boolean(currentUser),
@@ -394,6 +452,13 @@
     listEnergySavingsPeriods,
     getLatestWeeklyTip,
     updateWeeklyTipStatus,
+    listEnergyDailyAggregates,
+    isPlatformAdmin,
+    listAdminEnergyTips,
+    saveAdminEnergyTip,
+    listAdminEnergyFactors,
+    saveAdminEnergyFactor,
+    runAdminEnergyAnalytics,
     signOut: async () => {
       if (!client) return;
       const { error } = await client.auth.signOut();
