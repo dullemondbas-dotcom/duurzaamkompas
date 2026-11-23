@@ -208,6 +208,7 @@ def main():
     print(json.dumps({
         "generated_at": snapshot["generated_at"],
         "statuses": {name: source["status"] for name, source in snapshot["sources"].items()},
+        "messages": {name: source.get("message") for name, source in snapshot["sources"].items()},
     }, indent=2))
     if all(v["status"] == "error" for v in snapshot["sources"].values()):
         sys.exit(1)
