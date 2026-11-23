@@ -403,9 +403,11 @@ begin
         when r.grid_import_total_kwh is not null and r.prev_import_total is not null
           and r.grid_import_total_kwh>=r.prev_import_total
           and r.grid_import_total_kwh-r.prev_import_total<=10
+          and extract(epoch from (r.measured_at-r.prev_at))<=900
           then r.grid_import_total_kwh-r.prev_import_total
         when r.grid_import_w is not null and r.prev_import_w is not null
           and r.grid_import_w>=0 and r.prev_import_w>=0
+          and extract(epoch from (r.measured_at-r.prev_at))<=900
           then ((r.grid_import_w+r.prev_import_w)/2.0)
             * extract(epoch from (r.measured_at-r.prev_at))/3600000.0
         else null end import_kwh,
@@ -413,9 +415,11 @@ begin
         when r.grid_export_total_kwh is not null and r.prev_export_total is not null
           and r.grid_export_total_kwh>=r.prev_export_total
           and r.grid_export_total_kwh-r.prev_export_total<=10
+          and extract(epoch from (r.measured_at-r.prev_at))<=900
           then r.grid_export_total_kwh-r.prev_export_total
         when r.grid_export_w is not null and r.prev_export_w is not null
           and r.grid_export_w>=0 and r.prev_export_w>=0
+          and extract(epoch from (r.measured_at-r.prev_at))<=900
           then ((r.grid_export_w+r.prev_export_w)/2.0)
             * extract(epoch from (r.measured_at-r.prev_at))/3600000.0
         else null end export_kwh,
@@ -427,7 +431,7 @@ begin
         else null end gas_m3
     from raw r
     where r.prev_at is not null and r.measured_at>r.prev_at
-      and extract(epoch from (r.measured_at-r.prev_at))<=900
+      and extract(epoch from (r.measured_at-r.prev_at))<=7200
   ),
   interval_day_parts as (
     select i.household_id,i.integration_id,d.local_day,
