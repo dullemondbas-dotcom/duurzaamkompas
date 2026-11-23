@@ -1,32 +1,35 @@
 # DuurzaamKompas
 
-Eerste statische versie van de Nederlandstalige website over thuisbatterijen en de energiemarkt.
+Gratis Nederlandstalig consumentenplatform over thuisbatterijen, zonnepanelen, energiemanagement, laadoplossingen en de Nederlandse energiemarkt.
 
-## Bestanden
-- `index.html` — pagina-inhoud en navigatie
-- `styles.css` — vormgeving en mobiele weergave
-- `script.js` — mobiel menu en automatisch jaartal
+## Pagina's
+- `index.html` — homepage en platformoverzicht
+- `vergelijker.html` + `vergelijker.js` — batterijcatalogus, zoeken, vergelijken en scenariorekentool
+- `kennisbank.html` — uitleg over batterijen, zonnepanelen, EMS, netcongestie, laden en veiligheid
+- `regelgeving.html` — salderen, terugleveren, energiecontracten, registratie en regionale flexibiliteitsregelingen
+- `keuzehulp.html` + `keuzehulp.js` — interactieve offerte- en aanschafchecklist
+- `bronnen.html` — bronvermelding, redactionele werkwijze en commerciële transparantie
+- `over.html` — missie en positionering
+- `styles.css` — vormgeving en responsive layout
+- `site.js` — navigatie, delen en automatisch jaartal
+- `favicon.svg`, `robots.txt`, `sitemap.xml` — basis voor herkenning en vindbaarheid
 
-## Lokaal bekijken
-Open `index.html` in een browser.
+## Gratis publiceren
+GitHub Pages wordt via GitHub Actions gepubliceerd vanuit branch `main`. De workflow staat in `.github/workflows/deploy.yml`.
 
-## Gratis publiceren via GitHub Pages
-Er staat een GitHub Actions-workflow klaar in `.github/workflows/deploy.yml`.
-1. Open **Settings** van deze repository op GitHub.
-2. Kies links **Pages**.
-3. Ga naar **Build and deployment** en kies bij **Source**: **GitHub Actions**.
-4. Sla de instelling op.
-5. Open daarna het tabblad **Actions** om de eerste publicatie te volgen.
+Website: https://dullemondbas-dotcom.github.io/duurzaamkompas/
 
-Na de eerste succesvolle publicatie is de site bereikbaar via:
-`https://dullemondbas-dotcom.github.io/duurzaamkompas/`
+## Werkwijze voor inhoud
+- Productwaarden alleen opnemen als de exacte modelvariant en fabrikantbron duidelijk zijn.
+- Onbevestigde gegevens tonen als niet bevestigd.
+- Regelgeving en marktinformatie voorzien van controledatum en primaire bron.
+- Commerciële samenwerkingen later duidelijk labelen; ze mogen geen invloed hebben op technische gegevens of vergelijkingspositie.
+- Rekentools als scenario-indicaties presenteren, niet als persoonlijk financieel advies.
 
-Elke volgende wijziging op de branch `main` wordt automatisch opnieuw gepubliceerd. Er is geen framework, buildstap of betaalde dependency nodig.
+## Belangrijke aandachtspunten voor vervolg
+1. De productcatalogus uitbreiden met meer fabrikanten en per exacte uitvoering officiële datasheets controleren.
+2. De dynamische gegevens (prijzen, garantie, compatibiliteit, softwarefuncties) periodiek controleren.
+3. Verdere detailartikelen, een redactionele nieuwssectie en beheerfunctionaliteit toevoegen.
+4. Contactgegevens en een privacyverklaring toevoegen voordat bezoekersgegevens of formulieren worden verzameld.
 
-## Belangrijke vervolgstappen
-- Controleer en vul contactgegevens in voordat deze site publiek wordt gedeeld.
-- Voeg geverifieerde batterijmerken en productspecificaties toe, met bron en datum.
-- Maak artikelen inhoudelijk af en voeg bronvermeldingen toe.
-- Voeg pas formulieren of databasefunctionaliteit toe wanneer de gegevensverwerking en privacyverklaring geregeld zijn.
-
-De eerste versie bevat bewust geen onbevestigde merkscores, prijzen of productclaims.
+De website gebruikt momenteel geen account, database, nieuwsbriefinschrijving of analytische tracking. De checklist wordt alleen tijdelijk op de pagina bijgehouden en niet naar een server verzonden.
