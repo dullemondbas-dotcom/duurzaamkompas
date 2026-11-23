@@ -359,6 +359,27 @@
     return data || [];
   }
 
+  async function listEnergyTipEvents(limit = 20) {
+    if (!client || !currentUser || !householdId) return [];
+    const safeLimit = Math.max(1, Math.min(50, Number(limit) || 20));
+    const { data, error } = await client.from("energy_tip_events")
+      .select("id,tip_id,event_type,note,created_at")
+      .eq("household_id", householdId)
+      .order("created_at", { ascending: false })
+      .limit(safeLimit);
+    if (error) throw error;
+    const events = data || [];
+    if (!events.length) return [];
+    const tipIds = [...new Set(events.map(event => event.tip_id))];
+    const { data: tips, error: tipsError } = await client.from("household_weekly_tips")
+      .select("id,title")
+      .eq("household_id", householdId)
+      .in("id", tipIds);
+    if (tipsError) throw tipsError;
+    const titleById = new Map((tips || []).map(tip => [tip.id, tip.title]));
+    return events.map(event => ({ ...event, tip_title: titleById.get(event.tip_id) || null }));
+  }
+
   async function getLatestWeeklyTip() {
     if (!client || !currentUser || !householdId) return null;
     const { data, error } = await client.from("household_weekly_tips")
@@ -451,6 +472,7 @@
     revokeEnergyIntegration,
     listEnergySavingsPeriods,
     getLatestWeeklyTip,
+    listEnergyTipEvents,
     updateWeeklyTipStatus,
     listEnergyDailyAggregates,
     isPlatformAdmin,
