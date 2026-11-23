@@ -17,6 +17,7 @@
     partial:"Gedeeltelijke data",
     model:"Modelberekening",
     setup_required:"API-sleutel nodig",
+    permission_required:"Toestemming voor openbare publicatie nodig",
     waiting:"Wacht op eerste update",
     error:"Bron niet bereikbaar"
   }[status] || "Status onbekend");
