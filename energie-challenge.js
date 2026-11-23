@@ -39,6 +39,7 @@
       button.classList.toggle("active", button.dataset.view === view);
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
+    if (view === "history") void refreshHistory();
     return true;
   }
   window.DK_APP = Object.freeze({ navigateToView: setView });
@@ -498,7 +499,7 @@
         window.DK_ACCOUNT.listEnergyIntegrations()
       ]);
       const now = new Date();
-      const monthPrefix = localDateKey(new Date(now.getFullYear(), now.getMonth(), 1)).slice(0, 7);
+      const monthPrefix = localDateKey(now).slice(0, 7);
       const monthRows = rows.filter(row => localDateKey(new Date(row.bucket_start)).slice(0, 7) === monthPrefix);
       const gridRows = monthRows.filter(row => row.grid_import_kwh != null && Number(row.grid_coverage_ratio || 0) >= 0.8);
       const exportRows = monthRows.filter(row => row.grid_export_kwh != null && Number(row.grid_coverage_ratio || 0) >= 0.8);
@@ -606,6 +607,43 @@
     });
   }
 
+  function renderHistoryActions(events) {
+    const list = $("#historyActionList");
+    list.replaceChildren();
+    const labels = {
+      saved: "Tip bewaard",
+      accepted: "Je gaat met de tip aan de slag",
+      completed: "Actie afgerond",
+      dismissed: "Tip paste niet bij je",
+      snoozed: "Tip uitgesteld"
+    };
+    events.forEach(event => {
+      const row = document.createElement("article");
+      row.className = "history-action-row";
+      const dot = document.createElement("span");
+      dot.className = "history-action-dot";
+      const copy = document.createElement("div");
+      const title = document.createElement("strong");
+      title.textContent = event.tip_title || labels[event.event_type] || "Energieactie";
+      const detail = document.createElement("small");
+      detail.textContent = labels[event.event_type] || event.event_type;
+      const when = document.createElement("time");
+      when.dateTime = event.created_at;
+      when.textContent = new Date(event.created_at).toLocaleDateString("nl-NL", {
+        day: "numeric", month: "short", year: "numeric"
+      });
+      copy.append(title, detail);
+      row.append(dot, copy, when);
+      list.append(row);
+    });
+    if (!events.length) {
+      const empty = document.createElement("p");
+      empty.className = "history-actions-empty";
+      empty.textContent = "Bewaar of probeer je eerste weektip. Je acties verschijnen hier automatisch.";
+      list.append(empty);
+    }
+  }
+
   async function refreshHistory() {
     if (!window.DK_ACCOUNT?.isSignedIn?.()) {
       $("#historyLoginNotice").hidden = false;
@@ -615,16 +653,26 @@
     }
     $("#historyLoginNotice").hidden = true;
     try {
-      const rows = await window.DK_ACCOUNT.listEnergySavingsPeriods(activeHistoryPeriod);
-      if (!rows.length) {
-        $("#historyEmptyState").hidden = false;
-        $("#historyContent").hidden = true;
-        return;
+      const [rows, events] = await Promise.all([
+        window.DK_ACCOUNT.listEnergySavingsPeriods(activeHistoryPeriod),
+        window.DK_ACCOUNT.listEnergyTipEvents(20)
+      ]);
+      renderHistoryActions(events);
+      const hasHistory = rows.length > 0 || events.length > 0;
+      $("#historyEmptyState").hidden = hasHistory;
+      $("#historyContent").hidden = !hasHistory;
+      $("#historyNoSavingsNote").hidden = rows.length > 0;
+      if (rows.length) {
+        setHistorySummary(rows);
+        renderHistoryRows(rows);
+      } else {
+        $("#historyPeriodList").replaceChildren();
+        ["historyElectricityValue","historyGasValue","historyCostValue"].forEach(id => { $("#"+id).textContent="—"; });
+        $("#historyElectricityLabel").textContent = "Nog geen betrouwbare vergelijking";
+        $("#historyGasLabel").textContent = "Nog geen betrouwbare vergelijking";
+        $("#historyCostLabel").textContent = "Nog geen bruikbare tariefdata";
+        $("#historyQualityCaption").textContent = "Nog onvoldoende complete meetdagen voor een besparingsvergelijking.";
       }
-      $("#historyEmptyState").hidden = true;
-      $("#historyContent").hidden = false;
-      setHistorySummary(rows);
-      renderHistoryRows(rows);
     } catch (error) {
       console.warn("Mijn Energie geschiedenis:", error);
       $("#historyEmptyState").hidden = false;
@@ -670,6 +718,7 @@
             await window.DK_ACCOUNT.updateWeeklyTipStatus(tip.id, status);
             showToast("Je tip is bijgewerkt.");
             await renderDashboardWeeklyTip();
+            await refreshHistory();
           } catch (error) {
             showToast(error?.message || "Opslaan lukte niet.");
           } finally {
