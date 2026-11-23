@@ -111,7 +111,9 @@
         .some(key => accountProfile[key] !== undefined && accountProfile[key] !== null && accountProfile[key] !== "" && accountProfile[key] !== false);
       if (localProfile && !remoteHasHousehold) {
         fillProfileForm(localProfile);
-        $("#profileStatus").textContent = "Je eerder lokaal opgeslagen huishouden staat klaar. Druk op Profiel opslaan om het veilig over te zetten naar je account.";
+        const consentField = $("#householdForm")?.elements.namedItem("profileConsent");
+        if (consentField) consentField.checked = false;
+        $("#profileStatus").textContent = "Je eerder lokaal opgeslagen huishouden staat klaar. Controleer opnieuw je toestemming en sla het daarna op bij je account.";
       } else {
         fillProfileForm(accountProfile);
         if (remoteHasHousehold) localStorage.removeItem(PROFILE_KEY);
@@ -120,7 +122,11 @@
           : "Je account is gekoppeld. Vul je huishouden in of zet je lokale profiel over.";
       }
       if (accountProfile.nickname) updateNickname(accountProfile.nickname);
+      const consentLabel = $('label.consent-line span');
+      if (consentLabel) consentLabel.textContent = "Ik geef toestemming om mijn huishoudprofiel aan mijn account te koppelen en beveiligd op te slaan. Mijn adres wordt niet gevraagd en mijn profiel wordt niet openbaar getoond.";
     } else if (!event.detail?.user) {
+      const consentLabel = $('label.consent-line span');
+      if (consentLabel) consentLabel.textContent = "Ik begrijp dat dit profiel lokaal op dit apparaat wordt opgeslagen. Maak een account om het tussen apparaten te synchroniseren.";
       const localProfile = profile();
       if (localProfile) {
         fillProfileForm(localProfile);
