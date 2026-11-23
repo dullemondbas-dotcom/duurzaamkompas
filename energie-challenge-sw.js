@@ -1,6 +1,6 @@
 /* DuurzaamKompas Energie Challenge PWA shell.
    Only the app shell is cached; public website and future private API data are not cached. */
-const CACHE_NAME = "dk-energie-challenge-shell-v1";
+const CACHE_NAME = "dk-energie-challenge-shell-v2";
 const APP_FILES = [
   "./energie-challenge.html",
   "./energie-challenge.css",
