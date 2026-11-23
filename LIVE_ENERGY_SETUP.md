@@ -1,6 +1,6 @@
 # Live energiedashboard — installatie
 
-Het dashboard haalt KNMI-waarnemingen server-side op en publiceert alleen een openbare JSON-snapshot op \`data/energy-live.json\`. De KNMI API-sleutel wordt alleen in GitHub Actions gebruikt en nooit naar de browser gestuurd.
+Het dashboard haalt KNMI-waarnemingen server-side op en publiceert alleen een openbare JSON-snapshot op `data/energy-live.json`. De KNMI API-sleutel wordt alleen in GitHub Actions gebruikt en nooit naar de browser gestuurd.
 
 ## 1. KNMI API-sleutel toevoegen
 
@@ -8,7 +8,7 @@ Open de repository in GitHub: **Settings → Secrets and variables → Actions �
 
 Voeg deze repository secret toe:
 
-- \`KNMI_API_KEY\`: API-sleutel voor de KNMI EDR API. KNMI biedt ook een anonieme sleutel aan voor normaal gebruik. De dataset wordt gebruikt onder de datasetlicentie; voor de meeste KNMI-datasets is dat CC BY 4.0. De website vermeldt KNMI als bron en linkt naar de dataset.
+- `KNMI_API_KEY`: API-sleutel voor de KNMI EDR API. KNMI biedt ook een anonieme sleutel aan voor normaal gebruik. De dataset wordt gebruikt onder de datasetlicentie; voor de meeste KNMI-datasets is dat CC BY 4.0. De website vermeldt KNMI als bron en linkt naar de dataset.
 
 ## 2. Eenmalig de workflow starten
 
