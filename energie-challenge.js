@@ -60,6 +60,47 @@
       else field.value = value == null ? "" : String(value);
     });
   }
+
+  // Progressive Web App: install prompt, offline app shell and iOS guidance.
+  let deferredInstallPrompt = null;
+  const installButton = $("#installAppButton");
+  const installHelpButton = $("#installHelpButton");
+  const installHelpText = $("#installHelpText");
+  const installCard = $("#installAppCard");
+  const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+  if (isStandalone && installCard) installCard.hidden = true;
+
+  window.addEventListener("beforeinstallprompt", event => {
+    event.preventDefault();
+    deferredInstallPrompt = event;
+    if (installButton) installButton.hidden = false;
+  });
+  window.addEventListener("appinstalled", () => {
+    deferredInstallPrompt = null;
+    if (installCard) installCard.hidden = true;
+    showToast("Mijn Energie is toegevoegd aan je apparaat.");
+  });
+  installButton?.addEventListener("click", async () => {
+    if (!deferredInstallPrompt) {
+      if (installHelpText) installHelpText.hidden = false;
+      return;
+    }
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt = null;
+    if (installButton) installButton.hidden = true;
+  });
+  installHelpButton?.addEventListener("click", () => {
+    if (installHelpText) installHelpText.hidden = !installHelpText.hidden;
+  });
+
+  if ("serviceWorker" in navigator && location.protocol === "https:") {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./energie-challenge-sw.js", { scope: "./" })
+        .catch(() => showToast("Offline-modus kon niet worden geactiveerd. De app blijft online te gebruiken."));
+    });
+  }
+
   const savedProfile = profile();
   if (savedProfile) {
     updateNickname(savedProfile.nickname);
