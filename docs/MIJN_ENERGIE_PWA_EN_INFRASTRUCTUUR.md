@@ -19,6 +19,7 @@ Het project is aangemaakt in de EU (eu-west-1), actief en gekoppeld aan de publi
 Toegepaste migraties:
 - supabase/migrations/202611230001_initial_mijn_energie.sql
 - supabase/migrations/202611230002_mijn_energie_security_hardening.sql
+- supabase/migrations/202611230003_challenge_member_index.sql
 
 De database bevat:
 - profielen met unieke nickname;
