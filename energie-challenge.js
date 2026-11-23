@@ -116,6 +116,17 @@
   }
 
   window.addEventListener("dk-account-changed", event => {
+    if (event.detail?.user) {
+      startLiveEnergyUpdates();
+      refreshCompleteEnergyArea();
+    } else {
+      stopLiveEnergyUpdates();
+      currentEnergyTariff = null;
+      latestScenarioResult = null;
+      $("#energyTariffForm")?.reset();
+      $("#savedEnergyScenarios")?.replaceChildren();
+      pendingHomeWizardConfig = null;
+    }
     const accountProfile = event.detail?.profile;
     if (event.detail?.user && accountProfile) {
       const localProfile = profile();
@@ -282,6 +293,14 @@
 
   const integrationLabels = { home_assistant: "Home Assistant", homewizard: "HomeWizard P1" };
   const integrationByProvider = {};
+  let pendingHomeWizardConfig = null;
+  let liveEnergyUnsubscribe = null;
+  let liveEnergyFallbackTimer = null;
+  let liveEnergyRefreshTimer = null;
+  let liveEnergyRefreshBusy = false;
+  let liveEnergyRealtimeStatus = "CLOSED";
+  let latestScenarioResult = null;
+  let currentEnergyTariff = null;
 
   function integrationStatusText(item) {
     if (!item) return "Nog geen koppeling aangemaakt.";
@@ -334,13 +353,43 @@
   function showIntegrationToken(provider, token) {
     $("#integrationTokenTitle").textContent = integrationLabels[provider] + " · je koppelcode";
     $("#integrationTokenCode").textContent = token;
-    $("#integrationTokenStatus").textContent = "Kopieer en bewaar deze code nu. Sluit je dit venster, dan tonen we de code niet opnieuw.";
-    $("#integrationTokenInstructions").textContent = provider === "home_assistant"
-      ? "Bewaar deze code straks als geheim in Home Assistant. We leveren de precieze YAML en sensorselectie zodra je installatie klaarstaat."
-      : "Bewaar deze code voor de lokale HomeWizard-verbinding. De eerste route gebruikt Home Assistant als lokale brug; de losse brug bouwen we later.";
+    $("#integrationTokenStatus").textContent = "De code wordt maar één keer getoond. Bewaar de configuratie veilig en deel deze nooit.";
+    if (provider === "homewizard") {
+      const projectUrl = window.DK_SUPABASE_CONFIG?.projectUrl || "";
+      if (!/^https:\/\//.test(projectUrl)) throw new Error("De centrale Supabase-project-URL ontbreekt.");
+      pendingHomeWizardConfig = {
+        integration_key: token,
+        ingest_url: projectUrl.replace(/\/$/, "") + "/functions/v1/ingest-energy-reading",
+        poll_seconds: 30,
+        device_ip: "",
+        device_serial: ""
+      };
+      $("#integrationTokenInstructions").textContent = "Download de configuratie en plaats die naast de lokale bridge op een computer of mini-pc in hetzelfde netwerk als je HomeWizard P1-meter. Het apparaat-token blijft op die computer.";
+      $("#downloadHomeWizardConfig").hidden = false;
+      $("#homeWizardSetupLinks").hidden = false;
+    } else {
+      pendingHomeWizardConfig = null;
+      $("#integrationTokenInstructions").textContent = "Bewaar deze code als geheim in de configuratie van je eigen Home Assistant-installatie.";
+      $("#downloadHomeWizardConfig").hidden = true;
+      $("#homeWizardSetupLinks").hidden = true;
+    }
     $("#integrationTokenPanel").hidden = false;
     $("#integrationTokenPanel").scrollIntoView({ behavior: "smooth", block: "center" });
   }
+
+  $("#downloadHomeWizardConfig")?.addEventListener("click", () => {
+    if (!pendingHomeWizardConfig) return;
+    const blob = new Blob([JSON.stringify(pendingHomeWizardConfig, null, 2) + "\n"], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = "duurzaamkompas-homewizard-config.json";
+    document.body.append(anchor);
+    anchor.click();
+    anchor.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    $("#integrationTokenStatus").textContent = "Configuratie gedownload. Bewaar dit bestand veilig en commit het nooit naar GitHub.";
+  });
 
   $("[data-connect-provider]").forEach(button => button.addEventListener("click", async () => {
     const provider = button.dataset.connectProvider;
@@ -404,6 +453,295 @@
     $("#integrationTokenCode").textContent = "";
     $("#integrationTokenPanel").hidden = true;
   });
+
+  function setLiveEnergyStatus(text) {
+    const node = $("#liveEnergySyncLabel");
+    if (node) node.textContent = text;
+  }
+
+  function renderLiveEnergyChart(rows) {
+    const container = $("#liveEnergyChart");
+    if (!container) return;
+    if (!rows.length) {
+      container.innerHTML = '<div class="live-chart-empty">Nog geen actuele meetpunten. Zodra je P1-bridge draait, verschijnt hier je vermogen.</div>';
+      return;
+    }
+    const width = 660, height = 164, left = 42, right = 16, top = 12, bottom = 28;
+    const maximum = Math.max(100, ...rows.map(row => Math.max(Number(row.grid_import_w || 0), Number(row.grid_export_w || 0))));
+    const scale = Math.ceil(maximum / 100) * 100 || 100;
+    const x = index => left + (rows.length === 1 ? 0 : index * (width - left - right) / (rows.length - 1));
+    const y = value => top + (height - top - bottom) - (Number(value || 0) / scale) * (height - top - bottom);
+    const path = key => rows.map((row, index) => (index ? "L" : "M") + " " + x(index).toFixed(1) + " " + y(row[key]).toFixed(1)).join(" ");
+    const grid = [0, 1, 2].map(index => {
+      const yy = top + index * (height - top - bottom) / 2;
+      const tick = new Intl.NumberFormat("nl-NL", { maximumFractionDigits: 0 }).format(scale * (1 - index / 2));
+      return '<line x1="' + left + '" x2="' + (width - right) + '" y1="' + yy + '" y2="' + yy + '" stroke="#e7ece6"/>' +
+        '<text x="' + (left - 8) + '" y="' + (yy + 3) + '" text-anchor="end" font-size="10" fill="#68766d">' + tick + '</text>';
+    }).join("");
+    const first = new Date(rows[0].measured_at).toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" });
+    const last = new Date(rows[rows.length - 1].measured_at).toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" });
+    container.innerHTML = '<svg class="live-energy-svg" viewBox="0 0 ' + width + ' ' + height + '" role="img" aria-label="Actueel vermogen in watt">' +
+      grid +
+      '<path d="' + path("grid_import_w") + '" fill="none" stroke="#527b57" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>' +
+      '<path d="' + path("grid_export_w") + '" fill="none" stroke="#c5a36c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>' +
+      '<text x="' + left + '" y="' + (height - 6) + '" font-size="10" fill="#68766d">' + first + '</text>' +
+      '<text x="' + (width - right) + '" y="' + (height - 6) + '" text-anchor="end" font-size="10" fill="#68766d">' + last + '</text></svg>';
+  }
+
+  async function refreshLiveEnergy() {
+    if (!window.DK_ACCOUNT?.isSignedIn?.() || !window.DK_ACCOUNT?.listRecentEnergyMeasurements) {
+      renderLiveEnergyChart([]);
+      $("#liveEnergyPower").textContent = "—";
+      $("#liveEnergyDirection").textContent = "Log in en koppel je P1-meter";
+      setLiveEnergyStatus("Wacht op meetkoppeling");
+      return;
+    }
+    if (liveEnergyRefreshBusy) return;
+    liveEnergyRefreshBusy = true;
+    try {
+      const rows = await window.DK_ACCOUNT.listRecentEnergyMeasurements(120);
+      const ordered = rows.slice().sort((a, b) => new Date(a.measured_at) - new Date(b.measured_at));
+      renderLiveEnergyChart(ordered);
+      const latest = rows[0];
+      if (!latest) {
+        $("#liveEnergyPower").textContent = "—";
+        $("#liveEnergyDirection").textContent = "Nog geen actuele P1-meting";
+      } else {
+        const importW = Number(latest.grid_import_w || 0);
+        const exportW = Number(latest.grid_export_w || 0);
+        const age = Math.max(0, Date.now() - Date.parse(latest.measured_at));
+        const fresh = age <= 180000;
+        $("#liveEnergyPower").textContent = new Intl.NumberFormat("nl-NL", { maximumFractionDigits: 0 }).format(Math.abs(importW - exportW)) + " W";
+        $("#liveEnergyDirection").textContent = (importW >= exportW ? "Afname van het net" : "Teruglevering") +
+          (fresh ? " · live" : " · laatste meting " + new Date(latest.measured_at).toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" }));
+      }
+      if (liveEnergyRealtimeStatus === "SUBSCRIBED") setLiveEnergyStatus("Live-updates actief");
+    } catch (error) {
+      console.warn("Mijn Energie live meetgegevens:", error);
+      setLiveEnergyStatus("Live-data tijdelijk niet beschikbaar");
+    } finally {
+      liveEnergyRefreshBusy = false;
+    }
+  }
+
+  function stopLiveEnergyUpdates() {
+    if (liveEnergyUnsubscribe) {
+      liveEnergyUnsubscribe();
+      liveEnergyUnsubscribe = null;
+    }
+    if (liveEnergyFallbackTimer) window.clearInterval(liveEnergyFallbackTimer);
+    if (liveEnergyRefreshTimer) window.clearTimeout(liveEnergyRefreshTimer);
+    liveEnergyFallbackTimer = null;
+    liveEnergyRefreshTimer = null;
+    liveEnergyRealtimeStatus = "CLOSED";
+    setLiveEnergyStatus("Wacht op meetkoppeling");
+  }
+
+  function scheduleLiveEnergyRefresh() {
+    if (liveEnergyRefreshTimer) window.clearTimeout(liveEnergyRefreshTimer);
+    liveEnergyRefreshTimer = window.setTimeout(async () => {
+      liveEnergyRefreshTimer = null;
+      if (document.visibilityState !== "visible") return;
+      await refreshLiveEnergy();
+      await refreshIntegrationStatuses();
+    }, 650);
+  }
+
+  function startLiveEnergyUpdates() {
+    stopLiveEnergyUpdates();
+    if (!window.DK_ACCOUNT?.isSignedIn?.() || !window.DK_ACCOUNT?.subscribeEnergyMeasurements) {
+      void refreshLiveEnergy();
+      return;
+    }
+    liveEnergyUnsubscribe = window.DK_ACCOUNT.subscribeEnergyMeasurements(event => {
+      if (event.type === "status") {
+        liveEnergyRealtimeStatus = event.status;
+        setLiveEnergyStatus(event.status === "SUBSCRIBED" ? "Live-updates actief" : "Realtime-verbinding herstellen");
+        if (event.status === "SUBSCRIBED") scheduleLiveEnergyRefresh();
+      } else if (event.type === "measurement") {
+        scheduleLiveEnergyRefresh();
+      }
+    });
+    liveEnergyFallbackTimer = window.setInterval(async () => {
+      if (document.visibilityState !== "visible") return;
+      if (liveEnergyRealtimeStatus !== "SUBSCRIBED") {
+        setLiveEnergyStatus("Automatische controle · elke minuut");
+        await refreshLiveEnergy();
+        await refreshIntegrationStatuses();
+        await refreshDashboardMetrics();
+      }
+    }, 60000);
+    void refreshLiveEnergy();
+  }
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible" && window.DK_ACCOUNT?.isSignedIn?.()) scheduleLiveEnergyRefresh();
+  });
+
+  async function loadHouseholdTariff() {
+    if (!window.DK_ACCOUNT?.isSignedIn?.() || !window.DK_ACCOUNT?.getHouseholdEnergyTariff) return;
+    try {
+      currentEnergyTariff = await window.DK_ACCOUNT.getHouseholdEnergyTariff();
+      if (!currentEnergyTariff) return;
+      $("#energyTariffImport").value = currentEnergyTariff.electricity_import_eur_per_kwh ?? "";
+      $("#energyTariffExport").value = currentEnergyTariff.electricity_export_eur_per_kwh ?? "";
+      $("#energyTariffGas").value = currentEnergyTariff.gas_eur_per_m3 ?? "";
+      $("#energyTariffType").value = currentEnergyTariff.tariff_type || "unknown";
+      $("#energyTariffLabel").value = currentEnergyTariff.contract_label || "";
+    } catch (error) {
+      $("#energyTariffStatus").textContent = error?.message || "Je tarieven konden niet worden geladen.";
+    }
+  }
+
+  $("#energyTariffForm")?.addEventListener("submit", async event => {
+    event.preventDefault();
+    if (!window.DK_ACCOUNT?.isSignedIn?.()) {
+      showToast("Log in om je persoonlijke tarieven op te slaan.");
+      $("#accountOpenButton")?.click();
+      return;
+    }
+    const read = id => {
+      const value = $("#" + id).value.trim();
+      return value === "" ? null : Number(value);
+    };
+    const payload = {
+      electricity_import_eur_per_kwh: read("energyTariffImport"),
+      electricity_export_eur_per_kwh: read("energyTariffExport"),
+      gas_eur_per_m3: read("energyTariffGas"),
+      tariff_type: $("#energyTariffType").value,
+      contract_label: $("#energyTariffLabel").value.trim() || null,
+      valid_from: null
+    };
+    const button = event.currentTarget.querySelector('button[type="submit"]');
+    button.disabled = true;
+    try {
+      await window.DK_ACCOUNT.saveHouseholdEnergyTariff(payload);
+      currentEnergyTariff = await window.DK_ACCOUNT.getHouseholdEnergyTariff();
+      $("#energyTariffStatus").textContent = "Je persoonlijke tarieven zijn opgeslagen.";
+    } catch (error) {
+      $("#energyTariffStatus").textContent = error?.message || "Opslaan is niet gelukt.";
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+  function calculateEnergyScenario() {
+    const read = id => Number($("#" + id).value);
+    const input = {
+      importKwh: read("scenarioImportKwh"),
+      exportKwh: read("scenarioExportKwh"),
+      gasM3: read("scenarioGasM3"),
+      electricitySavingPercent: read("scenarioElectricitySaving"),
+      gasSavingPercent: read("scenarioGasSaving")
+    };
+    if (Object.values(input).some(value => !Number.isFinite(value) || value < 0) ||
+        input.electricitySavingPercent > 100 || input.gasSavingPercent > 100) {
+      throw new Error("Controleer de invoer: gebruik positieve waarden en maximaal 100% besparing.");
+    }
+    if (!currentEnergyTariff ||
+        currentEnergyTariff.electricity_import_eur_per_kwh == null ||
+        currentEnergyTariff.gas_eur_per_m3 == null) {
+      throw new Error("Vul eerst je stroom- en gastarief in en sla deze op.");
+    }
+    const savedImport = input.importKwh * input.electricitySavingPercent / 100;
+    const savedGas = input.gasM3 * input.gasSavingPercent / 100;
+    const electricitySaving = savedImport * Number(currentEnergyTariff.electricity_import_eur_per_kwh);
+    const gasSaving = savedGas * Number(currentEnergyTariff.gas_eur_per_m3);
+    const annualSaving = electricitySaving + gasSaving;
+    const result = {
+      saved_import_kwh: Number(savedImport.toFixed(2)),
+      saved_gas_m3: Number(savedGas.toFixed(2)),
+      electricity_saving_eur: Number(electricitySaving.toFixed(2)),
+      gas_saving_eur: Number(gasSaving.toFixed(2)),
+      annual_saving_eur: Number(annualSaving.toFixed(2)),
+      assumptions: "Variabele afnamekosten; vaste kosten, belastingwijzigingen, netkosten en dynamische uurprijzen niet meegenomen."
+    };
+    latestScenarioResult = { input, result };
+    const resultNode = $("#energyScenarioResult");
+    resultNode.innerHTML = "<span>Indicatieve jaarlijkse besparing</span><strong>" +
+      new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(annualSaving) +
+      "</strong><small>" + new Intl.NumberFormat("nl-NL", { maximumFractionDigits: 1 }).format(savedImport) +
+      " kWh minder netafname · " + new Intl.NumberFormat("nl-NL", { maximumFractionDigits: 1 }).format(savedGas) +
+      " m³ minder gas · scenario, geen gemeten besparing</small>";
+    $("#saveEnergyScenario").disabled = !window.DK_ACCOUNT?.isSignedIn?.();
+    $("#energyScenarioStatus").textContent = "";
+    return latestScenarioResult;
+  }
+
+  $("#energyScenarioForm")?.addEventListener("submit", event => {
+    event.preventDefault();
+    try { calculateEnergyScenario(); }
+    catch (error) { $("#energyScenarioStatus").textContent = error.message; }
+  });
+
+  $("#saveEnergyScenario")?.addEventListener("click", async () => {
+    if (!latestScenarioResult) return;
+    try {
+      await window.DK_ACCOUNT.saveEnergyScenarioSnapshot({
+        label: "Energiescenario " + new Date().toLocaleDateString("nl-NL"),
+        input_data: latestScenarioResult.input,
+        result_data: latestScenarioResult.result,
+        annual_saving_eur: latestScenarioResult.result.annual_saving_eur
+      });
+      $("#energyScenarioStatus").textContent = "Scenario opgeslagen bij je account (niet als gerealiseerde besparing).";
+      await refreshSavedEnergyScenarios();
+    } catch (error) {
+      $("#energyScenarioStatus").textContent = error?.message || "Scenario opslaan is niet gelukt.";
+    }
+  });
+
+  async function refreshSavedEnergyScenarios() {
+    const target = $("#savedEnergyScenarios");
+    if (!target || !window.DK_ACCOUNT?.isSignedIn?.()) {
+      if (target) {
+        target.replaceChildren();
+        const p = document.createElement("p");
+        p.className = "history-method-note";
+        p.textContent = "Log in om je bewaarde scenario's te bekijken.";
+        target.append(p);
+      }
+      return;
+    }
+    try {
+      const rows = await window.DK_ACCOUNT.listEnergyScenarioSnapshots(10);
+      target.replaceChildren();
+      if (!rows.length) {
+        const p = document.createElement("p");
+        p.className = "history-method-note";
+        p.textContent = "Nog geen scenario opgeslagen.";
+        target.append(p);
+        return;
+      }
+      rows.forEach(row => {
+        const item = document.createElement("div");
+        item.className = "saved-scenario-row";
+        const info = document.createElement("div");
+        const title = document.createElement("strong");
+        title.textContent = row.label;
+        const date = document.createElement("small");
+        date.textContent = new Date(row.created_at).toLocaleDateString("nl-NL", { dateStyle: "medium" });
+        info.append(title, date);
+        const amount = document.createElement("span");
+        amount.textContent = row.annual_saving_eur == null ? "Geen kostenindicatie" :
+          new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(row.annual_saving_eur) + " / jaar (scenario)";
+        item.append(info, amount);
+        target.append(item);
+      });
+    } catch (error) {
+      target.textContent = error?.message || "Opgeslagen scenario's konden niet worden geladen.";
+    }
+  }
+
+  function refreshCompleteEnergyArea() {
+    void refreshIntegrationStatuses();
+    void refreshDashboardMetrics();
+    void refreshLiveEnergy();
+    void loadHouseholdTariff();
+    void refreshSavedEnergyScenarios();
+    void refreshHistory();
+    void renderDashboardWeeklyTip();
+  }
+
   function localDateKey(date) {
     const parts = new Intl.DateTimeFormat("en-CA", {
       timeZone: "Europe/Amsterdam", year: "numeric", month: "2-digit", day: "2-digit"
@@ -982,6 +1320,9 @@
   void refreshIntegrationStatuses();
   void refreshLearningViews();
   void refreshDashboardMetrics();
+  void refreshLiveEnergy();
+  void loadHouseholdTariff();
+  void refreshSavedEnergyScenarios();
   void refreshAdminAccess();
 
   $("#resetDemo")?.addEventListener("click", () => {

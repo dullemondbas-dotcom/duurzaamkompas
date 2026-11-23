@@ -1,4 +1,4 @@
-name: Validate Mijn Kompas
+name: Validate Mijn Energie
 
 on:
   push:
@@ -6,13 +6,25 @@ on:
       - main
       - "feat/**"
     paths:
+      - "energie-challenge.html"
+      - "energie-challenge.css"
+      - "energie-challenge.js"
+      - "energie-challenge-sw.js"
+      - "supabase-auth.js"
       - "mijn-kompas.html"
       - "integrations/homewizard-p1/**"
+      - "supabase/migrations/**"
       - ".github/workflows/validate-mijn-kompas.yml"
   pull_request:
     paths:
+      - "energie-challenge.html"
+      - "energie-challenge.css"
+      - "energie-challenge.js"
+      - "energie-challenge-sw.js"
+      - "supabase-auth.js"
       - "mijn-kompas.html"
       - "integrations/homewizard-p1/**"
+      - "supabase/migrations/**"
       - ".github/workflows/validate-mijn-kompas.yml"
 
 permissions:
@@ -20,7 +32,7 @@ permissions:
 
 jobs:
   validate:
-    name: Validate app and local P1 bridge
+    name: Validate integrated Mijn Energie app
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -49,16 +61,53 @@ jobs:
       - name: Run P1 normalization tests
         run: python -m unittest discover -s integrations/homewizard-p1 -p 'test_*.py' -v
 
-      - name: Extract and check Mijn Kompas browser module
+      - name: Check JavaScript syntax
+        run: |
+          node --check energie-challenge.js
+          node --check supabase-auth.js
+          node --check energie-challenge-sw.js
+
+      - name: Check integrated page feature hooks
         run: |
           python - <<'PY'
           from pathlib import Path
-          import re
 
-          html = Path("mijn-kompas.html").read_text(encoding="utf-8")
-          scripts = re.findall(r'<script type="module">([\s\S]*?)</script>', html)
-          if len(scripts) != 1:
-              raise SystemExit(f"Expected exactly one module script, found {len(scripts)}")
-          Path("/tmp/mijn-kompas.mjs").write_text(scripts[0], encoding="utf-8")
+          html = Path("energie-challenge.html").read_text(encoding="utf-8")
+          js = Path("energie-challenge.js").read_text(encoding="utf-8")
+          css = Path("energie-challenge.css").read_text(encoding="utf-8")
+          required_html = [
+              'id="view-dashboard"',
+              'id="view-history"',
+              'id="view-connections"',
+              'id="liveEnergyChart"',
+              'id="energyTariffForm"',
+              'id="energyScenarioForm"',
+              'id="downloadHomeWizardConfig"',
+          ]
+          required_js = [
+              "subscribeEnergyMeasurements",
+              "listRecentEnergyMeasurements",
+              "saveHouseholdEnergyTariff",
+              "saveEnergyScenarioSnapshot",
+              "startLiveEnergyUpdates",
+              "renderLiveEnergyChart",
+          ]
+          missing = [item for item in required_html if item not in html]
+          missing += [item for item in required_js if item not in js]
+          if missing:
+              raise SystemExit("Missing integrated Mijn Energie hooks: " + ", ".join(missing))
+          if "live-energy-svg" not in js or ".live-energy-svg" not in css:
+              raise SystemExit("Live P1 chart markup and styling are not both present.")
+          print("Integrated Mijn Energie feature hooks found.")
           PY
-          node --check /tmp/mijn-kompas.mjs
+
+      - name: Check legacy Mijn Kompas route
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          page = Path("mijn-kompas.html").read_text(encoding="utf-8")
+          if "energie-challenge.html" not in page or "window.location.replace" not in page:
+              raise SystemExit("Legacy Mijn Kompas page must forward to the integrated Energie Challenge app.")
+          print("Legacy Mijn Kompas route forwards to the central app.")
+          PY

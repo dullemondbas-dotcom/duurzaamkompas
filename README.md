@@ -33,7 +33,7 @@ DuurzaamKompas is een gratis Nederlandstalig consumentenplatform over energie th
 - `over.html` — missie, visie, platformprincipes en ontwikkelrichting
 
 - `energie-challenge.html` + `energie-challenge.css` + `energie-challenge.js` — de bestaande Mijn Energie / Energie Challenge-omgeving met accounts, huishoudprofiel, meetdata, persoonlijke tips en challenge-interface. Challenge-scores en communityfuncties blijven buiten productie totdat meetkwaliteit en scoremethodiek zijn gevalideerd.
-- `mijn-kompas.html` — uitgebreide persoonlijke energieomgeving met dashboard, HomeWizard P1-koppeling, maandelijkse besparingshistorie, weekcoach, woningprofiel, persoonlijke tarieven en opgeslagen rekentoolscenario’s.
+- `energie-challenge.html` — centrale persoonlijke energieomgeving. Naast het bestaande account, woningprofiel, weektips, besparingsgeschiedenis en challenges bevat deze pagina ook de HomeWizard P1-configuratie, live vermogensgrafiek, persoonlijke tarieven en bewaarde scenario’s. `mijn-kompas.html` verwijst door naar deze centrale app.
 - `docs/ENERGIE_CHALLENGE_MVP_STATUS.md` — status, beperkingen en volgende technische stappen voor de Energie Challenge.
 - `docs/MIJN_KOMPAS_V3_GITHUB_IMPLEMENTATIE.md` — architectuur, datastromen, licentiegrenzen en status van Mijn Kompas V3.
 - `integrations/homewizard-p1/` — lokale Python-bridge, voorbeeldconfiguratie en tests voor opt-in HomeWizard P1-meetdata. De connectorbestanden en installatiehandleiding staan in `integrations/homewizard-p1/`.
@@ -123,7 +123,7 @@ De dagelijkse rekenengine, persoonlijke stroomreferentie, week-/maand-/jaarresul
 
 
 ### Live synchronisatie Mijn Kompas
-- `mijn-kompas.html` toont naast de dagelijkse kWh-grafiek ook recente P1-vermogensmetingen in watt.
+- `energie-challenge.html` toont naast de dagelijkse kWh-grafiek ook recente P1-vermogensmetingen in watt en bevat de gecombineerde gebruikersroute voor HomeWizard, tarieven, scenario’s en persoonlijke energiegeschiedenis.
 - Nieuwe rijen in `energy_measurements` activeren Supabase Realtime-verversing. Wanneer realtime tijdelijk wegvalt, gebruikt de pagina een zichtbare-tab fallbackcontrole per minuut.
 - De lokale HomeWizard-bridge valideert na pairing de API-respons, bewaart het apparaat-token alleen lokaal en kan op Windows optioneel met Taakplanner bij aanmelden starten.
 - Tests voor import/export, driefasenvermogen, telwerken, gas en tijdzone-normalisatie staan in `integrations/homewizard-p1/test_normalize.py`.
