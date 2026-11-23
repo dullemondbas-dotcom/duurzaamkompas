@@ -85,3 +85,12 @@ GitHub Pages wordt via GitHub Actions gepubliceerd vanuit branch `main`. Er word
 - docs/MIJN_ENERGIE_PWA_EN_INFRASTRUCTUUR.md — installatie-instructies, backendstatus en beveiligingsgrenzen.
 
 De app blijft momenteel een statische PWA-demo. De Supabase-configuratie is nog niet aangesloten en er zijn nog geen echte accounts of live meetdata.
+
+
+## Accountregistratie en huishoudprofiel
+De accountinterface is voorbereid met Supabase Auth (registratie, e-mailbevestiging, login, uitloggen en wachtwoordherstel) en online huishoudprofielsynchronisatie. Voor activering is nog een Supabase-project vereist:
+- configureer supabase-config.js met de publieke Project URL en publishable key;
+- voer supabase/migrations/202611230001_initial_mijn_energie.sql uit in Supabase SQL Editor;
+- configureer Site URL en Redirect URLs zoals beschreven in docs/MIJN_ENERGIE_PWA_EN_INFRASTRUCTUUR.md.
+
+Plaats nooit service_role keys of andere geheime sleutels in deze publieke repository. Zonder Supabase-config blijft de app in lokale demo-modus.
