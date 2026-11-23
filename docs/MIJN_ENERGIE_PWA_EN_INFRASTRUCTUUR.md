@@ -41,7 +41,7 @@ Row Level Security staat aan voor alle tabellen. Meetdata, aggregaten, integrati
 
 ## Dataveiligheid
 - Nooit een service-role key of Home Assistant-token in browser-JavaScript, GitHub Pages, localStorage of een openbare repository plaatsen.
-- integrations.secret_reference is uitsluitend een referentie naar server-side secret storage, niet het secret zelf.
+- Provider-tokens worden niet in de publieke database opgeslagen. Ze horen in een server-side secret store of beveiligde vault, buiten de browser en de publieke tabellen.
 - Challenge-ranglijsten worden via een nickname-only RPC opgehaald; er wordt geen e-mail, woonadres of ruwe meetdata teruggegeven.
 - De service worker cachet geen API-verzoeken of privégegevens.
 - De huidige app bewaart huishoudprofiel en test-challenges lokaal. Gebruik dit prototype niet voor gevoelige gegevens tot accountsynchronisatie en privacyprocessen actief zijn.
