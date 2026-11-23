@@ -69,16 +69,17 @@ if (calcForm) {
     event?.preventDefault();
     const use=value("annual-use"), solar=value("solar-yield"), direct=value("direct-use")/100, capacity=value("battery-capacity"), cycles=value("cycle-count"), efficiency=value("roundtrip")/100, buy=value("buy-price"), sell=value("sell-price"), investment=value("investment");
     const surplus=Math.max(0,solar*(1-direct));
-    const batteryThroughput=Math.max(0,capacity*cycles*efficiency);
-    const annualShift=Math.min(surplus,batteryThroughput,use);
-    const margin=buy-sell;
-    const benefit=annualShift*margin;
+    const maxStoredInput=Math.max(0,capacity*cycles);
+    const annualShift=Math.min(surplus*efficiency,maxStoredInput*efficiency,use);
+    const solarEnergyUsedForCharging=efficiency>0?annualShift/efficiency:0;
+    const benefit=annualShift*buy-solarEnergyUsedForCharging*sell;
+    const margin=efficiency>0?buy-sell/efficiency:0;
     const years=benefit>0&&investment>0?investment/benefit:null;
     document.querySelector("#shifted-energy").innerHTML=Math.round(annualShift).toLocaleString("nl-NL")+' <span>kWh</span>';
     document.querySelector("#annual-benefit").textContent=money(benefit);
     document.querySelector("#payback").textContent=years&&Number.isFinite(years)?years.toFixed(1).replace(".",",")+" jaar":"Niet zinvol te berekenen";
     document.querySelector("#surplus").textContent=Math.round(surplus).toLocaleString("nl-NL")+" kWh";
-    const message = margin<=0 ? "Je ingevulde verschil tussen inkoopprijs en terugleververgoeding is nul of negatief. Op basis van deze invoer ontstaat geen positieve bruto waarde voor verschoven zonnestroom." : "Dit is een theoretische bovengrens op basis van jouw invoer. Het model veronderstelt dat alle berekende verschoven energie nuttig in huis wordt gebruikt. In de praktijk kan de uitkomst aanzienlijk lager zijn door seizoenen, gelijktijdigheid, vermogen, verliezen en contractvoorwaarden.";
+    const message = margin<=0 ? "Na rekening te houden met het retourrendement is het verschil tussen vermeden inkoop en gemiste terugleververgoeding nul of negatief. Op basis van deze invoer ontstaat geen positieve bruto waarde voor verschoven zonnestroom." : "Dit is een theoretische bovengrens op basis van jouw invoer. De berekening telt het rendement mee: om 1 kWh terug te leveren energie uit de batterij te gebruiken, moet meer dan 1 kWh zonne-energie worden opgeslagen. Het model veronderstelt dat alle berekende energie nuttig in huis wordt gebruikt. In de praktijk kan de uitkomst aanzienlijk lager zijn door seizoenen, gelijktijdigheid, vermogen, verliezen en contractvoorwaarden.";
     document.querySelector("#calc-explanation").textContent=message;
   }
   calcForm.addEventListener("submit",calculate);
