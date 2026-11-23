@@ -66,7 +66,6 @@ create table if not exists public.integrations (
   status text not null default 'pending' check (status in ('pending','connected','degraded','revoked','error')),
   display_label text,
   granted_scopes text[] not null default '{}',
-  secret_reference text,
   connected_at timestamptz,
   last_seen_at timestamptz,
   last_error_code text,
@@ -409,18 +408,13 @@ create policy "challenges_update_creator" on public.challenges
 create policy "challenges_delete_creator" on public.challenges
   for delete to authenticated using (created_by = auth.uid());
 
-create policy "challenge_members_select_visible" on public.challenge_members
-  for select to authenticated using (
-    user_id = auth.uid()
-    or public.is_challenge_member(challenge_id)
-    or public.is_public_active_challenge(challenge_id)
-  );
--- Users join through join_public_challenge RPC; no direct member insertion.
+create policy "challenge_members_select_own" on public.challenge_members
+  for select to authenticated using (user_id = auth.uid());
+-- Other participants' internal IDs and household IDs are not exposed. Nickname-only
+-- leaderboards are returned through get_challenge_leaderboard RPC.
 
-create policy "challenge_scores_select_members" on public.challenge_scores
-  for select to authenticated using (public.is_challenge_member(challenge_id)
-    or public.is_public_active_challenge(challenge_id));
--- No client writes. Score computation is trusted server-side only.
+-- No direct SELECT or write policies for challenge_scores. Scores are exposed only
+-- through the nickname-only RPC and are computed server-side.
 
 create policy "consents_select_own" on public.consent_records
   for select to authenticated using (user_id = auth.uid());
