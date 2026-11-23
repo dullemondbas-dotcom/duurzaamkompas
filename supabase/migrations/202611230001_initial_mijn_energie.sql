@@ -175,7 +175,7 @@ create table if not exists public.consent_records (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
   household_id uuid references public.households(id) on delete cascade,
-  purpose text not null check (purpose in ('energy_measurements','challenge_participation','public_challenge','partner_contact_share','product_updates')),
+  purpose text not null check (purpose in ('household_profile','energy_measurements','challenge_participation','public_challenge','partner_contact_share','product_updates')),
   policy_version text not null,
   granted_at timestamptz not null default now(),
   revoked_at timestamptz,
