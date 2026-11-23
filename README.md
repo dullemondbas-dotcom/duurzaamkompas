@@ -10,16 +10,18 @@ Eerste statische versie van de Nederlandstalige website over thuisbatterijen en 
 ## Lokaal bekijken
 Open `index.html` in een browser.
 
-## Gratis publiceren
-Deze site kan als statische website gratis worden gehost via Cloudflare Pages:
-1. Open Cloudflare Pages en kies **Create a project**.
-2. Koppel deze GitHub-repository.
-3. Selecteer de branch `main`.
-4. Laat het build command leeg.
-5. Stel de output directory in op `/` (root).
-6. Start de deployment.
+## Gratis publiceren via GitHub Pages
+Er staat een GitHub Actions-workflow klaar in `.github/workflows/deploy.yml`.
+1. Open **Settings** van deze repository op GitHub.
+2. Kies links **Pages**.
+3. Ga naar **Build and deployment** en kies bij **Source**: **GitHub Actions**.
+4. Sla de instelling op.
+5. Open daarna het tabblad **Actions** om de eerste publicatie te volgen.
 
-Er is geen framework, buildstap of betaalde dependency nodig.
+Na de eerste succesvolle publicatie is de site bereikbaar via:
+`https://dullemondbas-dotcom.github.io/duurzaamkompas/`
+
+Elke volgende wijziging op de branch `main` wordt automatisch opnieuw gepubliceerd. Er is geen framework, buildstap of betaalde dependency nodig.
 
 ## Belangrijke vervolgstappen
 - Controleer en vul contactgegevens in voordat deze site publiek wordt gedeeld.
