@@ -36,7 +36,7 @@ DuurzaamKompas is een gratis Nederlandstalig consumentenplatform over energie th
 - `mijn-kompas.html` — uitgebreide persoonlijke energieomgeving met dashboard, HomeWizard P1-koppeling, maandelijkse besparingshistorie, weekcoach, woningprofiel, persoonlijke tarieven en opgeslagen rekentoolscenario’s.
 - `docs/ENERGIE_CHALLENGE_MVP_STATUS.md` — status, beperkingen en volgende technische stappen voor de Energie Challenge.
 - `docs/MIJN_KOMPAS_V3_GITHUB_IMPLEMENTATIE.md` — architectuur, datastromen, licentiegrenzen en status van Mijn Kompas V3.
-- `integrations/homewizard-p1/` — lokale Python-bridge, voorbeeldconfiguratie en tests voor opt-in HomeWizard P1-meetdata. Het connectorarchief staat op `integrations/homewizard-p1-connector.zip`.
+- `integrations/homewizard-p1/` — lokale Python-bridge, voorbeeldconfiguratie en tests voor opt-in HomeWizard P1-meetdata. De connectorbestanden en installatiehandleiding staan in `integrations/homewizard-p1/`.
 
 ## Redactionele uitgangspunten
 
