@@ -49,16 +49,12 @@ jobs:
       - name: Run P1 normalization tests
         run: python -m unittest discover -s integrations/homewizard-p1 -p 'test_*.py' -v
 
-      - name: Extract and check Mijn Kompas browser module
+      - name: Check legacy Mijn Kompas route
         run: |
           python - <<'PY'
           from pathlib import Path
-          import re
-
-          html = Path("mijn-kompas.html").read_text(encoding="utf-8")
-          scripts = re.findall(r'<script type="module">([\s\S]*?)</script>', html)
-          if len(scripts) != 1:
-              raise SystemExit(f"Expected exactly one module script, found {len(scripts)}")
-          Path("/tmp/mijn-kompas.mjs").write_text(scripts[0], encoding="utf-8")
+          page = Path("mijn-kompas.html").read_text(encoding="utf-8")
+          if "energie-challenge.html" not in page or "window.location.replace" not in page:
+              raise SystemExit("Legacy Mijn Kompas page must forward to the integrated Energie Challenge app.")
+          print("Legacy Mijn Kompas route forwards to the central app.")
           PY
-          node --check /tmp/mijn-kompas.mjs

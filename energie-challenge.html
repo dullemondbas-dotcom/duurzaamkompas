@@ -70,6 +70,15 @@
           <div class="chart-columns" id="energyChartColumns"></div>
         </div>
         <p class="chart-footnote" id="energyChartFootnote">Zodra een meter is gekoppeld, verschijnen hier je gemeten waarden. Onvolledige meetdagen worden niet als nulverbruik geteld.</p>
+        <div class="live-power-panel">
+          <div class="live-power-heading">
+            <div><p class="eyebrow">LIVE · P1-METER</p><h3>Actueel vermogen</h3><small>Recente meetpunten · maximaal 2 uur</small></div>
+            <span class="live-sync-label" id="liveEnergySyncLabel" aria-live="polite">Wacht op meterdata</span>
+          </div>
+          <div class="live-power-current"><strong id="liveEnergyPower">—</strong><span id="liveEnergyDirection">Nog geen actuele meting</span></div>
+          <div id="liveEnergyChart"><div class="live-chart-empty">Na de eerste P1-meting verschijnt hier je actuele afname en teruglevering.</div></div>
+          <div class="chart-legend"><span><i class="legend-current"></i>Afname (W)</span><span><i class="legend-live-export"></i>Teruglevering (W)</span></div>
+        </div>
       </article>
       <article class="panel challenge-panel">
         <div class="panel-heading"><div><p class="eyebrow">DOE MEE</p><h2>Jouw challenges</h2></div><button class="text-button" data-go="challenges">Alles bekijken →</button></div>
@@ -126,6 +135,34 @@
       </div>
       </div>
     </section>
+    
+    <section class="panel energy-planning-panel" aria-labelledby="energyTariffHeading">
+      <div class="panel-heading"><div><p class="eyebrow">PERSOONLIJKE INSTELLINGEN</p><h2 id="energyTariffHeading">Jouw energietarieven</h2><p>Vul de variabele tarieven uit je energiecontract in. Dan kunnen scenario's een persoonlijke kostenindicatie gebruiken.</p></div></div>
+      <form class="energy-tariff-form" id="energyTariffForm">
+        <label>Afname stroom · €/kWh<input id="energyTariffImport" type="number" min="0" step="0.001" inputmode="decimal" placeholder="Bijv. 0,29"></label>
+        <label>Terugleververgoeding · €/kWh<input id="energyTariffExport" type="number" min="0" step="0.001" inputmode="decimal" placeholder="Bijv. 0,07"></label>
+        <label>Gas · €/m³<input id="energyTariffGas" type="number" min="0" step="0.001" inputmode="decimal" placeholder="Bijv. 1,25"></label>
+        <label>Contracttype<select id="energyTariffType"><option value="fixed">Vast</option><option value="variable">Variabel</option><option value="dynamic">Dynamisch</option><option value="unknown">Onbekend</option></select></label>
+        <label class="energy-tariff-wide">Contractnaam (optioneel)<input id="energyTariffLabel" type="text" maxlength="100" placeholder="Naam van je contract"></label>
+        <button class="btn btn-primary" type="submit">Tarieven opslaan</button>
+        <span class="form-status" id="energyTariffStatus" role="status" aria-live="polite"></span>
+      </form>
+      <div class="scenario-divider"></div>
+      <div class="panel-heading"><div><p class="eyebrow">REKENTOOL · WAT ALS?</p><h2>Bereken een besparingsscenario</h2><p>Dit is een verwachting op basis van je eigen invoer, geen gemeten besparing.</p></div></div>
+      <form class="energy-scenario-form" id="energyScenarioForm">
+        <label>Jaarlijkse stroomafname · kWh<input id="scenarioImportKwh" type="number" min="0" step="1" inputmode="decimal" value="3000"></label>
+        <label>Jaarlijks gasverbruik · m³<input id="scenarioGasM3" type="number" min="0" step="1" inputmode="decimal" value="1000"></label>
+        <label>Verwachte daling stroomafname · %<input id="scenarioElectricitySaving" type="number" min="0" max="100" step="1" inputmode="decimal" value="10"></label>
+        <label>Verwachte daling gasverbruik · %<input id="scenarioGasSaving" type="number" min="0" max="100" step="1" inputmode="decimal" value="5"></label>
+        <div class="scenario-result" id="energyScenarioResult" aria-live="polite"><span>Indicatieve jaarlijkse besparing</span><strong>—</strong><small>Vul je tarieven in en bereken je scenario.</small></div>
+        <button class="btn btn-primary" type="submit">Bereken scenario</button>
+        <button class="btn btn-secondary" type="button" id="saveEnergyScenario" disabled>Bewaar bij mijn account</button>
+        <span class="form-status" id="energyScenarioStatus" role="status" aria-live="polite"></span>
+      </form>
+      <div class="scenario-saved-list" id="savedEnergyScenarios"><p class="history-method-note">Opgeslagen scenario's verschijnen hier.</p></div>
+      <p class="history-method-note">We rekenen met variabele stroom- en gaskosten. Vaste leveringskosten, netbeheerkosten, belastingen en eventuele dynamische uurprijzen zijn niet inbegrepen. Bij zonnepanelen of een thuisbatterij is een lagere netafname niet automatisch een lager totaal stroomverbruik.</p>
+    </section>
+
   </section>
 
   <section class="view" id="view-admin">
@@ -289,10 +326,11 @@
       </article>
       <article class="connection-card panel">
         <span class="connection-symbol">P1</span><span class="connection-status">LOKALE API-ROUTE VOORBEREID</span><h3>HomeWizard P1</h3>
-        <p>HomeWizard kan meetgegevens lokaal uitlezen. De eerste route gebruikt de officiële Home Assistant-integratie; later kan een lokale DuurzaamKompas-brug dezelfde meetdata doorsturen.</p>
+        <p>Verbind je HomeWizard P1 rechtstreeks via een kleine lokale bridge op een computer of mini-pc in je thuisnetwerk. De meter wordt lokaal gevonden en vraagt om fysieke bevestiging. Je HomeWizard-apparaat-token blijft op je eigen apparaat; DuurzaamKompas ontvangt alleen meetwaarden.</p>
         <p class="integration-status" data-provider-status="homewizard" aria-live="polite">Log in om de koppelstatus te bekijken.</p>
-        <button type="button" class="btn btn-secondary" data-connect-provider="homewizard">Maak HomeWizard-koppelcode</button>
+        <button type="button" class="btn btn-secondary" data-connect-provider="homewizard">Koppel HomeWizard P1</button>
         <button type="button" class="text-button integration-revoke" data-revoke-provider="homewizard" hidden>Verbinding intrekken</button>
+        <p class="connection-licence-note">De huidige lokale HomeWizard API-licentie is alleen voor persoonlijk, niet-commercieel gebruik. Voor een openbare of commerciële koppeling is eerst een passende schriftelijke overeenkomst nodig.</p>
       </article>
       <article class="connection-card panel">
         <span class="connection-symbol">DK</span><span class="connection-status">PRODUCTROUTE VASTGELEGD</span><h3>DuurzaamKompas P1</h3>
@@ -304,7 +342,12 @@
     <section class="integration-token-panel panel" id="integrationTokenPanel" hidden aria-live="polite">
       <div class="panel-heading"><div><p class="eyebrow">PERSOONLIJKE KOPPELCODE</p><h2 id="integrationTokenTitle">Je koppelcode is aangemaakt</h2><p id="integrationTokenInstructions"></p></div><button type="button" class="icon-button" id="hideIntegrationToken" aria-label="Koppelcode verbergen">×</button></div>
       <code class="integration-token-code" id="integrationTokenCode"></code>
-      <div class="integration-token-actions"><button type="button" class="btn btn-primary" id="copyIntegrationToken">Kopieer koppelcode</button><span class="form-status" id="integrationTokenStatus" aria-live="polite"></span></div>
+      <div class="integration-token-actions"><button type="button" class="btn btn-primary" id="copyIntegrationToken">Kopieer koppelcode</button><button type="button" class="btn btn-secondary" id="downloadHomeWizardConfig" hidden>Download P1-configuratie</button><span class="form-status" id="integrationTokenStatus" aria-live="polite"></span></div>
+      <div class="homewizard-setup-links" id="homeWizardSetupLinks" hidden>
+        <p>Download daarna de lokale bridgebestanden en volg de installatie-instructies:</p>
+        <a href="https://github.com/dullemondbas-dotcom/duurzaamkompas/tree/main/integrations/homewizard-p1" target="_blank" rel="noopener">HomeWizard P1-installatiehandleiding op GitHub ↗</a>
+        <small>De bridge kan op Windows automatisch starten via Taakplanner. Pairing met de fysieke P1-meter is eenmalig nodig.</small>
+      </div>
       <p class="integration-token-warning">Let op: deze code wordt maar één keer getoond. Bewaar hem lokaal in de beveiligde configuratie van je eigen installatie. Deel hem niet in een bericht, screenshot of openbaar bestand. Bij een nieuwe code wordt de vorige direct ongeldig.</p>
     </section>
     <div class="privacy-box"><span>♧</span><div><h3>Jij houdt de controle.</h3><p>De ruwe koppelcode wordt alleen in je browser aangemaakt en één keer aan je getoond. DuurzaamKompas bewaart uitsluitend een hash. Meetwaarden blijven privé voor je huishouden en worden niet automatisch openbaar in challenges geplaatst.</p><a href="bronnen.html">Lees onze uitgangspunten voor privacy en transparantie ↗</a></div></div>

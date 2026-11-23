@@ -419,6 +419,89 @@
     return data || [];
   }
 
+
+  async function listRecentEnergyMeasurements(minutes = 120) {
+    if (!client || !currentUser || !householdId) return [];
+    const safeMinutes = Math.max(5, Math.min(360, Number(minutes) || 120));
+    const since = new Date(Date.now() - safeMinutes * 60 * 1000).toISOString();
+    const { data, error } = await client.from("energy_measurements")
+      .select("measured_at,grid_import_w,grid_export_w")
+      .eq("household_id", householdId)
+      .gte("measured_at", since)
+      .order("measured_at", { ascending: false })
+      .limit(240);
+    if (error) throw error;
+    return data || [];
+  }
+
+  function subscribeEnergyMeasurements(callback) {
+    if (!client || !currentUser || !householdId || typeof callback !== "function") return () => {};
+    const channel = client.channel("dk-energy-measurements-" + householdId)
+      .on("postgres_changes", {
+        event: "INSERT",
+        schema: "public",
+        table: "energy_measurements",
+        filter: "household_id=eq." + householdId
+      }, payload => callback({ type: "measurement", record: payload.new }))
+      .subscribe(status => callback({ type: "status", status }));
+    return () => { void client.removeChannel(channel); };
+  }
+
+  async function getHouseholdEnergyTariff() {
+    if (!client || !currentUser || !householdId) return null;
+    const { data, error } = await client.from("household_energy_tariffs")
+      .select("electricity_import_eur_per_kwh,electricity_export_eur_per_kwh,gas_eur_per_m3,contract_label,tariff_type,valid_from,updated_at")
+      .eq("household_id", householdId)
+      .maybeSingle();
+    if (error) throw error;
+    return data || null;
+  }
+
+  async function saveHouseholdEnergyTariff(payload) {
+    if (!client || !currentUser || !householdId) throw new Error("Log in en sla eerst je huishoudenprofiel op.");
+    const clean = {
+      household_id: householdId,
+      electricity_import_eur_per_kwh: payload.electricity_import_eur_per_kwh,
+      electricity_export_eur_per_kwh: payload.electricity_export_eur_per_kwh,
+      gas_eur_per_m3: payload.gas_eur_per_m3,
+      contract_label: payload.contract_label || null,
+      tariff_type: payload.tariff_type || "unknown",
+      valid_from: payload.valid_from || null,
+      updated_at: new Date().toISOString()
+    };
+    const { error } = await client.from("household_energy_tariffs")
+      .upsert(clean, { onConflict: "household_id" });
+    if (error) throw error;
+    return true;
+  }
+
+  async function listEnergyScenarioSnapshots(limit = 12) {
+    if (!client || !currentUser || !householdId) return [];
+    const safeLimit = Math.max(1, Math.min(30, Number(limit) || 12));
+    const { data, error } = await client.from("energy_scenario_snapshots")
+      .select("id,label,annual_saving_eur,created_at,input_data,result_data")
+      .eq("household_id", householdId)
+      .order("created_at", { ascending: false })
+      .limit(safeLimit);
+    if (error) throw error;
+    return data || [];
+  }
+
+  async function saveEnergyScenarioSnapshot(payload) {
+    if (!client || !currentUser || !householdId) throw new Error("Log in en sla eerst je huishoudenprofiel op.");
+    const { error } = await client.from("energy_scenario_snapshots").insert({
+      household_id: householdId,
+      created_by: currentUser.id,
+      label: String(payload.label || "Mijn scenario").slice(0, 80),
+      input_data: payload.input_data || {},
+      result_data: payload.result_data || {},
+      annual_saving_eur: Number.isFinite(Number(payload.annual_saving_eur))
+        ? Number(Number(payload.annual_saving_eur).toFixed(2)) : null
+    });
+    if (error) throw error;
+    return true;
+  }
+
   async function isPlatformAdmin() {
     if (!client || !currentUser) return false;
     const { data, error } = await client.rpc("is_my_platform_admin");
@@ -475,6 +558,12 @@
     listEnergyTipEvents,
     updateWeeklyTipStatus,
     listEnergyDailyAggregates,
+    listRecentEnergyMeasurements,
+    subscribeEnergyMeasurements,
+    getHouseholdEnergyTariff,
+    saveHouseholdEnergyTariff,
+    listEnergyScenarioSnapshots,
+    saveEnergyScenarioSnapshot,
     isPlatformAdmin,
     listAdminEnergyTips,
     saveAdminEnergyTip,

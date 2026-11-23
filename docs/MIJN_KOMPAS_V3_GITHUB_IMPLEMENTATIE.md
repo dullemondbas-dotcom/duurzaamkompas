@@ -46,3 +46,10 @@ De huidige lokale HomeWizard API-licentie is voor persoonlijk, niet-commercieel 
 - Dagaggregaties en besparingsperioden blijven via de bestaande dagelijkse verwerking lopen; de recente vermogenslijn toont intussen direct nieuwe P1-meetpunten.
 - De lokale connector controleert na de fysieke knopbevestiging eerst de apparaatinfo en een meetrespons voordat de apparaat-token wordt bewaard.
 - Op Windows kan de gebruiker optioneel een Taakplanner-taak installeren om de bridge bij aanmelden te starten en bij een procesfout opnieuw te proberen.
+
+
+## Centrale app-route
+- De bestaande Energie Challenge-PWA is de centrale Mijn Energie / Mijn Kompas-omgeving: `energie-challenge.html`.
+- Het persoonlijke dashboard, live P1-vermogensgrafiek, persoonlijke tarieven, scenario-opslag, weekcoach, historische besparingen, accountbeheer en challenges zijn in deze route geïntegreerd.
+- `mijn-kompas.html` is een compatibele doorverwijspagina naar `energie-challenge.html`, zodat oude links blijven werken.
+- De PWA-cacheversie is verhoogd om de nieuwe HTML, CSS en JavaScript niet achter de oude offline app-shell te laten staan.

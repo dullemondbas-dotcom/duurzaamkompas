@@ -174,3 +174,49 @@
 .history-action-row small,.history-action-row time{font-size:9px;color:#89958c}
 .history-actions-empty,.history-no-savings-note,.history-method-note{margin:12px 0 0;color:#7a897e;font-size:10px;line-height:1.75}
 .history-no-savings-note{padding-top:10px;border-top:1px solid #edf1eb}
+
+
+/* Integrated Mijn Energie live P1, tariff and scenario experience */
+.live-power-panel{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.live-power-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+.live-power-heading h3{margin:2px 0 0;font:800 15px var(--display);color:var(--ink)}
+.live-power-heading small{display:block;margin-top:4px;color:var(--muted);font-size:10px}
+.live-sync-label{display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;background:#edf2e9;color:#66806a;font-size:9px;font-weight:700}
+.live-power-current{display:flex;align-items:baseline;gap:12px;margin:12px 0 5px}
+.live-power-current strong{font:800 24px var(--display);letter-spacing:-.04em;color:#294735}
+.live-power-current span{font-size:10px;color:var(--muted)}
+.live-energy-svg{display:block;width:100%;height:auto;min-height:120px;overflow:visible}
+.live-chart-empty{padding:22px 12px;border:1px dashed #dce5da;border-radius:9px;color:#849187;font-size:10px;text-align:center}
+.legend-live-export{display:inline-block;width:9px;height:9px;border-radius:50%;background:#c5a36c;margin-right:6px}
+.connection-licence-note{margin:11px 0 0;padding:10px 11px;border-radius:8px;background:#f7f4ed;color:#86734e;font-size:9px;line-height:1.6}
+.homewizard-setup-links{display:grid;gap:7px;margin:14px 0 4px;padding:13px 14px;border:1px solid #dce5da;border-radius:10px;background:#f8faf6}
+.homewizard-setup-links p{margin:0;color:#586b5d;font-size:10px}
+.homewizard-setup-links a{color:#315c45;font-size:11px;font-weight:800;text-decoration:underline;text-underline-offset:3px}
+.homewizard-setup-links small{color:#778579;font-size:9px;line-height:1.6}
+.energy-planning-panel{margin-top:18px;padding:22px}
+.energy-tariff-form,.energy-scenario-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:15px}
+.energy-tariff-form label,.energy-scenario-form label{display:grid;gap:5px;color:#566b5d;font-size:10px;font-weight:700}
+.energy-tariff-form input,.energy-tariff-form select,.energy-scenario-form input{width:100%;min-width:0;padding:10px 11px;border:1px solid #dce5db;border-radius:8px;background:#fff;color:#294434;font:500 12px var(--sans)}
+.energy-tariff-wide{grid-column:1/-1}
+.energy-tariff-form button,.energy-scenario-form button{justify-self:start}
+.energy-tariff-form .form-status,.energy-scenario-form .form-status{align-self:center;color:#68836a;font-size:10px}
+.scenario-divider{height:1px;margin:24px 0 21px;background:#e8eee5}
+.scenario-result{display:grid;gap:3px;align-content:center;padding:13px 14px;border-radius:10px;background:#edf2e9}
+.scenario-result span{color:#617467;font-size:9px;font-weight:700}
+.scenario-result strong{color:#294735;font:800 23px var(--display)}
+.scenario-result small{color:#778579;font-size:9px;line-height:1.5}
+.saved-scenario-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid #edf1eb}
+.saved-scenario-row:last-child{border-bottom:0}
+.saved-scenario-row>div{display:grid;gap:3px}
+.saved-scenario-row strong{font-size:10px;color:#294735}
+.saved-scenario-row small,.saved-scenario-row>span{font-size:9px;color:#849187}
+.scenario-saved-list{margin-top:13px}
+@media(max-width:680px){
+ .energy-planning-panel{padding:16px}
+ .energy-tariff-form,.energy-scenario-form{grid-template-columns:1fr}
+ .energy-tariff-wide{grid-column:1}
+ .energy-tariff-form button,.energy-scenario-form button{width:100%;justify-self:stretch}
+ .live-power-heading{align-items:flex-start}
+ .live-power-current{flex-wrap:wrap}
+ .saved-scenario-row{align-items:flex-start;flex-direction:column;gap:4px}
+}
