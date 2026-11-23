@@ -1,28 +1,35 @@
 # Live energiedashboard — installatie
 
-Het dashboard haalt gegevens server-side op en publiceert alleen een openbare JSON-snapshot op `data/energy-live.json`. API-sleutels worden nooit in browsercode opgenomen.
+Het dashboard haalt KNMI-waarnemingen server-side op en publiceert alleen een openbare JSON-snapshot op \`data/energy-live.json\`. De KNMI API-sleutel wordt alleen in GitHub Actions gebruikt en nooit naar de browser gestuurd.
 
-## 1. GitHub Actions secrets toevoegen
+## 1. KNMI API-sleutel toevoegen
 
-Open de repository **Settings → Secrets and variables → Actions → New repository secret** en voeg deze geheimen toe:
+Open de repository in GitHub: **Settings → Secrets and variables → Actions → New repository secret**.
 
-- `NED_API_KEY`: API-sleutel van je persoonlijke Nationaal Energie Dashboard-account. De API-handleiding vermeldt dat deze sleutel via de header `X-AUTH-TOKEN` wordt meegestuurd.
-- `KNMI_API_KEY`: API-sleutel voor de KNMI EDR API (ook een anonieme sleutel kan worden aangevraagd).
-- `TENNET_API_KEY`: API-sleutel voor TenneT Settlement Prices API, gevraagd via het officiële developerportaal.
+Voeg deze repository secret toe:
 
-De waarden zijn persoonlijk en horen niet in bestanden of chatberichten te worden gezet. Deel ze niet met bezoekers.
+- \`KNMI_API_KEY\`: API-sleutel voor de KNMI EDR API. KNMI biedt ook een anonieme sleutel aan voor normaal gebruik. De dataset wordt gebruikt onder de datasetlicentie; voor de meeste KNMI-datasets is dat CC BY 4.0. De website vermeldt KNMI als bron en linkt naar de dataset.
 
 ## 2. Eenmalig de workflow starten
 
 Ga naar **Actions → Refresh public energy dashboard → Run workflow**. De workflow wordt daarna iedere 15 minuten ingepland. GitHub Actions kan geplande workflows soms later uitvoeren.
 
-## 3. Wat wordt gepubliceerd
+## 3. Waarom NED en TenneT nog niet live worden doorgegeven
 
-- NED: Nederlandse zonne-opwek, windopwek en elektriciteitsvraag. De API bevat near-real-time gegevens op 10-minutenniveau.
+De algemene voorwaarden van Nationaal Energie Dashboard verbieden het kopiëren of distribueren van hun Product aan derden zonder voorafgaande toestemming. De API-sleutel is bovendien persoonlijk. TenneT verbiedt het distribueren of delen van API-data met derden, tenzij dit expliciet is toegestaan in de API-documentatie.
+
+DuurzaamKompas is een openbaar platform. Daarom publiceren we geen NED- of TenneT-API-data voordat de benodigde schriftelijke toestemming of overeenkomst is geregeld. De pagina toont de bronstatus en verwijst naar de voorwaarden. Er wordt geen persoonlijke API-sleutel van NED of TenneT opgevraagd of in GitHub opgeslagen.
+
+Officiële voorwaarden:
+- [NED algemene voorwaarden](https://ned.nl/nl/algemene-voorwaarden)
+- [TenneT API Fair Use Policy](https://developer.tennet.eu/fair-use-policy)
+
+## 4. Wat wordt gepubliceerd
+
 - KNMI: temperatuur, globale zonnestraling en windsnelheid bij station De Bilt uit het 10-minutendataset. Dit zijn snelle, nog niet gevalideerde waarnemingen.
-- TenneT: laatst gepubliceerde onbalans-settlementprijzen per balanceringsperiode; deze zijn niet hetzelfde als actuele consumentenprijzen.
-- PVGIS: langjarige referentieberekening van 1 kWp in Midden-Nederland, zuidgericht op 35 graden met 14% systeemverlies. Dit is een modeluitkomst, geen live meting. Deze uitkomst wordt maximaal eens per 30 dagen ververst.
+- PVGIS: langjarige referentieberekening van 1 kWp in Midden-Nederland, zuidgericht, 35° helling en 14% systeemverlies. Dit is een modeluitkomst, geen live meting. Deze uitkomst wordt maximaal eens per 30 dagen opnieuw berekend.
+- NED en TenneT: broninformatie en statusmelding totdat openbare doorgifte schriftelijk is toegestaan.
 
-## 4. Publicatie
+## 5. Publicatie
 
-De workflow commit alleen de JSON-snapshot. De bestaande GitHub Pages-deployworkflow publiceert die wijziging automatisch. Als een bron niet is geconfigureerd of tijdelijk niet bereikbaar is, toont het dashboard de status in plaats van fictieve waarden.
+De workflow commit de JSON-snapshot en publiceert het dashboard opnieuw via GitHub Pages wanneer gegevens veranderen. Bij een ontbrekende sleutel of tijdelijke storing toont het dashboard de status in plaats van fictieve waarden.
