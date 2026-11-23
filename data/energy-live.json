@@ -2,26 +2,14 @@
   "schema_version": 1,
   "generated_at": null,
   "refresh_interval_minutes": 15,
-  "description": "Openbare energiesnapshot; API-sleutels worden alleen server-side door GitHub Actions gebruikt.",
+  "description": "Openbare energiesnapshot. Alleen bronnen met passende hergebruiksvoorwaarden worden gepubliceerd.",
   "sources": {
     "ned": {
-      "status": "setup_required",
-      "message": "Voeg NED_API_KEY toe via GitHub Settings → Secrets and variables → Actions.",
+      "status": "permission_required",
+      "message": "NED staat openbare doorgifte van API-data aan derden niet toe zonder voorafgaande toestemming. Publieke koppeling volgt pas na schriftelijke afspraken.",
       "updated_at": null,
-      "data": {
-        "solar": {
-          "latest": null,
-          "series": []
-        },
-        "wind": {
-          "latest": null,
-          "series": []
-        },
-        "load": {
-          "latest": null,
-          "series": []
-        }
-      }
+      "source_url": "https://ned.nl/nl/algemene-voorwaarden",
+      "data": null
     },
     "knmi": {
       "status": "setup_required",
@@ -37,13 +25,11 @@
       }
     },
     "tennet": {
-      "status": "setup_required",
-      "message": "Voeg TENNET_API_KEY toe via GitHub Settings → Secrets and variables → Actions.",
+      "status": "permission_required",
+      "message": "TenneT staat het delen van API-data met derden niet toe, tenzij dit expliciet is toegestaan in de API-documentatie. Publieke koppeling volgt pas na schriftelijke toestemming.",
       "updated_at": null,
-      "data": {
-        "latest": null,
-        "series": []
-      }
+      "source_url": "https://developer.tennet.eu/fair-use-policy",
+      "data": null
     },
     "pvgis": {
       "status": "waiting",
