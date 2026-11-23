@@ -2077,3 +2077,41 @@ hr,.divider{border-color:var(--line)}
  .smart-boundary-section h2{font-size:27px}
  .smart-return-band{align-items:flex-start;flex-direction:column;padding:16px 6%}
 }
+
+
+/* Knowledge base: topic navigation and evidence-led deep dives */
+.knowledge-topic-nav{
+  display:flex;gap:9px;flex-wrap:wrap;margin:0 0 28px;padding:16px;
+  background:#edf5f7;border:1px solid #d9e7ec;border-radius:13px
+}
+.knowledge-topic-nav a{
+  display:inline-flex;align-items:center;min-height:34px;padding:7px 12px;
+  color:#1c6370;background:#fff;border:1px solid #d7e6eb;border-radius:8px;
+  font:750 10px var(--display);text-decoration:none;
+  transition:background .16s,border-color .16s,color .16s
+}
+.knowledge-topic-nav a:hover{
+  background:#dff2f1;border-color:#a8d7d6;color:#075f69
+}
+.knowledge-content ol{padding-left:22px;margin:12px 0 18px}
+.knowledge-content ol li{padding:4px 0 4px 3px;font-size:13px;line-height:1.85;color:#536c79}
+.knowledge-content .article-callout{
+  border-left-color:#087780;background:#eaf5f6;color:#516b77;
+  border-radius:0 9px 9px 0;font-size:12px;line-height:1.85
+}
+.knowledge-content .article-callout b{color:#17495b}
+.knowledge-content .source-links{
+  padding-top:13px;border-top:1px solid #dce7ed;gap:10px 20px
+}
+.knowledge-content .source-links a{
+  color:#087780;font-size:10px;font-weight:800;line-height:1.6;
+  text-decoration:underline;text-underline-offset:3px
+}
+.knowledge-content .source-links a:hover{color:#07535d}
+.knowledge-item:target{scroll-margin-top:105px}
+@media(max-width:600px){
+  .knowledge-topic-nav{gap:6px;padding:12px;margin-bottom:20px}
+  .knowledge-topic-nav a{font-size:9px;padding:7px 9px}
+  .knowledge-content ol li{font-size:12px}
+  .knowledge-content .article-callout{font-size:11px}
+}
