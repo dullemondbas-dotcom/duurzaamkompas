@@ -108,4 +108,4 @@ Het eerste testaccount is aangemaakt en het opslaan van het huishoudprofiel is b
 
 
 ### Besparing en persoonlijke begeleiding
-De dagelijkse rekenengine, persoonlijke stroomreferentie, week-/maandresultaten, tipselectie en Cron-planning zijn ingericht. De dashboardkaarten gebruiken echte dagaggregaten en blijven leeg totdat er een meter is gekoppeld. De eigenaar kan in een afgeschermde beheerpagina tips en bronvermelde rekenfactoren beheren. Er staan nog geen meterregels of besparingsperioden in de database.
+De dagelijkse rekenengine, persoonlijke stroomreferentie, week-/maand-/jaarresultaten, profielgestuurde weektipselectie en Cron-planning zijn ingericht. De dashboardkaarten gebruiken echte dagaggregaten en blijven leeg totdat er een meter is gekoppeld. De eigenaar kan in een afgeschermde beheerpagina tips en bronvermelde rekenfactoren beheren. Er staan nog geen meterregels of besparingsperioden in de database.
