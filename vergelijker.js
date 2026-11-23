@@ -17,7 +17,7 @@ function renderProducts() {
   else items.sort((a,b) => a.brand.localeCompare(b.brand));
   grid.innerHTML = items.length ? items.map(m => `<article class="product-card">
     <div class="product-card-top"><span class="product-kind">${esc(m.kind)}</span><label class="compare-check"><input type="checkbox" data-select="${esc(m.id)}" ${selected.has(m.id)?"checked":""}><span>Vergelijk</span></label></div>
-    <div class="product-brand">${esc(m.brand)}</div><h3>${esc(m.model)}</h3><div class="product-capacity"><b>${esc(m.capacity)}</b><small>Bruikbare capaciteit / productreeks</small></div>
+    <div class="product-brand">${esc(m.brand)}</div><h3>${esc(m.model)}</h3><div class="product-capacity"><b>${esc(m.capacity)}</b><small>Capaciteit, afhankelijk van uitvoering</small></div>
     <div class="product-facts"><div><small>Laad- / ontlaadvermogen</small><b>${esc(m.power)}</b></div><div><small>Batterijtype</small><b>${esc(m.chemistry)}</b></div><div><small>Fase / systeem</small><b>${esc(m.phase)}</b></div><div><small>Garantie</small><b>${esc(m.warranty)}</b></div></div>
     <p class="product-note">${esc(m.note)}</p><div class="product-tags">${m.tags.map(t=>`<span>${esc(t)}</span>`).join("")}</div>
     <div class="product-source"><span>Gecontroleerd: ${esc(m.checked)}</span><a href="${esc(m.source)}" target="_blank" rel="noopener">${esc(m.sourceLabel)} ↗</a></div>
