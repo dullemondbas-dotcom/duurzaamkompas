@@ -81,15 +81,26 @@
 
   function navigateToHousehold() {
     const navigate = () => {
-      if (typeof window.DK_APP?.navigateToView === "function") {
-        window.DK_APP.navigateToView("household");
+      const target = document.getElementById("view-household");
+      if (!target) {
+        console.error("Mijn Energie: huishoudprofielpagina ontbreekt in de HTML.");
         return;
       }
-      document.querySelector('.nav-tab[data-view="household"]')?.click();
+
+      // Change the visible page directly. This does not depend on the app's
+      // tab click listeners, script order, or an already-fired load event.
+      document.querySelectorAll(".view").forEach(section => {
+        section.classList.toggle("active", section === target);
+      });
+      document.querySelectorAll(".nav-tab").forEach(button => {
+        button.classList.toggle("active", button.dataset.view === "household");
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     };
-    // Deferred scripts execute before DOMContentLoaded. Waiting for that event
-    // guarantees the app navigation handlers have been registered first.
-    if (document.readyState === "loading" || document.readyState === "interactive") {
+
+    // Only wait while the browser is still parsing the HTML. "interactive"
+    // may already mean DOMContentLoaded has fired, so never wait on it.
+    if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", navigate, { once: true });
     } else {
       navigate();
