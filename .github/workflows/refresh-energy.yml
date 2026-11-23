@@ -13,19 +13,14 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 concurrency:
-  group: pages
+  group: live-energy-refresh
   cancel-in-progress: false
 
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     timeout-minutes: 10
     steps:
       - name: Checkout main
@@ -61,17 +56,3 @@ jobs:
           git push origin HEAD:main
           echo "changed=true" >> "$GITHUB_OUTPUT"
 
-      - name: Configure GitHub Pages
-        if: steps.commit.outputs.changed == 'true'
-        uses: actions/configure-pages@v5
-
-      - name: Upload website files
-        if: steps.commit.outputs.changed == 'true'
-        uses: actions/upload-pages-artifact@v4
-        with:
-          path: .
-
-      - name: Deploy updated dashboard
-        id: deployment
-        if: steps.commit.outputs.changed == 'true'
-        uses: actions/deploy-pages@v4
