@@ -5,6 +5,8 @@ const APP_FILES = [
   "./energie-challenge.html",
   "./energie-challenge.css",
   "./energie-challenge.js",
+  "./supabase-config.js",
+  "./supabase-auth.js",
   "./energie-challenge.webmanifest",
   "./assets/energie-challenge-icon.svg",
   "./assets/energie-challenge-icon-180.png",
