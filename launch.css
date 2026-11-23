@@ -519,3 +519,33 @@ button{cursor:pointer}
 @media(max-width:820px){
  .nav.open{display:flex!important}
 }
+
+@media(max-width:600px){
+ .search-trigger{width:auto;min-width:68px;padding:0 9px}
+}
+.watch-hero,.deepening-hero,.smart-advice-section,.research-chapter.battery-research,
+.research-chapter.safety-research,.research-chapter.market-research{
+ background:linear-gradient(120deg,#15382f 0%,#204b3d 68%,#315e46 135%)!important
+}
+.watch-hero h1,.deepening-hero h1,.smart-advice-inner h2,.research-chapter-heading h2,
+.platform-final-cta h2,.news-reading-heading h2{color:#fff!important}
+.watch-hero h1 em,.deepening-hero h1 em,.smart-advice-inner h2 em,
+.research-chapter-heading h2 em,.platform-final-cta h2 em,
+.news-reading-heading h2 em{color:#dcebc5!important}
+.watch-hero-copy>p,.deepening-hero>p,.smart-advice-inner>div:first-child>p,
+.research-chapter-heading>p,.platform-final-cta p,.news-reading-heading>p{color:#d7e4d8!important}
+.research-case,.research-perspective,.news-reading-card{
+ background:#214a3a!important;border-color:#52705a!important
+}
+.research-case p,.research-perspective p,.news-reading-card p{color:#d6e3d7!important}
+.research-case-top,.research-perspective>b,.research-source-link{color:#d6e9c5!important}
+.research-case-highlight{background:#f0f6e9!important;border-color:#d7e5d1!important}
+.research-case-highlight p,.research-case-highlight .research-source-link{color:#506a55!important}
+.research-case-highlight .research-case-top{color:#4e7954!important}
+.research-case-highlight .research-caution{background:#e7f0e0!important}
+.research-case-highlight .research-caution b{color:#345d3d!important}
+.research-case-highlight .research-caution span{color:#506a55!important}
+.deepening-handoff,.watch-intro-strip,.watch-next-section{background:#edf4e9!important;border-color:#dce7d8!important}
+@media(max-width:820px){
+ .nav{max-height:calc(100dvh - 70px)}
+}
