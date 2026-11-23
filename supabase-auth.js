@@ -346,6 +346,42 @@
     return true;
   }
 
+  async function listEnergySavingsPeriods(periodType = "month") {
+    if (!client || !currentUser || !householdId) return [];
+    let query = client.from("energy_savings_periods")
+      .select("id,period_type,period_start,period_end,grid_import_difference_kwh,gas_difference_m3,estimated_variable_cost_difference_eur,cost_method,coverage_ratio,quality_score,quality_label,model_version,computed_at")
+      .eq("household_id", householdId)
+      .order("period_start", { ascending: false })
+      .limit(24);
+    if (["week", "month", "year"].includes(periodType)) query = query.eq("period_type", periodType);
+    const { data, error } = await query;
+    if (error) throw error;
+    return data || [];
+  }
+
+  async function getLatestWeeklyTip() {
+    if (!client || !currentUser || !householdId) return null;
+    const { data, error } = await client.from("household_weekly_tips")
+      .select("id,week_start,title,summary,why_this_tip,action_text,expected_effect,cost_band,effort_band,source_name,source_url,status")
+      .eq("household_id", householdId)
+      .order("week_start", { ascending: false })
+      .limit(1);
+    if (error) throw error;
+    return data?.[0] || null;
+  }
+
+  async function updateWeeklyTipStatus(tipId, status, note = null) {
+    if (!client || !currentUser || !householdId) throw new Error("Log in om je tip op te slaan.");
+    const { data, error } = await client.rpc("set_my_weekly_tip_status", {
+      p_tip_id: tipId,
+      p_status: status,
+      p_note: note
+    });
+    if (error) throw error;
+    if (!data) throw new Error("De tip kon niet worden bijgewerkt.");
+    return true;
+  }
+
   window.DK_ACCOUNT = Object.freeze({
     isConfigured: () => isConfigured && Boolean(client),
     isSignedIn: () => Boolean(currentUser),
@@ -355,6 +391,9 @@
     listEnergyIntegrations,
     createEnergyIntegration,
     revokeEnergyIntegration,
+    listEnergySavingsPeriods,
+    getLatestWeeklyTip,
+    updateWeeklyTipStatus,
     signOut: async () => {
       if (!client) return;
       const { error } = await client.auth.signOut();
