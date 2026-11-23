@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102a25">
+  <meta name="description" content="Ontdek welke energieoplossing past bij jouw woning. Krijg onafhankelijk vooradvies over zonnepanelen, thuisbatterijen en energiemanagement. Zonder overstapadvies.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://dullemondbas-dotcom.github.io/duurzaamkompas/advies.html">
+  <meta property="og:title" content="Persoonlijk energieadvies — DuurzaamKompas">
+  <meta property="og:description" content="Eerst inzicht in je woning en energieverbruik. Dan pas bepalen of een thuisbatterij of andere oplossing bij je past.">
+  <meta name="twitter:card" content="summary">
+  <title>Persoonlijk energieadvies | DuurzaamKompas</title>
+  <link rel="canonical" href="https://dullemondbas-dotcom.github.io/duurzaamkompas/advies.html">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="site.js"></script>
+  <script defer src="advies.js"></script>
+</head>
+<body>
+  <div class="topline"><span class="pulse"></span> Vooradvies voor jouw energiesituatie <span class="topline-sep">|</span> Gratis en zonder verplichtingen</div>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="DuurzaamKompas startpagina"><span class="brand-mark">DK<span>↗</span></span><span class="brand-name">duurzaam<span>kompas</span></span></a>
+    <button class="menu-toggle" aria-label="Menu openen" aria-expanded="false">☰</button>
+    <nav class="nav">
+      <a href="vergelijker.html">Thuisbatterijen</a>
+      <a href="advies.html" aria-current="page">Persoonlijk advies</a>
+      <a href="kennisbank.html">Kennisbank</a>
+      <a href="regelgeving.html">Regels & kosten</a>
+      <a class="nav-cta" href="keuzehulp.html">Offerte voorbereiden <span>↗</span></a>
+    </nav>
+  </header>
+  <main>
+    <section class="page-hero advice-hero">
+      <div class="section-kicker light-kicker">PERSOONLIJK VOORADVIES</div>
+      <h1>Eerst inzicht.<br><em>Dan pas investeren.</em></h1>
+      <p>Een thuisbatterij is niet voor ieder huishouden de beste eerste stap. Vertel ons hoe jouw woning en energieverbruik eruitzien. Je krijgt een eerste richting en weet welke informatie je nodig hebt voor een goede keuze.</p>
+      <div class="page-hero-meta"><span>Geen verkooppraatjes</span><span>Geen overstapadvies</span><span>Antwoorden blijven op je apparaat</span></div>
+    </section>
+
+    <section class="advice-intro">
+      <div class="advice-intro-inner">
+        <div><span class="section-kicker">ZO WERKT HET</span><h2>Advies dat begint<br><em>bij jouw situatie.</em></h2></div>
+        <div class="advice-intro-copy"><p>We kijken eerst naar je woning, zonnepanelen, stroomverbruik en plannen. Daarna laten we zien welke vervolgstap logisch is: meer inzicht verzamelen, je huidige installatie slimmer gebruiken of de mogelijkheden van opslag onderzoeken.</p><p>Je krijgt geen automatisch verkooppraatje en we sturen je niet naar een andere energieleverancier. Het doel is dat je goed voorbereid zélf kunt beslissen.</p></div>
+      </div>
+      <div class="advice-principles"><div><b>01</b><span>Begrijp je verbruik</span></div><div><b>02</b><span>Breng je wensen in kaart</span></div><div><b>03</b><span>Kies een passende vervolgstap</span></div></div>
+    </section>
+
+    <section class="advice-builder" id="start-advies">
+      <div class="advice-builder-heading">
+        <div><span class="section-kicker">JOUW ENERGIEPROFIEL</span><h2>Vertel iets over<br><em>jouw situatie.</em></h2><p>De vragen zijn kort. We gebruiken je antwoorden alleen om op deze pagina een eerste advies samen te stellen.</p></div>
+        <div class="privacy-stamp"><span>⌂</span><b>Privé op jouw apparaat</b><small>Geen account. Geen upload. Geen leverancierskeuze.</small></div>
+      </div>
+
+      <div class="wizard">
+        <div class="wizard-progress">
+          <div class="wizard-progress-top"><span id="step-caption">STAP 1 VAN 4</span><b id="step-percent">25%</b></div>
+          <div class="wizard-track"><span id="wizard-fill"></span></div>
+          <div class="wizard-step-labels"><span class="active" data-label-step="1">Woning</span><span data-label-step="2">Verbruik</span><span data-label-step="3">Wensen</span><span data-label-step="4">Situatie</span></div>
+        </div>
+        <form id="advice-form" novalidate>
+          <section class="advice-step active" data-step="1">
+            <div class="step-heading"><span>01</span><div><h3>Hoe ziet je huidige installatie eruit?</h3><p>We beginnen bij wat er al in en om je huis aanwezig is.</p></div></div>
+            <fieldset class="choice-fieldset">
+              <legend>Heb je zonnepanelen?</legend>
+              <div class="choice-grid">
+                <label class="choice-card"><input type="radio" name="solarStatus" value="yes"><span class="choice-card-body"><b>Ja</b><small>Er liggen zonnepanelen op mijn dak.</small></span></label>
+                <label class="choice-card"><input type="radio" name="solarStatus" value="planned"><span class="choice-card-body"><b>Nog niet, wel gepland</b><small>Ik ben van plan zonnepanelen te nemen.</small></span></label>
+                <label class="choice-card"><input type="radio" name="solarStatus" value="no"><span class="choice-card-body"><b>Nee</b><small>Ik heb geen zonnepanelen en geen plannen.</small></span></label>
+                <label class="choice-card"><input type="radio" name="solarStatus" value="unknown"><span class="choice-card-body"><b>Weet ik niet zeker</b><small>Ik moet dit nog uitzoeken.</small></span></label>
+              </div>
+            </fieldset>
+            <fieldset class="choice-fieldset">
+              <legend>Heb je al een thuisbatterij?</legend>
+              <div class="choice-grid choice-grid-two">
+                <label class="choice-card"><input type="radio" name="batteryStatus" value="yes"><span class="choice-card-body"><b>Ja</b><small>Ik wil mijn bestaande systeem verbeteren of uitbreiden.</small></span></label>
+                <label class="choice-card"><input type="radio" name="batteryStatus" value="no"><span class="choice-card-body"><b>Nee</b><small>Ik oriënteer me op een eerste batterij.</small></span></label>
+              </div>
+            </fieldset>
+            <fieldset class="choice-fieldset">
+              <legend>Weet je welke aansluiting je hebt?</legend>
+              <div class="choice-grid choice-grid-three">
+                <label class="choice-card"><input type="radio" name="phase" value="1"><span class="choice-card-body"><b>1-fase</b><small>Eenfasige aansluiting.</small></span></label>
+                <label class="choice-card"><input type="radio" name="phase" value="3"><span class="choice-card-body"><b>3-fase</b><small>Driefasige aansluiting.</small></span></label>
+                <label class="choice-card"><input type="radio" name="phase" value="unknown"><span class="choice-card-body"><b>Onbekend</b><small>Dit moet ik controleren.</small></span></label>
+              </div>
+            </fieldset>
+          </section>
+
+          <section class="advice-step" data-step="2" hidden>
+            <div class="step-heading"><span>02</span><div><h3>Hoeveel stroom gebruik en lever je?</h3><p>Een jaarafrekening of energiedashboard geeft vaak al een goede eerste indicatie. Weet je iets niet? Laat het veld leeg.</p></div></div>
+            <div class="advice-input-grid">
+              <label class="advice-input" for="annual-consumption"><span>Jaarlijks stroomverbruik</span><small>Van je woning, in kWh per jaar</small><div class="input-unit"><input id="annual-consumption" type="number" min="0" max="50000" step="100" placeholder="Bijv. 3.500"><b>kWh</b></div></label>
+              <label class="advice-input" for="annual-solar"><span>Jaarlijkse zonne-opwek</span><small>Opbrengst van je zonnepanelen</small><div class="input-unit"><input id="annual-solar" type="number" min="0" max="50000" step="100" placeholder="Bijv. 3.800"><b>kWh</b></div></label>
+              <label class="advice-input" for="annual-export"><span>Jaarlijkse teruglevering</span><small>Stroom die je aan het net levert</small><div class="input-unit"><input id="annual-export" type="number" min="0" max="50000" step="100" placeholder="Bijv. 1.600"><b>kWh</b></div></label>
+              <label class="advice-input" for="inverter-brand"><span>Merk van je omvormer</span><small>Alleen invullen als je dit weet</small><input id="inverter-brand" type="text" maxlength="80" placeholder="Bijv. SolarEdge, Huawei, Enphase"></label>
+            </div>
+            <div class="data-tip"><b>Waar vind je deze gegevens?</b><span>Op je jaarafrekening, in de app van je energieleverancier of in de monitoring van je zonnepanelen. Teruglevering is niet hetzelfde als totale zonne-opwek.</span></div>
+          </section>
+
+          <section class="advice-step" data-step="3" hidden>
+            <div class="step-heading"><span>03</span><div><h3>Wat wil je met je energiesysteem bereiken?</h3><p>Kies één of meer doelen. Zo kunnen we de techniek en vervolgstap op jouw prioriteiten afstemmen.</p></div></div>
+            <fieldset class="choice-fieldset">
+              <legend>Wat vind je belangrijk?</legend>
+              <div class="goal-grid">
+                <label class="goal-card"><input type="checkbox" name="goals" value="selfuse"><span class="goal-icon">☀</span><b>Meer eigen zonnestroom gebruiken</b><small>Minder terugleveren en meer stroom zelf benutten.</small></label>
+                <label class="goal-card"><input type="checkbox" name="goals" value="cost"><span class="goal-icon">€</span><b>Grip op energiekosten</b><small>Inzicht in verbruik, tarieven en mogelijke besparingen.</small></label>
+                <label class="goal-card"><input type="checkbox" name="goals" value="backup"><span class="goal-icon">ϟ</span><b>Noodstroom bij uitval</b><small>Belangrijke apparaten kunnen blijven werken.</small></label>
+                <label class="goal-card"><input type="checkbox" name="goals" value="ev"><span class="goal-icon">↗</span><b>Elektrisch rijden</b><small>Een laadpaal of elektrische auto slim integreren.</small></label>
+                <label class="goal-card"><input type="checkbox" name="goals" value="heatpump"><span class="goal-icon">⌂</span><b>Warmtepomp of elektrisch verwarmen</b><small>Verbruik van verwarming afstemmen op opwek en tarieven.</small></label>
+                <label class="goal-card"><input type="checkbox" name="goals" value="insight"><span class="goal-icon">◎</span><b>Vooral inzicht en onafhankelijk advies</b><small>Eerst begrijpen wat technisch en financieel verstandig is.</small></label>
+              </div>
+            </fieldset>
+            <div class="advice-input-grid compact-input-grid">
+              <label class="advice-input" for="contract-kind"><span>Welk type energiecontract heb je?</span><small>Dit is alleen context, geen advies om over te stappen.</small><select id="contract-kind"><option value="unknown">Weet ik niet / liever niet zeggen</option><option value="fixed">Vast</option><option value="variable">Variabel</option><option value="dynamic">Dynamisch</option></select></label>
+              <label class="advice-input" for="future-plan"><span>Verwacht je grote veranderingen?</span><small>Bijvoorbeeld meer elektrisch verbruik.</small><select id="future-plan"><option value="none">Geen concrete plannen</option><option value="ev">Elektrische auto of laadpaal</option><option value="heatpump">Warmtepomp</option><option value="both">Elektrische auto én warmtepomp</option><option value="other">Anders / nog niet zeker</option></select></label>
+            </div>
+          </section>
+
+          <section class="advice-step" data-step="4" hidden>
+            <div class="step-heading"><span>04</span><div><h3>Waar sta je in je oriëntatie?</h3><p>We stemmen de vervolgstap af op wat je al hebt uitgezocht. Je hoeft nog niets gekocht of gekozen te hebben.</p></div></div>
+            <fieldset class="choice-fieldset">
+              <legend>Wat is je huidige situatie?</legend>
+              <div class="choice-grid">
+                <label class="choice-card"><input type="radio" name="stage" value="explore"><span class="choice-card-body"><b>Ik ben me aan het oriënteren</b><small>Ik wil eerst weten wat verstandig is.</small></span></label>
+                <label class="choice-card"><input type="radio" name="stage" value="quote"><span class="choice-card-body"><b>Ik heb een offerte ontvangen</b><small>Ik wil weten of de oplossing bij mijn situatie past.</small></span></label>
+                <label class="choice-card"><input type="radio" name="stage" value="compare"><span class="choice-card-body"><b>Ik vergelijk meerdere oplossingen</b><small>Ik wil de verschillen inhoudelijk begrijpen.</small></span></label>
+                <label class="choice-card"><input type="radio" name="stage" value="installed"><span class="choice-card-body"><b>Ik heb al een systeem</b><small>Ik wil mijn huidige installatie verbeteren.</small></span></label>
+              </div>
+            </fieldset>
+            <label class="advice-input standalone-input" for="extra-context"><span>Is er nog iets dat we moeten weten?</span><small>Bijvoorbeeld type woning, plannen voor verbouwing of een specifieke vraag. Deel geen adres- of contractnummers.</small><textarea id="extra-context" rows="4" maxlength="600" placeholder="Mijn situatie is..."></textarea></label>
+            <div class="data-tip"><b>Wat gebeurt er met je antwoorden?</b><span>De analyse wordt direct in je browser uitgevoerd. We slaan je antwoorden niet op en versturen ze niet naar DuurzaamKompas of een aanbieder.</span></div>
+          </section>
+
+          <div class="wizard-actions">
+            <button type="button" id="wizard-back" class="wizard-back" disabled>← Vorige stap</button>
+            <button type="button" id="wizard-next" class="button button-dark">Volgende stap <span>→</span></button>
+            <button type="button" id="wizard-submit" class="button button-dark" hidden>Bekijk mijn eerste advies <span>↗</span></button>
+          </div>
+        </form>
+      </div>
+
+      <section id="advice-result" class="advice-result" hidden aria-live="polite">
+        <div class="result-heading">
+          <span class="section-kicker">JOUW EERSTE ADVIES</span>
+          <h2 id="result-title">Dit is de eerste richting.</h2>
+          <p id="result-summary"></p>
+        </div>
+        <div class="result-recommendation">
+          <div class="recommendation-label"><span>VOORLOPIGE RICHTING</span><b id="result-type"></b></div>
+          <h3 id="result-recommendation-title"></h3>
+          <p id="result-recommendation-copy"></p>
+          <div class="result-confidence" id="result-confidence"></div>
+        </div>
+        <div class="result-columns">
+          <div class="result-list-panel"><span class="kicker">DIT IS EEN LOGISCHE VOLGENDE STAP</span><ul id="result-actions"></ul></div>
+          <div class="result-list-panel"><span class="kicker">LET HIER EXTRA OP</span><ul id="result-watchouts"></ul></div>
+        </div>
+        <div class="result-questions"><span class="kicker">VRAGEN OM MEE TE NEMEN</span><h3>Bespreek dit met je installateur.</h3><ol id="result-questions-list"></ol></div>
+        <div class="no-switch-note"><b>Geen overstapwedstrijd.</b><span>DuurzaamKompas geeft geen advies om voortdurend van energieleverancier of aanbieder te wisselen. We kijken eerst naar de oplossing die bij je woning past. Als de aansturing of een contract relevant is, leggen we de technische voorwaarden en aandachtspunten uit — zonder een overstap als doel te stellen.</span></div>
+        <div class="result-disclaimer">Dit is een geautomatiseerde eerste oriëntatie op basis van de informatie die je zelf hebt ingevuld. Het is geen technisch ontwerp, rendementsberekening of persoonlijk financieel advies. Voor een definitieve keuze zijn onder meer meetgegevens, de meterkast, de exacte apparatuur en een inspectie van de installatielocatie nodig.</div>
+        <div class="result-actions">
+          <a class="button button-dark" href="vergelijker.html">Bekijk technische systemen <span>↗</span></a>
+          <a class="button button-outline" href="keuzehulp.html">Bereid een offertegesprek voor <span>→</span></a>
+          <button type="button" class="print-result" id="print-advice">Print dit advies</button>
+          <button type="button" class="restart-result" id="restart-advice">Opnieuw beginnen</button>
+        </div>
+      </section>
+    </section>
+
+    <section class="advice-approach">
+      <div class="section-kicker">ONZE MANIER VAN ADVISEREN</div>
+      <div class="section-heading"><h2>Niet altijd een batterij.<br><em>Wel altijd een passend advies.</em></h2><p>Een goede adviseur moet ook kunnen uitleggen wanneer je beter nog even niets koopt. Dat uitgangspunt nemen we mee in iedere uitkomst.</p></div>
+      <div class="approach-grid">
+        <article><span>01</span><h3>Eerst de behoefte</h3><p>We kijken naar je energieverbruik, opwek, apparaten en plannen. Niet naar een product dat iemand graag wil verkopen.</p></article>
+        <article><span>02</span><h3>Dan de techniek</h3><p>We leggen verschillen uit tussen opslag, omvormers, energiemanagement en slimme aansturing.</p></article>
+        <article><span>03</span><h3>Daarna pas vergelijken</h3><p>Als een oplossing logisch lijkt, vergelijk je systemen op kenmerken, compatibiliteit en voorwaarden.</p></article>
+      </div>
+    </section>
+  </main>
+  <footer class="footer">
+    <a class="brand footer-brand" href="index.html"><span class="brand-mark">DK<span>↗</span></span><span class="brand-name">duurzaam<span>kompas</span></span></a>
+    <span>Inzicht in de wereld van energie.</span>
+    <div class="footer-links"><a href="bronnen.html">Bronnen & werkwijze</a><a href="over.html">Over het platform</a><a href="regelgeving.html">Regelgeving</a></div>
+    <span>© <span id="year"></span> DuurzaamKompas</span>
+  </footer>
+</body>
+</html>
