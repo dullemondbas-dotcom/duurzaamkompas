@@ -81,20 +81,15 @@ GitHub Pages wordt via GitHub Actions gepubliceerd vanuit branch `main`. Er word
 
 - energie-challenge.webmanifest + energie-challenge-sw.js — installeerbare PWA-configuratie en offline app-shell.
 - assets/energie-challenge-icon.svg en assets/energie-challenge-icon-180.png — app-iconen.
-- supabase/migrations/202611230001_initial_mijn_energie.sql — voorbereid accounts-/huishouden-/meetdata-/challenge-schema met Row Level Security; moet eerst in een eigen Supabase-project worden toegepast en getest.
+- supabase/migrations/ — databaseopbouw voor accounts, huishoudens, woningprofielen, meetgegevens, challenges, toestemming en veilige huishoudaanmaak.
 - docs/MIJN_ENERGIE_PWA_EN_INFRASTRUCTUUR.md — installatie-instructies, backendstatus en beveiligingsgrenzen.
 
-De app blijft momenteel een statische PWA-demo. De Supabase-configuratie is nog niet aangesloten en er zijn nog geen echte accounts of live meetdata.
+### Accountregistratie en huishoudprofiel
+Mijn Energie gebruikt Supabase Auth voor registratie, e-mailbevestiging, login, uitloggen en wachtwoordherstel. Huishoudprofielen worden na toestemming online opgeslagen en opgehaald voor synchronisatie tussen apparaten. Huishoudens worden uitsluitend aangemaakt via een beveiligde RPC die de ingelogde gebruiker uit `auth.uid()` afleidt; de browser kan geen eigenaar-ID kiezen.
 
+De project-URL en publieke publishable key staan in `supabase-config.js`. Plaats nooit service_role keys of andere geheime sleutels in deze publieke repository.
 
-## Accountregistratie en huishoudprofiel
-De accountinterface is voorbereid met Supabase Auth (registratie, e-mailbevestiging, login, uitloggen en wachtwoordherstel) en online huishoudprofielsynchronisatie. Voor activering is nog een Supabase-project vereist:
-- configureer supabase-config.js met de publieke Project URL en publishable key;
-- voer supabase/migrations/202611230001_initial_mijn_energie.sql uit in Supabase SQL Editor;
-- configureer Site URL en Redirect URLs zoals beschreven in docs/MIJN_ENERGIE_PWA_EN_INFRASTRUCTUUR.md.
+### Status en grenzen
+Het eerste testaccount is aangemaakt en e-mailbevestiging en login zijn gecontroleerd. Een eerste opslagtest bracht een RLS-blokkade bij de directe huishoudinsert aan het licht. De beveiligde huishoud-RPC is toegevoegd; de complete opslagflow moet na de reparatie opnieuw met het testaccount worden bevestigd.
 
-Plaats nooit service_role keys of andere geheime sleutels in deze publieke repository. Zonder Supabase-config blijft de app in lokale demo-modus.
-
-
-## Supabase-project gekoppeld
-Het project is actief in de EU en de twee database-migraties zijn toegepast. De frontend gebruikt de publieke publishable key. De tabellen zijn afgeschermd met RLS. Rond Auth URL Configuration nog af zoals beschreven in docs/MIJN_ENERGIE_PWA_EN_INFRASTRUCTUUR.md en test daarna registratie en profielsynchronisatie.
+De PWA toont voorlopig nog voorbeeldcijfers. Er is nog geen echte meterdata, Home Assistant-koppeling of live challengecompetitie. Zie `docs/MIJN_ENERGIE_PWA_EN_INFRASTRUCTUUR.md` voor de actuele status.
