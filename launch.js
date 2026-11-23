@@ -144,12 +144,4 @@
     }));
   }
 
-  if (menuButton && nav) {
-    menuButton.addEventListener("click", () => {
-      const open = nav.classList.toggle("open");
-      menuButton.setAttribute("aria-expanded",String(open));
-      menuButton.setAttribute("aria-label",open ? "Menu sluiten" : "Menu openen");
-      menuButton.textContent = open ? "×" : "☰";
-    });
-  }
 })();
