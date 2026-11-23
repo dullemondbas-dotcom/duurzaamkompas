@@ -134,3 +134,32 @@
 }
 
 .weekly-tip-action-text{margin:8px 0 0;color:#45664b;font-size:10px;font-weight:700;line-height:1.6}
+
+/* Internal energy management and live-measurement presentation */
+.admin-engine-panel{display:grid;grid-template-columns:1fr auto;align-items:center;gap:5px 18px;margin-bottom:14px;padding:20px;border:1px solid #dce7d8;border-radius:13px;background:#f0f5ec}
+.admin-engine-panel h2{margin:0;color:#244735;font:800 18px var(--display)}
+.admin-engine-panel p:not(.eyebrow){margin:5px 0;color:#758276;font-size:10px}
+.admin-engine-panel .form-status{grid-column:1/-1;margin:2px 0 0}
+.admin-section-panel{margin:14px 0;padding:22px}
+.admin-form{margin-top:19px;padding-top:18px;border-top:1px solid #e8eee5}
+.admin-form textarea{width:100%;min-height:72px;padding:10px 11px;border:1px solid #dce5db;border-radius:7px;background:#fff;color:#294434;font:400 11px/1.6 var(--sans);resize:vertical}
+.admin-full{grid-column:1/-1}
+.admin-checkbox-row{display:flex;gap:20px;flex-wrap:wrap;margin-top:15px}
+.admin-checkbox-row label{display:flex;align-items:center;gap:7px;color:#66786a;font-size:10px}
+.admin-checkbox-row input{accent-color:#527b55}
+.admin-tip-list,.admin-factor-list{display:grid;gap:8px;margin-top:15px}
+.admin-list-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 13px;border:1px solid #e6ece3;border-radius:9px;background:#fbfcfa}
+.admin-list-row>div{display:grid;gap:3px;min-width:0}
+.admin-list-row strong{color:#294735;font-size:11px}
+.admin-list-row small,.admin-factor-source{color:#849187;font-size:9px;overflow-wrap:anywhere}
+.admin-factor-source{color:#547c56;font-weight:700}
+.admin-state{font-size:8px;font-weight:800;color:#68836a}
+#adminNavTab{white-space:nowrap}
+@media(max-width:640px){
+ .admin-engine-panel{grid-template-columns:1fr;align-items:start}
+ .admin-engine-panel .btn{width:100%}
+ .admin-section-panel{padding:16px}
+ .admin-full{grid-column:1}
+ .admin-list-row{align-items:flex-start}
+ .admin-list-row .btn{flex:none}
+}
