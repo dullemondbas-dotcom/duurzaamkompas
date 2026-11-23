@@ -18,6 +18,8 @@
   let activeFilter = "all";
   let savedOnly = false;
   let savedIds = readSavedIds();
+  const allFilterCount = document.querySelector('[data-filter-count="all"]');
+  if (allFilterCount) allFilterCount.textContent = String(cards.length);
 
   function readSavedIds() {
     try {
