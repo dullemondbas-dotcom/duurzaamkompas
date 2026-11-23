@@ -38,6 +38,15 @@ De huidige HomeWizard API-licentie is persoonlijk en niet-commercieel. Er bestaa
 
    De standaardinterval is 30 seconden. De computer of mini-pc moet ingeschakeld blijven.
 
+7. **Windows: automatisch starten bij aanmelden (optioneel).** Open PowerShell in de connector-map en voer uit:
+
+   ```powershell
+   Set-ExecutionPolicy -Scope Process Bypass
+   .\\install-windows-autostart.ps1
+   ```
+
+   De Windows-taak start de bridge bij aanmelden en probeert bij een fout opnieuw te starten. Verwijderen kan met `.\\uninstall-windows-autostart.ps1`.
+
 ## Intrekken en opruimen
 
 1. Trek de integratie in Mijn Kompas in. Daarmee wordt de server-side koppelcode ongeldig.
@@ -52,7 +61,9 @@ De HomeWizard-token wordt opgeslagen in \`~/.duurzaamkompas/homewizard-device.js
 
 ## Gegevens en beperkingen
 
+- Na pairing controleert de connector eerst de apparaatinfo en een echte measurement-response voordat het apparaat-token lokaal wordt opgeslagen.
 - De bridge stuurt P1-vermogens en cumulatieve stroomtellerstanden door; gas wordt alleen meegestuurd als de P1/API dit beschikbaar maakt.
+- HTTPS valideert de HomeWizard CA-keten en de apparaat-hostnaam.
 - De backend accepteert meetmomenten binnen een beperkt tijdvenster en begrenst de ingestiefrequentie.
 - Historische gegevens beginnen pas wanneer de bridge actief is. De lokale API-koppeling haalt geen oude meetgeschiedenis uit de meter op.
 - Een verschil in netafname is niet automatisch hetzelfde als een verandering van het totale huishoudelijke stroomverbruik, zeker niet met zonnepanelen of een thuisbatterij.

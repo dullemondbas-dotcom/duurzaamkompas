@@ -38,3 +38,11 @@ Open de app via GitHub Pages of een lokale HTTP-server; \`file://\` kan ES-modul
 ## Licentiegrens HomeWizard
 
 De huidige lokale HomeWizard API-licentie is voor persoonlijk, niet-commercieel gebruik en verleent geen sublicentierecht of recht op omzetgeneratie met API-afhankelijke software. Gebruik deze route niet voor openbare of commerciële DuurzaamKompas-dienstverlening zonder schriftelijke toestemming of een passende commerciële overeenkomst. Voor een SaaS-route moet eerst een toegestane commerciële of partnerintegratie worden gekozen.
+
+
+## Live updates en automatische start
+- De tabel `energy_measurements` is toegevoegd aan de Supabase Realtime-publicatie. Row Level Security blijft ingeschakeld.
+- Mijn Kompas luistert naar nieuwe meetregels en ververst de actuele meterstand, de recente vermogensgrafiek en de koppelstatus. Als Realtime tijdelijk niet beschikbaar is, controleert de pagina opnieuw per minuut zolang het tabblad zichtbaar is.
+- Dagaggregaties en besparingsperioden blijven via de bestaande dagelijkse verwerking lopen; de recente vermogenslijn toont intussen direct nieuwe P1-meetpunten.
+- De lokale connector controleert na de fysieke knopbevestiging eerst de apparaatinfo en een meetrespons voordat de apparaat-token wordt bewaard.
+- Op Windows kan de gebruiker optioneel een Taakplanner-taak installeren om de bridge bij aanmelden te starten en bij een procesfout opnieuw te proberen.

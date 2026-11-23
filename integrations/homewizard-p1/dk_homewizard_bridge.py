@@ -79,7 +79,9 @@ def discover(config: dict, config_path: Path) -> None:
 def tls_context() -> ssl.SSLContext:
     if not CA_FILE.exists():
         raise RuntimeError("HomeWizard CA-certificaat ontbreekt. Voer eerst python install_cert.py uit.")
-    return ssl.create_default_context(cafile=str(CA_FILE))
+    context = ssl.create_default_context(cafile=str(CA_FILE))
+    context.hostname_checks_common_name = True
+    return context
 
 def hostname(serial: str) -> str:
     return "appliance/p1dongle/" + serial
@@ -109,10 +111,21 @@ async def pair(config: dict) -> None:
                     body={"name": local_user})
                 token = result.get("token")
                 if token:
+                    device_headers = {"X-Api-Version": API_VERSION, "Authorization": "Bearer " + token}
+                    info = await api_json(session, "GET", "https://" + ip + "/api",
+                        tls=tls, server_name=name, headers=device_headers)
+                    measurement = await api_json(session, "GET", "https://" + ip + "/api/measurement",
+                        tls=tls, server_name=name, headers=device_headers)
+                    if info.get("product_type") != "HWE-P1":
+                        raise RuntimeError("Het gevonden apparaat is geen ondersteunde HomeWizard P1-meter.")
+                    if info.get("serial") and info["serial"].lower() != serial.lower():
+                        raise RuntimeError("Het serienummer wijkt af van de gevonden P1-meter.")
+                    if not isinstance(measurement, dict):
+                        raise RuntimeError("De P1-meter gaf nog geen geldige meetrespons terug.")
                     save_private(DEVICE_FILE, {"device_ip": ip, "device_serial": serial,
                         "device_token": token, "user_name": local_user,
                         "paired_at": datetime.now().astimezone().isoformat()})
-                    print("HomeWizard gekoppeld. Het apparaat-token staat uitsluitend lokaal in", DEVICE_FILE)
+                    print("HomeWizard gekoppeld en verbinding getest. Het apparaat-token staat uitsluitend lokaal in", DEVICE_FILE)
                     return
             except RuntimeError as exc:
                 if "403" not in str(exc):
@@ -156,10 +169,11 @@ def normalize(data: dict, serial: str) -> dict:
         "gas_total_m3": gas
     }
 
-async def disconnect() -> None:
+async def disconnect(config_path: Path = DEFAULT_CONFIG) -> None:
     device = read_json(DEVICE_FILE)
     if not device.get("device_token"):
-        print("Geen lokaal HomeWizard-token gevonden.")
+        config_path.unlink(missing_ok=True)
+        print("Geen lokaal HomeWizard-token gevonden; lokale koppelconfiguratie verwijderd.")
         return
     tls, serial, ip = tls_context(), device["device_serial"], device["device_ip"]
     await_name = hostname(serial)
@@ -171,7 +185,8 @@ async def disconnect() -> None:
                 "Content-Type": "application/json"},
             body={"name": device.get("user_name", "local/duurzaamkompas")})
     DEVICE_FILE.unlink(missing_ok=True)
-    print("Lokale HomeWizard-toegang ingetrokken en apparaat-token verwijderd.")
+    config_path.unlink(missing_ok=True)
+    print("Lokale HomeWizard-toegang ingetrokken; apparaattoken en koppelconfiguratie verwijderd.")
 
 async def run_bridge(config: dict) -> None:
     device = read_json(DEVICE_FILE)
@@ -221,7 +236,7 @@ async def main() -> None:
     elif args.command == "run":
         await run_bridge(config)
     elif args.command == "disconnect":
-        await disconnect()
+        await disconnect(Path(args.config))
 
 if __name__ == "__main__":
     try:

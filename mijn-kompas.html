@@ -78,6 +78,9 @@ section{padding:70px 0;scroll-margin-top:85px}
 .metric .metric-sub{display:block;font-size:11px;color:var(--muted);margin-top:5px}.metric.primary-metric .metric-sub{color:#dce8dd}
 .impact{margin-top:12px;background:var(--soft);border-radius:16px;padding:16px}.impact h4{font-size:13px;margin:0 0 9px}.impactline{display:flex;justify-content:space-between;gap:14px;font-size:13px;padding:6px 0;border-bottom:1px solid #dfe7df}.impactline:last-child{border:0}.impactline span:last-child{font-weight:750;font-variant-numeric:tabular-nums;text-align:right}
 .fineprint{font-size:11px;color:var(--muted);margin:14px 0 0;line-height:1.5}
+.live-chart-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:22px 0 8px;padding-top:17px;border-top:1px solid var(--line)}
+.live-chart-heading strong{display:block;font-size:13px;color:var(--ink)}
+.live-chart-heading small{display:block;color:var(--muted);font-size:11px}
 .side-stack{display:grid;gap:14px}
 .tipcard{background:#f0f3ed;border-color:#e0e7de}.tip-top{display:flex;justify-content:space-between;gap:12px;align-items:center}.tip-label{font-size:11px;text-transform:uppercase;letter-spacing:.13em;color:var(--green);font-weight:800}.tip-week{font-size:11px;color:var(--muted)}.tipcard h3{font-size:21px;line-height:1.2;letter-spacing:-.035em;margin:12px 0 8px}.tipcard p{font-size:13px;color:#56645b;margin:0}.tip-reason{margin-top:12px;padding-top:11px;border-top:1px solid #d9e2d8;font-size:11px;color:var(--muted)}
 .connectcard{padding:20px}.connect-title{display:flex;justify-content:space-between;gap:12px;align-items:center}.connect-title h3{margin:0;font-size:17px}.state{display:inline-flex;align-items:center;gap:6px;border-radius:99px;background:#f0f2ed;padding:5px 9px;font-size:11px;color:#59695e;white-space:nowrap}.dot{width:7px;height:7px;border-radius:50%;background:#a3aa9f}.connectcard p{font-size:12px;color:var(--muted);margin:10px 0 0}.connect-foot{font-size:11px;color:var(--green);font-weight:650;margin-top:12px}
@@ -165,6 +168,12 @@ section{padding:70px 0;scroll-margin-top:85px}
           <div class="app-toolbar"><div><h3>Jouw energieverloop</h3><div class="muted">Dagelijkse meetwaarden · laatste 14 dagen</div></div><span class="quality-label" id="chart-quality">Geen meetdata</span></div>
           <div id="energy-chart-wrap"><div class="chart-empty">Zodra je meter data aanlevert, verschijnt hier je energieverloop.</div></div>
           <div class="chart-legend"><span><i class="legend-dot"></i>Netafname</span><span><i class="legend-dot export"></i>Teruglevering</span></div>
+          <div class="live-chart-heading">
+            <div><strong>Actueel vermogen</strong><small>Recente P1-meetpunten · maximaal 2 uur</small></div>
+            <span id="live-sync-label" class="quality-label" aria-live="polite">Wacht op meetkoppeling</span>
+          </div>
+          <div id="live-power-chart-wrap"><div class="chart-empty">Na de eerste P1-meting verschijnt hier het actuele vermogen.</div></div>
+          <div class="chart-legend"><span><i class="legend-dot"></i>Afname (W)</span><span><i class="legend-dot export"></i>Teruglevering (W)</span></div>
         </div>
         <div class="app-panel">
           <h3>Wat is er veranderd?</h3><p class="app-footnote">Vergelijking met je eigen historische referentie. Een verschil in netafname is niet hetzelfde als een bewezen daling van het totale energieverbruik.</p>
@@ -534,6 +543,8 @@ const euro = (n) => new Intl.NumberFormat('nl-NL',{style:'currency',currency:'EU
 const numberNl = (n,d=1) => new Intl.NumberFormat('nl-NL',{maximumFractionDigits:d}).format(Number(n||0));
 let currentUser = null, householdId = null, currentTip = null, liveChannel = null;
 let currentIntegration = null;
+let liveRefreshTimer = null, liveRefreshDebounce = null, liveRefreshInFlight = false;
+let liveRealtimeStatus = 'CLOSED';
 function message(id, text, bad=false){ const node=el(id); if(node){node.textContent=text;node.style.color=bad?'#9a4b36':'var(--muted)';} }
 function showAuth(show){el('auth-card').hidden=!show;el('app-workspace').hidden=show;}
 function setConnected(connected,text){el('global-connection-dot').classList.toggle('connected',connected);el('global-connection-text').textContent=text;el('hw-dot').classList.toggle('connected',connected);el('hw-status').textContent=text;}
@@ -552,14 +563,59 @@ async function ensureHousehold(){
 async function handleAuth(){
   const {data:{session},error}=await supabase.auth.getSession();
   if(error) throw error;
-  if(session?.user) await activateSession(session.user); else {currentUser=null;householdId=null;showAuth(true);}
+  if(session?.user) await activateSession(session.user); else {stopLiveUpdates();currentUser=null;householdId=null;showAuth(true);}
 }
+function setLiveSyncLabel(text){
+ const node=el('live-sync-label');if(node)node.textContent=text;
+}
+function stopLiveUpdates(){
+ if(liveRefreshTimer){clearInterval(liveRefreshTimer);liveRefreshTimer=null;}
+ if(liveRefreshDebounce){clearTimeout(liveRefreshDebounce);liveRefreshDebounce=null;}
+ liveRefreshInFlight=false;liveRealtimeStatus='CLOSED';
+ if(liveChannel){const channel=liveChannel;liveChannel=null;void supabase.removeChannel(channel);}
+ setLiveSyncLabel('Wacht op meetkoppeling');
+}
+function scheduleLiveRefresh(){
+ if(liveRefreshDebounce)clearTimeout(liveRefreshDebounce);
+ liveRefreshDebounce=setTimeout(async()=>{
+  liveRefreshDebounce=null;
+  if(!householdId||document.visibilityState!=='visible'||liveRefreshInFlight)return;
+  liveRefreshInFlight=true;
+  try{
+   await Promise.all([loadChart(),loadIntegrations()]);
+   setLiveSyncLabel('Bijgewerkt · '+new Date().toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'}));
+  }catch(error){console.warn('Mijn Kompas live-update:',error);setLiveSyncLabel('Live-update tijdelijk niet beschikbaar');}
+  finally{liveRefreshInFlight=false;}
+ },700);
+}
+function startLiveRefreshFallback(){
+ if(liveRefreshTimer)clearInterval(liveRefreshTimer);
+ liveRefreshTimer=setInterval(()=>{
+  if(!householdId||document.visibilityState!=='visible'||liveRealtimeStatus==='SUBSCRIBED')return;
+  setLiveSyncLabel('Automatische controle · verbinding herstellen');
+  scheduleLiveRefresh();
+ },60000);
+}
+document.addEventListener('visibilitychange',()=>{
+ if(document.visibilityState==='visible'&&householdId)scheduleLiveRefresh();
+});
 async function activateSession(user){
-  currentUser=user; el('account-label').textContent=user.email||'Ingelogd'; showAuth(false);
-  try { await ensureHousehold(); await loadDashboard(); }
-  catch(err){message('auth-message',`Je bent ingelogd, maar het huishouden kon niet worden geladen: ${err.message}`,true);}
-  if(liveChannel) await supabase.removeChannel(liveChannel);
-  if(householdId){liveChannel=supabase.channel('dk-household-'+householdId).on('postgres_changes',{event:'*',schema:'public',table:'energy_measurements',filter:`household_id=eq.${householdId}`},()=>loadDashboard()).subscribe();}
+ if(liveRefreshTimer)clearInterval(liveRefreshTimer);
+ if(liveChannel){const oldChannel=liveChannel;liveChannel=null;await supabase.removeChannel(oldChannel);}
+ currentUser=user;el('account-label').textContent=user.email||'Ingelogd';showAuth(false);
+ try{await ensureHousehold();await loadDashboard();}
+ catch(err){message('auth-message',`Je bent ingelogd, maar het huishouden kon niet worden geladen: ${err.message}`,true);}
+ liveRealtimeStatus='CONNECTING';
+ if(householdId){
+  liveChannel=supabase.channel('dk-household-'+householdId)
+   .on('postgres_changes',{event:'*',schema:'public',table:'energy_measurements',filter:`household_id=eq.${householdId}`},scheduleLiveRefresh)
+   .subscribe(status=>{
+    liveRealtimeStatus=status;
+    setLiveSyncLabel(status==='SUBSCRIBED'?'Live-updates actief':'Live-verbinding herstellen…');
+    if(status==='SUBSCRIBED')scheduleLiveRefresh();
+   });
+  startLiveRefreshFallback();
+ }
 }
 async function signIn(){
   const email=el('auth-email').value.trim(),password=el('auth-password').value;
@@ -602,17 +658,40 @@ function svgChart(rows){
  const grid=[0,1,2,3].map(i=>{const yy=top+i*(height-top-bottom)/3;return `<line x1="${left}" x2="${width-right}" y1="${yy}" y2="${yy}" stroke="#e7ece6"/><text x="${left-8}" y="${yy+3}" text-anchor="end" font-size="10" fill="#68766d">${numberNl(max*(1-i/3),0)}</text>`}).join('');
  return `<svg class="app-chart" viewBox="0 0 ${width} ${height}" role="img" aria-label="Grafiek stroomafname en teruglevering per dag">${grid}<path d="${path('grid_import_kwh')}" fill="none" stroke="#315c45" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="${path('grid_export_kwh')}" fill="none" stroke="#c68b45" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>${labels}</svg>`;
 }
+function svgLivePowerChart(rows){
+ if(!rows.length)return '<div class="chart-empty">Nog geen actuele meetpunten. Zodra je P1-bridge draait, verschijnt hier je vermogen.</div>';
+ const width=660,height=176,left=42,right=16,top=14,bottom=31;
+ const maximum=Math.max(100,...rows.map(r=>Math.max(Number(r.grid_import_w||0),Number(r.grid_export_w||0))));
+ const scale=Math.ceil(maximum/100)*100||100;
+ const x=i=>left+(rows.length===1?0:i*(width-left-right)/(rows.length-1));
+ const y=value=>top+(height-top-bottom)-(Number(value||0)/scale)*(height-top-bottom);
+ const path=key=>rows.map((row,i)=>`${i?'L':'M'} ${x(i).toFixed(1)} ${y(row[key]).toFixed(1)}`).join(' ');
+ const grid=[0,1,2].map(i=>{const yy=top+i*(height-top-bottom)/2;return `<line x1="${left}" x2="${width-right}" y1="${yy}" y2="${yy}" stroke="#e7ece6"/><text x="${left-8}" y="${yy+3}" text-anchor="end" font-size="10" fill="#68766d">${numberNl(scale*(1-i/2),0)}</text>`;}).join('');
+ const first=new Date(rows[0].measured_at).toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'});
+ const last=new Date(rows[rows.length-1].measured_at).toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'});
+ return `<svg class="app-chart" viewBox="0 0 ${width} ${height}" role="img" aria-label="Actueel vermogen in watt over recente P1-metingen">${grid}<path d="${path('grid_import_w')}" fill="none" stroke="#315c45" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="${path('grid_export_w')}" fill="none" stroke="#c68b45" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><text x="${left}" y="${height-7}" font-size="10" fill="#68766d">${first}</text><text x="${width-right}" y="${height-7}" text-anchor="end" font-size="10" fill="#68766d">${last}</text></svg>`;
+}
 async function loadChart(){
  const since=new Date();since.setDate(since.getDate()-14);
- const {data,error}=await supabase.from('energy_aggregates').select('bucket_start,grid_import_kwh,grid_export_kwh,gas_m3,quality,coverage_ratio').eq('household_id',householdId).eq('resolution','day').gte('bucket_start',since.toISOString()).order('bucket_start',{ascending:true});
- if(error)throw error;const rows=data||[];el('energy-chart-wrap').innerHTML=svgChart(rows);
+ const liveSince=new Date(Date.now()-2*60*60*1000);
+ const [aggregateResult,recentResult,latestResult]=await Promise.all([
+  supabase.from('energy_aggregates').select('bucket_start,grid_import_kwh,grid_export_kwh,gas_m3,quality,coverage_ratio').eq('household_id',householdId).eq('resolution','day').gte('bucket_start',since.toISOString()).order('bucket_start',{ascending:true}),
+  supabase.from('energy_measurements').select('measured_at,grid_import_w,grid_export_w').eq('household_id',householdId).gte('measured_at',liveSince.toISOString()).order('measured_at',{ascending:false}).limit(240),
+  supabase.from('energy_measurements').select('measured_at,grid_import_w,grid_export_w').eq('household_id',householdId).order('measured_at',{ascending:false}).limit(1).maybeSingle()
+ ]);
+ if(aggregateResult.error)throw aggregateResult.error;
+ if(recentResult.error)throw recentResult.error;
+ if(latestResult.error)throw latestResult.error;
+ const rows=aggregateResult.data||[];
+ const recentRows=(recentResult.data||[]).slice().reverse();
+ el('energy-chart-wrap').innerHTML=svgChart(rows);
+ el('live-power-chart-wrap').innerHTML=svgLivePowerChart(recentRows);
  if(rows.length){const valid=rows.filter(r=>r.quality==='validated'&&Number(r.coverage_ratio||0)>=.8).length;el('chart-quality').textContent=`${valid} van ${rows.length} dagen gevalideerd`;}
  else el('chart-quality').textContent='Geen meetdata';
  const today=new Date();const localDate=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Amsterdam'}).format(today);const todayRow=rows.find(r=>new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Amsterdam'}).format(new Date(r.bucket_start))===localDate);
  if(todayRow){el('today-import').textContent=`${numberNl(todayRow.grid_import_kwh,1)} kWh`;el('today-export').textContent=`${numberNl(todayRow.grid_export_kwh,1)} kWh`;el('today-gas').textContent=todayRow.gas_m3==null?'—':`${numberNl(todayRow.gas_m3,2)} m³`;el('today-quality').textContent=`Meetdekking ${Math.round(Number(todayRow.coverage_ratio||0)*100)}%`;}
  else {el('today-import').textContent='—';el('today-export').textContent='—';el('today-gas').textContent='—';el('today-quality').textContent='Dag nog niet verwerkt';}
- const {data:latest,error:latestError}=await supabase.from('energy_measurements').select('measured_at,grid_import_w,grid_export_w').eq('household_id',householdId).order('measured_at',{ascending:false}).limit(1).maybeSingle();
- if(latestError)throw latestError;
+ const latest=latestResult.data;
  if(latest){const watts=Number(latest.grid_import_w||0)-Number(latest.grid_export_w||0);const ageMs=Math.max(0,Date.now()-Date.parse(latest.measured_at));const fresh=ageMs<=180000;el('live-power').textContent=`${numberNl(Math.abs(watts),0)} W`;el('live-power-caption').textContent=fresh?(watts>=0?'Afname van het net':'Teruglevering'):'Laatste bekende meting';el('measurement-note').textContent=`Laatste P1-meting: ${new Date(latest.measured_at).toLocaleString('nl-NL')}${fresh?'.':' — deze meting is ouder dan 3 minuten; controleer of de bridge draait.'}`;}
  else {el('live-power').textContent='—';el('live-power-caption').textContent='Wachten op meetdata';el('measurement-note').textContent='Nog geen automatische meetgegevens. Koppel een P1-meter om live inzichten en historie te vullen.';}
 }
@@ -659,9 +738,9 @@ async function loadDashboard(){
 el('auth-signin').addEventListener('click',()=>signIn().catch(e=>message('auth-message',e.message,true)));
 el('auth-signup').addEventListener('click',()=>signUp().catch(e=>message('auth-message',e.message,true)));
 el('auth-password').addEventListener('keydown',e=>{if(e.key==='Enter')signIn().catch(x=>message('auth-message',x.message,true));});
-el('auth-signout').addEventListener('click',async()=>{await supabase.auth.signOut();currentUser=null;householdId=null;showAuth(true);});
+el('auth-signout').addEventListener('click',async()=>{stopLiveUpdates();await supabase.auth.signOut();currentUser=null;householdId=null;showAuth(true);});
 el('refresh-dashboard').addEventListener('click',()=>loadDashboard().then(()=>message('auth-message','Je dashboard is bijgewerkt.')).catch(e=>message('auth-message',e.message,true)));
-supabase.auth.onAuthStateChange((_event,session)=>{if(session?.user && session.user.id!==currentUser?.id) setTimeout(()=>activateSession(session.user),0);else if(!session){currentUser=null;householdId=null;showAuth(true);}});
+supabase.auth.onAuthStateChange((_event,session)=>{if(session?.user && session.user.id!==currentUser?.id) setTimeout(()=>activateSession(session.user),0);else if(!session){stopLiveUpdates();currentUser=null;householdId=null;showAuth(true);}});
 
 async function ensureHouseholdProfileConsent(){
  const {data:existing,error:lookupError}=await supabase.from('consent_records').select('id').eq('household_id',householdId).eq('purpose','household_profile').is('revoked_at',null).limit(1).maybeSingle();if(lookupError)throw lookupError;

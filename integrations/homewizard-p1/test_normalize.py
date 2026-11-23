@@ -31,5 +31,14 @@ class NormalizeTests(unittest.TestCase):
         self.assertEqual(normalize(reading,"serial-5")["source_event_id"],
             normalize(reading,"serial-5")["source_event_id"])
 
+    def test_gas_from_external_meter_is_forwarded(self):
+        result = normalize({"timestamp":"2026-11-23T12:00:00",
+            "external":[{"type":"gas_meter","value":12.345,"unit":"m3"}]}, "serial-6")
+        self.assertEqual(result["gas_total_m3"], 12.345)
+
+    def test_measurement_timestamp_without_timezone_is_dutch_local_time(self):
+        result = normalize({"timestamp":"2026-11-23T12:00:00","power_w":50}, "serial-7")
+        self.assertIn("+01:00", result["measured_at"])
+
 if __name__ == "__main__":
     unittest.main()

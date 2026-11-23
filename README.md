@@ -120,3 +120,10 @@ De dagelijkse rekenengine, persoonlijke stroomreferentie, week-/maand-/jaarresul
 - De bridge stuurt alleen genormaliseerde meetwaarden via HTTPS naar de bestaande `ingest-energy-reading` Edge Function. De HomeWizard-apparaat-token blijft lokaal; in de database staat alleen een hash van de intrekbare DuurzaamKompas-koppelsleutel.
 - Installatie en tests: zie `integrations/homewizard-p1/README.md`. De connector is niet geactiveerd of getest met een fysieke meter totdat de gebruiker zelf pairt met de P1-meter.
 - De migraties `20261123185840` en `20261123190218` zijn al toegepast op het gekoppelde Supabase-project; ze worden ook in deze repository bewaard voor reproduceerbaarheid. Voer ze niet opnieuw handmatig uit op die bestaande database.
+
+
+### Live synchronisatie Mijn Kompas
+- `mijn-kompas.html` toont naast de dagelijkse kWh-grafiek ook recente P1-vermogensmetingen in watt.
+- Nieuwe rijen in `energy_measurements` activeren Supabase Realtime-verversing. Wanneer realtime tijdelijk wegvalt, gebruikt de pagina een zichtbare-tab fallbackcontrole per minuut.
+- De lokale HomeWizard-bridge valideert na pairing de API-respons, bewaart het apparaat-token alleen lokaal en kan op Windows optioneel met Taakplanner bij aanmelden starten.
+- Tests voor import/export, driefasenvermogen, telwerken, gas en tijdzone-normalisatie staan in `integrations/homewizard-p1/test_normalize.py`.
