@@ -5,11 +5,59 @@
   <meta name="description" content="Nieuws, achtergronden en heldere uitleg over de Nederlandse energiemarkt, thuisbatterijen, zonnepanelen, energiemanagement en slim laden.">
   <meta property="og:type" content="website"><meta property="og:url" content="https://dullemondbas-dotcom.github.io/duurzaamkompas/nieuws.html"><meta property="og:title" content="Nieuws & duiding — DuurzaamKompas"><meta property="og:description" content="Volg ontwikkelingen in energie en ontdek wat ze betekenen voor je woning en huishouden.">
   <title>Nieuws & duiding over energie | DuurzaamKompas</title><link rel="canonical" href="https://dullemondbas-dotcom.github.io/duurzaamkompas/nieuws.html"><link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="styles.css"><script defer src="site.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="launch.css"><script defer src="site.js"></script>
+  <script defer src="launch.js"></script>
+  <meta property="og:image" content="https://dullemondbas-dotcom.github.io/duurzaamkompas/assets/social-preview.svg">
+  <meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
-  <div class="topline"><span class="pulse"></span> Onafhankelijke informatie en praktische inzichten over energie thuis <span class="topline-sep">|</span> Gratis te gebruiken</div>
-  <header class="site-header"><a class="brand" href="index.html" aria-label="DuurzaamKompas startpagina"><span class="brand-mark">DK<span>↗</span></span><span class="brand-name">duurzaam<span>kompas</span></span></a><button class="menu-toggle" aria-label="Menu openen" aria-expanded="false">☰</button><nav class="nav" aria-label="Hoofdnavigatie"><a href="advies.html">Advies</a><a href="tools.html">Tools</a><a href="slimme-apparaten.html">Slimme apparaten</a><a href="nieuws.html">Nieuws</a><a href="kijken.html">Kijken & luisteren</a><a href="kennisbank.html">Kennis & uitleg</a><a class="nav-cta" href="keuzehulp.html">Bereid je keuze voor <span>↗</span></a></nav></header>
+  <div class="topline"><span class="pulse"></span><span>Gratis en onafhankelijk consumentenplatform</span><span class="topline-divider">·</span><span>Van eerste vraag tot technische verdieping</span></div>
+  <header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html" aria-label="DuurzaamKompas startpagina"><span class="brand-mark">DK<span>↗</span></span><span class="brand-name">duurzaam<span>kompas</span></span></a>
+    <nav class="nav" aria-label="Hoofdnavigatie">
+      <a href="slimme-apparaten.html">Slimme apparaten</a>
+      <details class="nav-group">
+        <summary>Energie begrijpen <span aria-hidden="true">⌄</span></summary>
+        <div class="nav-dropdown">
+          <a href="kennisbank.html"><small>IN GEWONE TAAL</small><b>Kennisbank</b><span>Begrijp hoe energie en techniek werken.</span></a>
+          <a href="regelgeving.html"><small>REGELS & KOSTEN</small><b>Contracten en salderen</b><span>Wat verandert er en waar betaal je voor?</span></a>
+          <a href="onderzoek.html"><small>CIJFERS & ONDERZOEK</small><b>Wat zeggen de onderzoeken?</b><span>Lees conclusies, aannames en bronnen.</span></a>
+        </div>
+      </details>
+      <details class="nav-group">
+        <summary>Zelf aan de slag <span aria-hidden="true">⌄</span></summary>
+        <div class="nav-dropdown">
+          <a href="advies.html"><small>JOUW WONING</small><b>Persoonlijk vooradvies</b><span>Begin bij je situatie, niet bij een product.</span></a>
+          <a href="tools.html"><small>GRATIS HULPMIDDELEN</small><b>Tools en berekeningen</b><span>Verken keuzes en scenario's.</span></a>
+          <a href="keuzehulp.html"><small>GOED VOORBEREID</small><b>Offerte- en aankoopcheck</b><span>Neem de juiste vragen mee.</span></a>
+        </div>
+      </details>
+      <details class="nav-group">
+        <summary>Ontdekken <span aria-hidden="true">⌄</span></summary>
+        <div class="nav-dropdown">
+          <a href="nieuws.html"><small>ACTUALITEIT</small><b>Nieuws en duiding</b><span>Wat speelt er in de energiewereld?</span></a>
+          <a href="kijken.html"><small>VIDEO & PODCAST</small><b>Kijken en luisteren</b><span>Leer met uitleg, voorbeelden en quizzen.</span></a>
+          <a href="verdieping.html"><small>EXTRA BRONNEN</small><b>Verdieping</b><span>Webinars, podcasts en publicaties.</span></a>
+          <a href="over.html"><small>HET PLATFORM</small><b>Over DuurzaamKompas</b><span>Onze missie en redactionele aanpak.</span></a>
+        </div>
+      </details>
+      <a class="nav-cta" href="advies.html">Start met jouw woning <span>↗</span></a>
+    </nav>
+    <button class="search-trigger" type="button" id="site-search-open" aria-label="Zoeken op DuurzaamKompas"><span aria-hidden="true">⌕</span><span>Zoeken</span></button>
+    <button class="menu-toggle" type="button" aria-label="Menu openen" aria-expanded="false">☰</button>
+  </div>
+</header>
+<div class="site-search-overlay" id="site-search" hidden>
+  <button class="site-search-backdrop" type="button" data-search-close aria-label="Zoekvenster sluiten"></button>
+  <section class="site-search-dialog" role="dialog" aria-modal="true" aria-labelledby="site-search-title">
+    <div class="site-search-top"><div><span class="section-kicker">DUURZAAMKOMPAS ZOEKEN</span><h2 id="site-search-title">Waar ben je naar op zoek?</h2></div><button type="button" class="site-search-close" data-search-close aria-label="Sluiten">×</button></div>
+    <label class="site-search-input"><span aria-hidden="true">⌕</span><input id="site-search-query" type="search" placeholder="Bijvoorbeeld: thuisbatterij, EMS of salderen…" autocomplete="off"><kbd>ESC</kbd></label>
+    <div class="site-search-results" id="site-search-results" role="listbox" aria-label="Zoekresultaten"><p class="site-search-hint">Populaire onderwerpen: thuisbatterij · salderen 2027 · slim aansturen · energiecontract</p></div>
+  </section>
+</div>
+
   <main>
     <section class="page-hero news-page-hero"><div class="section-kicker light-kicker">NIEUWS · ACHTERGROND · CONTEXT</div><h1>Wat verandert er<br><em>in de energiewereld?</em></h1><p>Technologie, regelgeving en de energiemarkt veranderen voortdurend. Wij brengen ontwikkelingen terug naar de vraag die voor consumenten telt: wat betekent dit voor mijn huis, mijn energierekening en mijn keuzes?</p><div class="news-page-meta"><span>FEITEN EN BRONNEN EERST</span><span>UITLEG ZONDER ONNODIG JARGON</span><span>GEEN VERKOOPDRUK</span></div></section>
     <section class="news-editorial-intro section compact-section"><div class="platform-section-top"><div><div class="section-kicker">DE REDACTIONELE BENADERING</div><h2>Niet elk bericht is<br><em>even belangrijk voor jou.</em></h2></div><p>We kijken verder dan een losse kop. We maken duidelijk wat er feitelijk is veranderd, wat nog onzeker is en welke gevolgen huishoudens daar mogelijk van merken. Waar nodig verwijzen we rechtstreeks naar wetgeving, toezichthouders, netbeheerders en fabrikanten.</p></div><div class="news-format-grid"><article><span>01 / NIEUWS</span><h3>Wat is er gebeurd?</h3><p>Een concrete ontwikkeling, besluit of aankondiging, met datum en primaire bron.</p></article><article><span>02 / ACHTERGROND</span><h3>Waarom is dit relevant?</h3><p>Context, belangen, technische uitleg en mogelijke gevolgen voor huishoudens.</p></article><article><span>03 / PRAKTISCHE UITLEG</span><h3>Wat kun je ermee?</h3><p>Vragen om te stellen, gegevens om te controleren en stappen om zelf te zetten.</p></article></div></section>
@@ -30,5 +78,17 @@
     <section class="news-topics-strip"><div><div class="section-kicker">VOLG DE GROTE THEMA'S</div><h2>Een energiemarkt<br><em>in beweging.</em></h2></div><div class="news-topic-links"><a href="regelgeving.html">Regelgeving & beleid <span>↗</span></a><a href="kennisbank.html#thuisbatterij">Batterijtechnologie <span>↗</span></a><a href="kennisbank.html#ems">Energysturing & EMS <span>↗</span></a><a href="kennisbank.html#laden">Elektrisch rijden & laden <span>↗</span></a><a href="kennisbank.html#net">Netcongestie & flexibiliteit <span>↗</span></a></div></section>
     <section class="news-transparency-strip"><div><b>Een duidelijke redactionele afspraak</b><p>Een nieuwsbericht, achtergrondartikel, productreview of commerciële samenwerking krijgt een herkenbaar eigen label. Feiten, interpretaties en eventuele belangen worden niet door elkaar gehaald.</p></div><a href="bronnen.html" class="button button-dark">Onze redactionele regels <span>↗</span></a></section>
   </main>
-  <footer class="footer"><a class="brand footer-brand" href="index.html"><span class="brand-mark">DK<span>↗</span></span><span class="brand-name">duurzaam<span>kompas</span></span></a><span>Grip op energie begint met inzicht.</span><div class="footer-links"><a href="advies.html">Advies</a><a href="tools.html">Tools</a><a href="nieuws.html">Nieuws & duiding</a><a href="kijken.html">Kijken & luisteren</a><a href="verdieping.html">Verdieping</a><a href="onderzoek.html">Onderzoek</a><a href="slimme-apparaten.html">Slimme apparaten</a><a href="kennisbank.html">Kennisbank</a><a href="regelgeving.html">Regels & kosten</a><a href="bronnen.html">Redactionele werkwijze</a><a href="over.html">Over het platform</a></div><span>© <span id="year"></span> DuurzaamKompas</span></footer>
+  <footer class="footer dk-footer">
+  <div class="footer-main">
+    <div class="footer-brand-block">
+      <a class="brand footer-brand" href="index.html"><span class="brand-mark">DK<span>↗</span></span><span class="brand-name">duurzaam<span>kompas</span></span></a>
+      <p>Energie begrijpelijk maken. Zodat je betere keuzes kunt maken voor jouw woning.</p>
+      <button class="footer-share" type="button" id="share-button"><span aria-hidden="true">↗</span> Deel DuurzaamKompas</button>
+    </div>
+    <div class="footer-column"><b>Begin hier</b><a href="advies.html">Persoonlijk vooradvies</a><a href="tools.html">Gratis tools</a><a href="keuzehulp.html">Offertechecklist</a></div>
+    <div class="footer-column"><b>Ontdek technologie</b><a href="slimme-apparaten.html">Slimme apparaten</a><a href="vergelijker.html">Thuisbatterijen</a><a href="kennisbank.html">Kennisbank</a><a href="regelgeving.html">Energiecontracten en regels</a></div>
+    <div class="footer-column"><b>Blijf begrijpen</b><a href="nieuws.html">Nieuws en duiding</a><a href="kijken.html">Kijken en luisteren</a><a href="onderzoek.html">Onderzoek en cijfers</a><a href="verdieping.html">Verdieping</a></div>
+  </div>
+  <div class="footer-bottom"><span>© <span id="year"></span> DuurzaamKompas · Gratis toegankelijk</span><div><a href="bronnen.html">Bronnen & transparantie</a><a href="over.html">Over het platform</a></div><span>Geen verkooppraat. Eerst begrijpen, dan kiezen.</span></div>
+</footer>
 </body></html>
