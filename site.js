@@ -1,5 +1,15 @@
 const menuButton = document.querySelector(".menu-toggle");
 const nav = document.querySelector(".nav");
+
+if (nav) {
+  const currentFile = location.pathname.split("/").pop() || "index.html";
+  nav.querySelectorAll("a[href]").forEach(link => {
+    const targetFile = link.getAttribute("href").split("#")[0] || "index.html";
+    if (targetFile === currentFile && !link.classList.contains("nav-cta")) {
+      link.setAttribute("aria-current", "page");
+    }
+  });
+}
 if (menuButton && nav) {
   menuButton.addEventListener("click", () => {
     const isOpen = nav.classList.toggle("open");
