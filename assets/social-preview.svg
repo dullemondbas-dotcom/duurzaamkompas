@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+<defs><linearGradient id="b" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#173c31"/><stop offset="1" stop-color="#102a25"/></linearGradient><linearGradient id="a" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#dcebc5"/><stop offset="1" stop-color="#8fb99d"/></linearGradient></defs>
+<rect width="1200" height="630" fill="#f7f8f4"/><rect x="0" y="0" width="1200" height="630" rx="22" fill="url(#b)"/>
+<circle cx="1005" cy="80" r="190" fill="#cfe5b9" opacity=".08"/><circle cx="1005" cy="80" r="130" fill="none" stroke="#d8e9c7" stroke-opacity=".16" stroke-width="2"/>
+<g transform="translate(80 80)"><rect width="66" height="66" rx="18" fill="#dcebc5"/><text x="12" y="44" fill="#173c31" font-family="Arial,sans-serif" font-size="25" font-weight="700">DK</text></g>
+<text x="170" y="125" fill="#fff" font-family="Arial,sans-serif" font-size="29" font-weight="700">duurzaamkompas</text>
+<text x="84" y="280" fill="#fff" font-family="Arial,sans-serif" font-size="66" font-weight="700">Grip op energie.</text>
+<text x="84" y="360" fill="#dcebc5" font-family="Georgia,serif" font-size="65" font-style="italic">Begint met inzicht.</text>
+<text x="88" y="438" fill="#e1ece4" font-family="Arial,sans-serif" font-size="25">Begrijp slimme apparaten, energiekosten en de keuzes voor jouw woning.</text>
+<g transform="translate(850 190)" fill="none" stroke="#dcebc5" stroke-width="3">
+<path d="M0 100 150 0 300 100v230H0Z" stroke-opacity=".8"/><path d="M-20 100 150 -20 320 100" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/><rect x="110" y="185" width="70" height="130" rx="7" fill="#dcebc5" stroke="none"/><path d="m146 211-17 34h18l-8 33 27-43h-20l12-24Z" fill="#315d43" stroke="none"/><path d="M33 55h60v34H33zM42 55v34M62 55v34M33 72h60" stroke="#80b9b0"/>
+<path d="M212 165h54v-40h-54zM220 155h38M234 125v40" stroke="#80b9b0"/>
+</g>
+<text x="84" y="565" fill="#bdd6c2" font-family="Arial,sans-serif" font-size="18" letter-spacing="3">GRATIS · HELDER · ONAFHANKELIJK</text>
+</svg>
