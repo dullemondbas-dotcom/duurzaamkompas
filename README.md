@@ -32,6 +32,9 @@ DuurzaamKompas is een gratis Nederlandstalig consumentenplatform over energie th
 - `bronnen.html` — bronbeleid, redactionele werkwijze, commerciële transparantie en publicatiestatus
 - `over.html` — missie, visie, platformprincipes en ontwikkelrichting
 
+- `energie-challenge.html` + `energie-challenge.css` + `energie-challenge.js` — eerste interactieve prototype van Mijn Energie / Energie Challenge: dashboard met fictieve voorbeelddata, huishoudprofiel, lokale test-challenges en de voorbereide Home Assistant-koppelpresentatie. Profiel en zelfgemaakte challenges worden uitsluitend lokaal in de browser opgeslagen. Er is nog geen online account, backend, echte meterdata of gedeelde competitie.
+- `docs/ENERGIE_CHALLENGE_MVP_STATUS.md` — status, beperkingen en volgende technische stappen voor de Energie Challenge.
+
 ## Redactionele uitgangspunten
 
 1. Consumentenbelang eerst: begin bij de woning, het verbruik, het doel en de echte vraag van de bezoeker.
