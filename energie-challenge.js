@@ -281,10 +281,139 @@
     showToast(names[button.dataset.id] + " is een fictieve demo-challenge. Online deelnemen is nog niet actief.");
   }));
 
-  $("#notifyHa")?.addEventListener("click", () => {
-    $("#haStatus").textContent = "De interesseknop is een prototype. Er wordt nog geen e-mailadres verzonden of koppeling aangemaakt.";
-    showToast("De Home Assistant-koppeling is nog in ontwikkeling.");
+  const integrationLabels = { home_assistant: "Home Assistant", homewizard: "HomeWizard P1" };
+  const integrationByProvider = {};
+
+  function integrationStatusText(item) {
+    if (!item) return "Nog geen koppeling aangemaakt.";
+    if (item.status === "connected") {
+      const seen = item.last_seen_at ? new Date(item.last_seen_at).toLocaleString("nl-NL", { dateStyle: "medium", timeStyle: "short" }) : "onbekend tijdstip";
+      return "Verbonden · laatste meetwaarde ontvangen: " + seen + ".";
+    }
+    if (item.status === "pending") return "Koppelcode aangemaakt · wacht op de eerste meetwaarde.";
+    if (item.status === "degraded") return "Er is eerder data ontvangen, maar de verbinding vraagt aandacht.";
+    if (item.status === "revoked") return "Toegang ingetrokken. Je kunt later een nieuwe koppelcode maken.";
+    return "De koppeling heeft aandacht nodig. Maak eventueel een nieuwe koppelcode.";
+  }
+
+  async function refreshIntegrationStatuses() {
+    const statusNodes = $("[data-provider-status]");
+    if (!window.DK_ACCOUNT?.isSignedIn?.()) {
+      statusNodes.forEach(node => { node.textContent = "Log in om de koppelstatus te bekijken."; });
+      $("[data-revoke-provider]").forEach(button => { button.hidden = true; });
+      return;
+    }
+    try {
+      const items = await window.DK_ACCOUNT.listEnergyIntegrations();
+      Object.keys(integrationByProvider).forEach(key => delete integrationByProvider[key]);
+      items.forEach(item => { integrationByProvider[item.provider] = item; });
+      statusNodes.forEach(node => { node.textContent = integrationStatusText(integrationByProvider[node.dataset.providerStatus]); });
+      $("[data-revoke-provider]").forEach(button => {
+        const item = integrationByProvider[button.dataset.revokeProvider];
+        button.hidden = !item || item.status === "revoked";
+      });
+      $("[data-connect-provider]").forEach(button => {
+        const item = integrationByProvider[button.dataset.connectProvider];
+        button.textContent = item && item.status !== "revoked" ? "Vervang koppelcode" : "Maak koppelcode";
+      });
+    } catch (error) {
+      console.warn("Mijn Energie integratiestatus:", error);
+      statusNodes.forEach(node => { node.textContent = "De koppelstatus kon niet worden opgehaald."; });
+    }
+  }
+
+  function makeIntegrationToken() {
+    if (!window.crypto?.getRandomValues || !window.crypto?.subtle) throw new Error("Je browser ondersteunt de beveiligde codegeneratie niet.");
+    return Array.from(window.crypto.getRandomValues(new Uint8Array(32)), b => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  async function hashIntegrationToken(token) {
+    const digest = await window.crypto.subtle.digest("SHA-256", new TextEncoder().encode(token));
+    return Array.from(new Uint8Array(digest), b => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  function showIntegrationToken(provider, token) {
+    $("#integrationTokenTitle").textContent = integrationLabels[provider] + " · je koppelcode";
+    $("#integrationTokenCode").textContent = token;
+    $("#integrationTokenStatus").textContent = "Kopieer en bewaar deze code nu. Sluit je dit venster, dan tonen we de code niet opnieuw.";
+    $("#integrationTokenInstructions").textContent = provider === "home_assistant"
+      ? "Bewaar deze code straks als geheim in Home Assistant. We leveren de precieze YAML en sensorselectie zodra je installatie klaarstaat."
+      : "Bewaar deze code voor de lokale HomeWizard-verbinding. De eerste route gebruikt Home Assistant als lokale brug; de losse brug bouwen we later.";
+    $("#integrationTokenPanel").hidden = false;
+    $("#integrationTokenPanel").scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
+  $("[data-connect-provider]").forEach(button => button.addEventListener("click", async () => {
+    const provider = button.dataset.connectProvider;
+    if (!window.DK_ACCOUNT?.isSignedIn?.()) {
+      showToast("Log eerst in om een persoonlijke koppelcode te maken.");
+      $("#accountOpenButton")?.click();
+      return;
+    }
+    if (!$("#energyDataConsent")?.checked) {
+      showToast("Geef eerst toestemming voor het delen van energiemetingen.");
+      $("#energyDataConsent")?.focus();
+      return;
+    }
+    const existing = integrationByProvider[provider];
+    if (existing && existing.status !== "revoked" && !window.confirm("De huidige koppelcode wordt direct vervangen. Een bestaande verbinding met de oude code stopt dan. Doorgaan?")) return;
+    const previousLabel = button.textContent;
+    button.disabled = true;
+    button.textContent = "Veilige code maken…";
+    try {
+      const token = makeIntegrationToken();
+      const tokenHash = await hashIntegrationToken(token);
+      await window.DK_ACCOUNT.createEnergyIntegration(provider, integrationLabels[provider], tokenHash);
+      showIntegrationToken(provider, token);
+      await refreshIntegrationStatuses();
+      showToast("De persoonlijke koppelcode is aangemaakt.");
+    } catch (error) {
+      console.error("Mijn Energie: koppeling voorbereiden:", error);
+      showToast(error?.message || "De koppeling kon niet worden voorbereid.");
+    } finally {
+      button.disabled = false;
+      await refreshIntegrationStatuses();
+    }
+  }));
+
+  $("[data-revoke-provider]").forEach(button => button.addEventListener("click", async () => {
+    const provider = button.dataset.revokeProvider;
+    const item = integrationByProvider[provider];
+    if (!item) return;
+    if (!window.confirm("Weet je zeker dat je " + integrationLabels[provider] + " wilt ontkoppelen? De huidige koppelcode wordt direct ongeldig.")) return;
+    button.disabled = true;
+    try {
+      await window.DK_ACCOUNT.revokeEnergyIntegration(item.id);
+      await refreshIntegrationStatuses();
+      showToast("De koppeling is ingetrokken. Nieuwe meetgegevens worden niet meer geaccepteerd.");
+    } catch (error) {
+      showToast(error?.message || "Ontkoppelen is niet gelukt.");
+    } finally { button.disabled = false; }
+  }));
+
+  $("#copyIntegrationToken")?.addEventListener("click", async () => {
+    const token = $("#integrationTokenCode")?.textContent || "";
+    if (!token) return;
+    try {
+      await navigator.clipboard.writeText(token);
+      $("#integrationTokenStatus").textContent = "Gekopieerd. Bewaar de code op een veilige plek.";
+    } catch (_) {
+      $("#integrationTokenStatus").textContent = "Automatisch kopiëren lukte niet. Selecteer de code en kopieer deze handmatig.";
+    }
   });
+  $("#hideIntegrationToken")?.addEventListener("click", () => {
+    $("#integrationTokenCode").textContent = "";
+    $("#integrationTokenPanel").hidden = true;
+  });
+  window.addEventListener("dk-account-changed", event => {
+    if (!event.detail?.user) {
+      $("#integrationTokenCode").textContent = "";
+      $("#integrationTokenPanel").hidden = true;
+      $("#energyDataConsent").checked = false;
+    }
+    void refreshIntegrationStatuses();
+  });
+  void refreshIntegrationStatuses();
 
   $("#resetDemo")?.addEventListener("click", () => {
     if (!window.confirm("Je lokaal opgeslagen profiel en zelfgemaakte demo-challenges verwijderen?")) return;
