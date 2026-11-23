@@ -5,7 +5,8 @@ if (nav) {
   const currentFile = location.pathname.split("/").pop() || "index.html";
   nav.querySelectorAll("a[href]").forEach(link => {
     const targetFile = link.getAttribute("href").split("#")[0] || "index.html";
-    if (targetFile === currentFile && !link.classList.contains("nav-cta")) {
+    const isBatterySubpage = currentFile === "vergelijker.html" && targetFile === "slimme-apparaten.html";
+    if ((targetFile === currentFile || isBatterySubpage) && !link.classList.contains("nav-cta")) {
       link.setAttribute("aria-current", "page");
     }
   });
