@@ -1,0 +1,49 @@
+name: Refresh public energy dashboard
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: live-energy-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Refresh live and model data
+        env:
+          NED_API_KEY: ${{ secrets.NED_API_KEY }}
+          KNMI_API_KEY: ${{ secrets.KNMI_API_KEY }}
+          TENNET_API_KEY: ${{ secrets.TENNET_API_KEY }}
+        run: python .github/scripts/update_energy_data.py
+
+      - name: Commit public data snapshot
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/energy-live.json
+          if git diff --cached --quiet; then
+            echo "No changes to public energy data."
+            exit 0
+          fi
+          git pull --rebase origin main
+          git commit -m "Update public energy dashboard data"
+          git push origin HEAD:main
