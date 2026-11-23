@@ -6,7 +6,6 @@ from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 import aiohttp
-from zeroconf import Zeroconf, ServiceBrowser, ServiceListener
 
 APP_DIR = Path.home() / ".duurzaamkompas"
 DEVICE_FILE = APP_DIR / "homewizard-device.json"
@@ -36,6 +35,7 @@ def install_certificate() -> None:
     print("HomeWizard CA-certificaat opgeslagen:", CA_FILE)
 
 def discover(config: dict, config_path: Path) -> None:
+    from zeroconf import Zeroconf, ServiceBrowser, ServiceListener
     found = []
     class Listener(ServiceListener):
         def add_service(self, zc, service_type, name):
