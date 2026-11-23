@@ -1,6 +1,4 @@
-/* DuurzaamKompas Energie Challenge — static prototype only.
-   Profiles and demo-created challenges are stored in this browser's localStorage.
-   No account, external data transfer, partner tracking or smart-meter connection exists yet. */
+/* DuurzaamKompas Mijn Energie — navigation, demo interactions and authenticated household data. */
 (() => {
   "use strict";
   const PROFILE_KEY = "dk_energy_profile_v1";
@@ -48,7 +46,7 @@
     button.addEventListener("click", () => setView(button.dataset.view));
   });
   const requestedView = new URLSearchParams(location.search).get("view");
-  if (["dashboard","household","challenges","connections"].includes(requestedView)) setView(requestedView);
+  if (["dashboard","history","household","challenges","connections"].includes(requestedView)) setView(requestedView);
   $$("[data-go]").forEach(button => button.addEventListener("click", () => setView(button.dataset.go)));
 
   const note = $(".prototype-note");
@@ -405,6 +403,175 @@
     $("#integrationTokenCode").textContent = "";
     $("#integrationTokenPanel").hidden = true;
   });
+  let activeHistoryPeriod = "month";
+
+  function formatMeasure(value, unit) {
+    const number = Number(value);
+    return Number.isFinite(number)
+      ? new Intl.NumberFormat("nl-NL", { maximumFractionDigits: 1 }).format(number) + (unit ? " " + unit : "")
+      : "—";
+  }
+
+  function setHistorySummary(rows) {
+    const latest = rows[0];
+    if (!latest) return;
+    const electricity = latest.grid_import_difference_kwh == null ? null : Number(latest.grid_import_difference_kwh);
+    const gas = latest.gas_difference_m3 == null ? null : Number(latest.gas_difference_m3);
+    const cost = latest.estimated_variable_cost_difference_eur == null ? null : Number(latest.estimated_variable_cost_difference_eur);
+    $("#historyElectricityValue").textContent = electricity == null ? "—" : formatMeasure(electricity, "kWh");
+    $("#historyElectricityLabel").textContent = electricity == null ? "Nog geen betrouwbare vergelijking" : (electricity >= 0 ? "Minder netafname dan je referentie" : "Meer netafname dan je referentie");
+    $("#historyGasValue").textContent = gas == null ? "—" : formatMeasure(gas, "m³");
+    $("#historyGasLabel").textContent = gas == null ? "Nog geen betrouwbare vergelijking" : (gas >= 0 ? "Minder gas dan je referentie" : "Meer gas dan je referentie");
+    $("#historyCostValue").textContent = cost == null ? "—" : (cost >= 0 ? "€ " : "−€ ") + formatMeasure(Math.abs(cost), "");
+    $("#historyCostLabel").textContent = latest.cost_method === "interval_rate"
+      ? "Berekend met tijdsafhankelijke tarieven"
+      : latest.cost_method === "fixed_rate"
+        ? "Berekend met je variabele contracttarief"
+        : latest.cost_method === "indicative"
+          ? "Indicatie op basis van beschikbare tarieven"
+          : "Niet berekend: geen bruikbare tariefdata";
+    $("#historyQualityCaption").textContent = "Datakwaliteit: " + (latest.quality_label || "onbekend") + " · meetdekking " + Math.round(Number(latest.coverage_ratio || 0) * 100) + "%";
+  }
+
+  function renderHistoryRows(rows) {
+    const list = $("#historyPeriodList");
+    list.replaceChildren();
+    rows.forEach(row => {
+      const item = document.createElement("article");
+      item.className = "history-period-item";
+      const dates = document.createElement("div");
+      dates.className = "history-period-date";
+      const label = document.createElement("strong");
+      const start = new Date(row.period_start + "T12:00:00");
+      label.textContent = start.toLocaleDateString("nl-NL", { month: "long", year: "numeric" });
+      const detail = document.createElement("small");
+      detail.textContent = row.period_type === "week"
+        ? "Week van " + start.toLocaleDateString("nl-NL", { day: "numeric", month: "short" })
+        : row.period_type === "year" ? "Jaaroverzicht" : "Maandoverzicht";
+      dates.append(label, detail);
+      const outcome = document.createElement("div");
+      outcome.className = "history-period-outcomes";
+      const electricity = document.createElement("span");
+      electricity.textContent = row.grid_import_difference_kwh == null ? "Stroom: —" : "Stroom: " + formatMeasure(row.grid_import_difference_kwh, "kWh");
+      const gas = document.createElement("span");
+      gas.textContent = row.gas_difference_m3 == null ? "Gas: —" : "Gas: " + formatMeasure(row.gas_difference_m3, "m³");
+      outcome.append(electricity, gas);
+      const quality = document.createElement("span");
+      quality.className = "history-quality-label";
+      quality.textContent = (row.quality_label || "onbekend") + " · " + Math.round(Number(row.coverage_ratio || 0) * 100) + "% dekking";
+      item.append(dates, outcome, quality);
+      list.append(item);
+    });
+  }
+
+  async function refreshHistory() {
+    if (!window.DK_ACCOUNT?.isSignedIn?.()) {
+      $("#historyLoginNotice").hidden = false;
+      $("#historyEmptyState").hidden = true;
+      $("#historyContent").hidden = true;
+      return;
+    }
+    $("#historyLoginNotice").hidden = true;
+    try {
+      const rows = await window.DK_ACCOUNT.listEnergySavingsPeriods(activeHistoryPeriod);
+      if (!rows.length) {
+        $("#historyEmptyState").hidden = false;
+        $("#historyContent").hidden = true;
+        return;
+      }
+      $("#historyEmptyState").hidden = true;
+      $("#historyContent").hidden = false;
+      setHistorySummary(rows);
+      renderHistoryRows(rows);
+    } catch (error) {
+      console.warn("Mijn Energie geschiedenis:", error);
+      $("#historyEmptyState").hidden = false;
+      $("#historyContent").hidden = true;
+    }
+  }
+
+  async function renderDashboardWeeklyTip() {
+    const container = $("#dashboardWeeklyTipActions");
+    if (!window.DK_ACCOUNT?.isSignedIn?.()) {
+      $("#dashboardWeeklyTipTitle").textContent = "Log in voor je persoonlijke voortgang.";
+      $("#dashboardWeeklyTipSummary").textContent = "Je energiegeschiedenis en weektips worden aan je huishouden gekoppeld.";
+      container.replaceChildren();
+      return;
+    }
+    try {
+      const tip = await window.DK_ACCOUNT.getLatestWeeklyTip();
+      if (!tip) {
+        $("#dashboardWeeklyTipTitle").textContent = "We bouwen eerst een eerlijke nulmeting op.";
+        $("#dashboardWeeklyTipSummary").textContent = "Zodra we je energiegebruik betrouwbaar kunnen vergelijken, krijg je iedere week één persoonlijke tip. Zonder meetdata geven we alleen profielgerichte adviezen.";
+        const link = document.createElement("button");
+        link.type = "button";
+        link.className = "text-button";
+        link.textContent = "Bekijk je koppelingen →";
+        link.addEventListener("click", () => setView("connections"));
+        container.replaceChildren(link);
+        return;
+      }
+      $("#dashboardWeeklyTipTitle").textContent = tip.title;
+      $("#dashboardWeeklyTipSummary").textContent = tip.summary + " " + tip.why_this_tip;
+      container.replaceChildren();
+      const addAction = (label, status, className = "text-button") => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = className;
+        button.textContent = label;
+        button.addEventListener("click", async () => {
+          button.disabled = true;
+          try {
+            await window.DK_ACCOUNT.updateWeeklyTipStatus(tip.id, status);
+            showToast("Je tip is bijgewerkt.");
+            await renderDashboardWeeklyTip();
+          } catch (error) {
+            showToast(error?.message || "Opslaan lukte niet.");
+          } finally {
+            button.disabled = false;
+          }
+        });
+        container.append(button);
+      };
+      if (tip.status === "completed") {
+        const done = document.createElement("span");
+        done.className = "weekly-tip-complete";
+        done.textContent = "Afgerond";
+        container.append(done);
+      } else if (tip.status === "dismissed") {
+        const dismissed = document.createElement("span");
+        dismissed.className = "weekly-tip-complete";
+        dismissed.textContent = "Niet relevant voor mij";
+        container.append(dismissed);
+      } else {
+        addAction("Bewaar", "saved");
+        addAction("Ga ik doen", "accepted");
+        addAction("Past niet", "dismissed");
+        if (tip.status === "accepted" || tip.status === "saved") addAction("Afgerond", "completed", "btn btn-primary btn-small");
+      }
+      if (tip.source_url) {
+        const source = document.createElement("a");
+        source.className = "text-button";
+        source.href = tip.source_url;
+        source.target = "_blank";
+        source.rel = "noopener noreferrer";
+        source.textContent = "Bron bij deze tip ↗";
+        container.append(source);
+      }
+    } catch (error) {
+      console.warn("Mijn Energie weektip:", error);
+    }
+  }
+
+  $("[data-history-period]").forEach(button => button.addEventListener("click", () => {
+    activeHistoryPeriod = button.dataset.historyPeriod;
+    $("[data-history-period]").forEach(node => node.classList.toggle("active", node === button));
+    void refreshHistory();
+  }));
+
+  async function refreshLearningViews() {
+    await Promise.all([refreshHistory(), renderDashboardWeeklyTip()]);
+  }
   window.addEventListener("dk-account-changed", event => {
     if (!event.detail?.user) {
       $("#integrationTokenCode").textContent = "";
@@ -412,8 +579,10 @@
       $("#energyDataConsent").checked = false;
     }
     void refreshIntegrationStatuses();
+    void refreshLearningViews();
   });
   void refreshIntegrationStatuses();
+  void refreshLearningViews();
 
   $("#resetDemo")?.addEventListener("click", () => {
     if (!window.confirm("Je lokaal opgeslagen profiel en zelfgemaakte demo-challenges verwijderen?")) return;
