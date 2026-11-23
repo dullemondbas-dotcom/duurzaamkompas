@@ -239,19 +239,30 @@
   }
 
   async function ensureHousehold(user, municipality) {
+    if (!user || !currentUser || user.id !== currentUser.id) {
+      throw new Error("Je inlogsessie is veranderd. Log opnieuw in en probeer het nog eens.");
+    }
+
     if (householdId) {
       if (municipality !== undefined) {
-        const { error } = await client.from("households").update({ municipality: municipality || null }).eq("id", householdId);
+        const { error } = await client.from("households")
+          .update({ municipality: municipality || null })
+          .eq("id", householdId);
         if (error) throw error;
       }
       return householdId;
     }
-    const { data: household, error } = await client
-      .from("households")
-      .insert({ owner_user_id: user.id, label: "Mijn huishouden", municipality: municipality || null })
-      .select("id").single();
+
+    // The RPC derives owner_user_id from auth.uid() on the server. This avoids
+    // relying on a browser-supplied owner id and keeps the RLS boundary intact.
+    const { data: newHouseholdId, error } = await client.rpc("create_my_household", {
+      p_municipality: municipality || null
+    });
     if (error) throw error;
-    householdId = household.id;
+    if (!newHouseholdId) {
+      throw new Error("Supabase heeft geen huishouden-ID teruggegeven. Probeer het opnieuw.");
+    }
+    householdId = newHouseholdId;
     return householdId;
   }
 
