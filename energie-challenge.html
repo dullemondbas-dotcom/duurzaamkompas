@@ -17,6 +17,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="energie-challenge.css">
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2/dist/umd/supabase.js"></script>
+<script defer src="supabase-config.js"></script>
+<script defer src="supabase-auth.js"></script>
 <script defer src="energie-challenge.js"></script>
 </head>
 <body>
@@ -29,13 +32,13 @@
     <button class="nav-tab" data-view="challenges"><span class="tab-icon">★</span><span>Challenges</span></button>
     <button class="nav-tab" data-view="connections"><span class="tab-icon">⌁</span><span>Koppelen</span></button>
   </nav>
-  <div class="app-user"><span class="avatar" id="avatarInitial">D</span><span id="headerNickname">Demo gebruiker</span></div>
+  <button type="button" class="app-user account-trigger" id="accountOpenButton" aria-haspopup="dialog" aria-controls="accountDialog"><span class="avatar" id="avatarInitial">D</span><span id="headerNickname">Demo gebruiker</span><small id="accountButtonLabel">Mijn account</small></button>
 </header>
 
 <main class="app-main">
   <section class="prototype-note" role="note">
     <span class="note-icon">i</span>
-    <div><strong>Je bekijkt de eerste prototypeversie.</strong> Alle voorbeeldmetingen en deelnemers zijn fictief. Je profiel en acties worden alleen lokaal in deze browser opgeslagen. Er is nog geen account, gedeelde ranglijst of live meterverbinding.</div>
+    <div><strong>Je bekijkt de eerste versie van Mijn Energie.</strong> Dashboardmetingen en deelnemers zijn nog voorbeelddata. Je kunt straks een account gebruiken om je huishouden tussen apparaten te synchroniseren; live meterdata en online challenges worden later aangesloten.</div>
     <button type="button" id="dismissNote" aria-label="Melding verbergen">×</button>
   </section>
   <section class="install-app-card" id="installAppCard" aria-label="Installeer Mijn Energie">
@@ -87,7 +90,7 @@
   </section>
 
   <section class="view" id="view-household">
-    <div class="page-heading"><p class="eyebrow">JOUW UITGANGSPUNT</p><h1>Vertel iets over je huishouden.</h1><p class="lead">Met deze gegevens kunnen we straks huishoudens eerlijker vergelijken. Je adres is niet nodig en je profiel is in deze prototypeversie alleen lokaal opgeslagen.</p></div>
+    <div class="page-heading"><p class="eyebrow">JOUW UITGANGSPUNT</p><h1>Vertel iets over je huishouden.</h1><p class="lead">Met deze gegevens kunnen we straks huishoudens eerlijker vergelijken. Je adres is niet nodig. Met een account wordt je profiel beveiligd opgeslagen en gesynchroniseerd tussen je apparaten; zonder account blijft het alleen op dit apparaat.</p></div>
     <form id="householdForm" class="form-layout">
       <article class="panel form-panel">
         <div class="form-section-title"><span>01</span><div><h2>Je woning</h2><p>Een globale omschrijving is voldoende.</p></div></div>
@@ -123,8 +126,8 @@
           <label>Nickname<input name="nickname" maxlength="24" placeholder="Bijvoorbeeld EnergieBaas27" required></label>
           <label>Vergelijkingsgroep<select name="comparison"><option value="automatic">Automatisch bepalen op basis van mijn profiel</option><option value="beginner">Ik begin zonder grote installaties</option><option value="solar">Ik heb zonnepanelen</option><option value="all-electric">Mijn woning is grotendeels elektrisch</option></select></label>
         </div>
-        <label class="consent-line"><input type="checkbox" name="localConsent" required><span>Ik begrijp dat deze prototypeversie mijn ingevulde gegevens alleen lokaal in deze browser bewaart. Dit is nog geen online account en deelt niets met andere deelnemers.</span></label>
-        <div class="form-actions"><button class="btn btn-primary" type="submit">Profiel lokaal opslaan <span>↗</span></button><span id="profileStatus" class="form-status" aria-live="polite"></span></div>
+        <label class="consent-line"><input type="checkbox" name="profileConsent" required><span>Ik geef toestemming om mijn huishoudprofiel voor Mijn Energie op te slaan. Mijn adres wordt niet gevraagd en mijn profiel wordt niet openbaar getoond.</span></label>
+        <div class="form-actions"><button class="btn btn-primary" type="submit">Profiel opslaan <span>↗</span></button><span id="profileStatus" class="form-status" aria-live="polite"></span></div>
       </article>
     </form>
   </section>
@@ -172,6 +175,60 @@
   </section>
 </main>
 <footer class="app-footer"><a href="index.html">DuurzaamKompas</a><span>Mijn Energie · Eerste prototype</span><a href="bronnen.html">Privacy & transparantie</a></footer>
+
+<dialog class="account-dialog" id="accountDialog" aria-labelledby="accountTitle">
+  <div class="account-dialog-panel">
+    <header class="account-modal-head">
+      <div><p class="eyebrow">DUURZAAMKOMPAS · MIJN ENERGIE</p><h2 id="accountTitle">Mijn account</h2></div>
+      <button type="button" class="account-close" id="accountCloseButton" aria-label="Venster sluiten">×</button>
+    </header>
+    <div id="accountAuthArea">
+      <p class="account-intro">Bewaar je huishouden en open je profiel op je telefoon, tablet en computer.</p>
+      <nav class="account-tabs" aria-label="Account opties">
+        <button type="button" class="active" data-auth-view="login">Inloggen</button>
+        <button type="button" data-auth-view="register">Account maken</button>
+      </nav>
+      <form id="accountLoginForm" class="account-form">
+        <label>E-mailadres<input type="email" name="email" autocomplete="email" required placeholder="jij@voorbeeld.nl"></label>
+        <label>Wachtwoord<input type="password" name="password" autocomplete="current-password" required minlength="8" placeholder="Minimaal 8 tekens"></label>
+        <button type="submit" class="btn btn-primary">Inloggen <span>↗</span></button>
+        <button type="button" class="text-button account-forgot" data-auth-view="reset">Wachtwoord vergeten?</button>
+      </form>
+      <form id="accountRegisterForm" class="account-form" hidden>
+        <label>Nickname<input type="text" name="nickname" autocomplete="nickname" required minlength="3" maxlength="24" pattern="[A-Za-z0-9_-]{3,24}" placeholder="Bijvoorbeeld EnergieBaas27"><small>3–24 tekens: letters, cijfers, _ of - . Je nickname is zichtbaar in challenges.</small></label>
+        <label>E-mailadres<input type="email" name="email" autocomplete="email" required placeholder="jij@voorbeeld.nl"></label>
+        <label>Wachtwoord<input type="password" name="password" autocomplete="new-password" required minlength="8" placeholder="Minimaal 8 tekens"></label>
+        <label class="account-check"><input type="checkbox" name="accept" required><span>Ik ga akkoord met het aanmaken van een account en heb de privacy-informatie gelezen.</span></label>
+        <button type="submit" class="btn btn-primary">Account aanmaken <span>↗</span></button>
+      </form>
+      <form id="accountResetForm" class="account-form" hidden>
+        <p>Vul je e-mailadres in. Je ontvangt een beveiligde link om een nieuw wachtwoord in te stellen.</p>
+        <label>E-mailadres<input type="email" name="email" autocomplete="email" required placeholder="jij@voorbeeld.nl"></label>
+        <button type="submit" class="btn btn-primary">Verstuur herstellink</button>
+        <button type="button" class="text-button account-forgot" data-auth-view="login">Terug naar inloggen</button>
+      </form>
+      <form id="accountUpdatePasswordForm" class="account-form" hidden>
+        <p>Kies een nieuw wachtwoord voor je account.</p>
+        <label>Nieuw wachtwoord<input type="password" name="password" autocomplete="new-password" minlength="8" required></label>
+        <label>Herhaal wachtwoord<input type="password" name="confirmPassword" autocomplete="new-password" minlength="8" required></label>
+        <button type="submit" class="btn btn-primary">Wachtwoord opslaan</button>
+      </form>
+      <div id="accountStatus" class="account-status" role="status" aria-live="polite"></div>
+      <p class="account-config-note" id="accountConfigNote">Accountregistratie wordt voorbereid.</p>
+    </div>
+    <section id="accountSignedInArea" hidden>
+      <div class="account-signed-badge"><span class="status-dot"></span> Ingelogd</div>
+      <p class="account-email" id="accountEmail"></p>
+      <p class="account-nickname" id="accountNickname"></p>
+      <div class="account-sync-status" id="accountSyncStatus">Je account is actief.</div>
+      <div class="account-session-actions">
+        <button type="button" class="btn btn-primary" id="accountHouseholdButton">Mijn huishouden openen</button>
+        <button type="button" class="btn btn-secondary" id="accountSignOutButton">Uitloggen</button>
+      </div>
+    </section>
+  </div>
+</dialog>
+
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </body>
 </html>
