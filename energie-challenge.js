@@ -144,7 +144,7 @@
     $("#profileStatus").textContent = "Je profiel staat lokaal opgeslagen in deze browser.";
   }
 
-  $("#householdForm")?.addEventListener("submit", event => {
+  $("#householdForm")?.addEventListener("submit", async event => {
     event.preventDefault();
     const form = event.currentTarget;
     if (!form.reportValidity()) return;
