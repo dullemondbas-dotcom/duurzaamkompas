@@ -1,0 +1,58 @@
+/* DuurzaamKompas — live energy dashboard */
+.live-page{background:#f7f9f5}
+.live-wrap{width:min(1200px,calc(100% - 48px));margin:0 auto}
+.live-topline{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:16px 0;color:#65776b;font-size:11px}
+.live-pulse{display:inline-block;width:8px;height:8px;margin-right:8px;border-radius:50%;background:#6a9a60;box-shadow:0 0 0 4px #6a9a601c}
+.live-status-main{font-weight:800;color:#315a3e}
+.live-action{display:inline-flex;align-items:center;gap:7px;border:1px solid #d7e3d4;background:#fff;color:#31553c;border-radius:8px;padding:9px 12px;font-size:10px;font-weight:800;cursor:pointer}
+.live-action:hover{background:#edf4e8}
+.live-explainer{padding:16px 18px;background:#edf4e9;border:1px solid #d9e5d5;border-radius:12px;color:#586e5e;font-size:11px;line-height:1.75}
+.live-explainer strong{color:#244333}
+.live-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:20px 0 30px}
+.live-card{background:#fff;border:1px solid #dce6dc;border-radius:14px;padding:19px;box-shadow:0 5px 17px rgba(20,49,36,.035);min-width:0}
+.live-card.full{grid-column:1/-1}
+.live-card.double{grid-column:span 2}
+.live-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:13px}
+.live-card-head small{display:block;color:#6b876c;font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+.live-card h2{margin:5px 0 0;color:#203d30;font:800 17px/1.22 "Manrope",Arial,sans-serif}
+.live-card h3{margin:0 0 10px;color:#244333;font:800 13px "Manrope",Arial,sans-serif}
+.live-big{font:800 clamp(27px,3vw,38px)/1 "Manrope",Arial,sans-serif;letter-spacing:-1.5px;color:#244735}
+.live-unit{font-size:12px;letter-spacing:0;color:#728176;font-weight:650}
+.live-sub{margin-top:8px;color:#7a887d;font-size:10px;line-height:1.6}
+.live-mini-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:15px}
+.live-mini-stat{padding:11px;background:#f4f8f1;border-radius:9px;min-width:0}
+.live-mini-stat small{display:block;color:#829087;font-size:9px;margin-bottom:6px}
+.live-mini-stat b{display:block;color:#345641;font:800 17px "Manrope",Arial,sans-serif;overflow-wrap:anywhere}
+.live-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 8px;background:#edf4e9;color:#456d49;border-radius:20px;font-size:9px;font-weight:800;white-space:nowrap}
+.live-pill.warn{background:#fbf3e6;color:#8a6a36}
+.live-pill.off{background:#f0f2ef;color:#68756b}
+.live-source-time{margin-top:12px;padding-top:10px;border-top:1px solid #e8eee5;color:#8a968c;font-size:9px}
+.live-bars{display:flex;align-items:end;gap:5px;height:128px;padding:13px 4px 4px;margin-top:14px;border-bottom:1px solid #dce6dc}
+.live-bar-group{display:flex;flex:1;min-width:0;height:100%;align-items:end;gap:2px;justify-content:center}
+.live-bar{width:45%;max-width:18px;min-height:2px;border-radius:4px 4px 0 0;background:#6b9b68}
+.live-bar.wind{background:#93adbf}
+.live-bar-labels{display:flex;justify-content:space-between;gap:8px;margin-top:7px;color:#87948a;font-size:8px}
+.live-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;color:#758278;font-size:9px}
+.live-legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px;background:#6b9b68}
+.live-legend i.wind{background:#93adbf}
+.live-chart-note{margin-top:10px;color:#87948a;font-size:9px;line-height:1.6}
+.live-data-table{width:100%;border-collapse:collapse;font-size:10px}
+.live-data-table th,.live-data-table td{padding:9px 7px;text-align:left;border-bottom:1px solid #e8eee5}
+.live-data-table th{color:#718176;font-size:9px;font-weight:700}
+.live-data-table td{color:#34513e}
+.live-data-table tr:last-child td{border-bottom:0}
+.live-pvgis-bars{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:6px;align-items:end;height:148px;margin-top:15px;padding:12px 2px 0;border-bottom:1px solid #dce6dc}
+.live-pvgis-month{height:100%;display:flex;flex-direction:column;justify-content:end;align-items:center;gap:6px;min-width:0}
+.live-pvgis-bar{width:100%;max-width:24px;min-height:3px;background:#8fae77;border-radius:5px 5px 0 0}
+.live-pvgis-month small{font-size:8px;color:#829087}
+.live-source-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.live-source-item{padding:13px;background:#f6f9f4;border:1px solid #e1e9de;border-radius:10px;min-width:0}
+.live-source-item b{display:block;color:#355641;font-size:10px;margin-bottom:6px}
+.live-source-item span{display:block;color:#7b887e;font-size:9px;line-height:1.55;overflow-wrap:anywhere}
+.live-message{padding:14px;background:#f5f7f3;border:1px dashed #cbd9c6;border-radius:9px;color:#78867c;font-size:10px;line-height:1.65}
+.live-message.error{background:#fbf4eb;border-color:#e7d4b6;color:#826741}
+.live-note{margin:15px 0 0;color:#829087;font-size:9px;line-height:1.7}
+.live-link{color:#3f754b;text-decoration:underline;text-underline-offset:3px;font-weight:800}
+.live-link:hover{color:#234b33}
+@media(max-width:900px){.live-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.live-card.double{grid-column:span 2}.live-source-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.live-wrap{width:min(100% - 32px,1200px)}.live-grid{grid-template-columns:1fr}.live-card.double,.live-card.full{grid-column:1}.live-mini-stats{grid-template-columns:1fr 1fr}.live-source-grid{grid-template-columns:1fr 1fr}.live-card{padding:16px}.live-pvgis-bars{gap:3px}.live-pvgis-month small{font-size:7px}}
