@@ -33,7 +33,9 @@
     $$(".nav-tab").forEach(button => button.classList.toggle("active", button.dataset.view === view));
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
-  $$(".nav-tab").forEach(button => button.addEventListener("click", () => setView(button.dataset.view)));
+  $(".nav-tab").forEach(button => button.addEventListener("click", () => setView(button.dataset.view)));
+  const requestedView = new URLSearchParams(location.search).get("view");
+  if (["dashboard","household","challenges","connections"].includes(requestedView)) setView(requestedView);
   $$("[data-go]").forEach(button => button.addEventListener("click", () => setView(button.dataset.go)));
 
   const note = $(".prototype-note");
