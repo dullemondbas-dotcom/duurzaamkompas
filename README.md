@@ -76,3 +76,12 @@ GitHub Pages wordt via GitHub Actions gepubliceerd vanuit branch `main`. Er word
 5. Een eventuele nieuwsbrief pas toevoegen met een passende privacyverklaring en expliciete toestemming.
 6. Voor live gegevens en een geautomatiseerde nieuwsvoorziening pas infrastructuur kiezen als er voldoende gebruik, onderhoudscapaciteit en budget is.
 
+
+## Mijn Energie PWA en backendbasis
+
+- energie-challenge.webmanifest + energie-challenge-sw.js — installeerbare PWA-configuratie en offline app-shell.
+- assets/energie-challenge-icon.svg en assets/energie-challenge-icon-180.png — app-iconen.
+- supabase/migrations/202611230001_initial_mijn_energie.sql — voorbereid accounts-/huishouden-/meetdata-/challenge-schema met Row Level Security; moet eerst in een eigen Supabase-project worden toegepast en getest.
+- docs/MIJN_ENERGIE_PWA_EN_INFRASTRUCTUUR.md — installatie-instructies, backendstatus en beveiligingsgrenzen.
+
+De app blijft momenteel een statische PWA-demo. De Supabase-configuratie is nog niet aangesloten en er zijn nog geen echte accounts of live meetdata.
