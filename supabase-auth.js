@@ -80,8 +80,20 @@
   }
 
   function navigateToHousehold() {
-    const householdTab = document.querySelector('.nav-tab[data-view="household"]');
-    if (householdTab) householdTab.click();
+    const navigate = () => {
+      if (typeof window.DK_APP?.navigateToView === "function") {
+        window.DK_APP.navigateToView("household");
+        return;
+      }
+      document.querySelector('.nav-tab[data-view="household"]')?.click();
+    };
+    // Deferred scripts execute before DOMContentLoaded. Waiting for that event
+    // guarantees the app navigation handlers have been registered first.
+    if (document.readyState === "loading" || document.readyState === "interactive") {
+      document.addEventListener("DOMContentLoaded", navigate, { once: true });
+    } else {
+      navigate();
+    }
   }
 
   async function loadHouseholdProfile(user) {
