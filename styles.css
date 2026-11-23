@@ -1282,3 +1282,8 @@ img,svg{max-width:100%}
 .deepening-handoff p{font-size:10px;line-height:1.75;color:#748178;margin:5px 0 0}
 .deepening-handoff .button{font-size:9px;white-space:nowrap}
 @media(max-width:600px){.deepening-handoff{align-items:flex-start;flex-direction:column;padding:22px 6%}}
+
+/* Quiz introduction is a single column within the quiz split layout */
+.watch-quiz-heading{display:block;margin:0;align-self:start}
+.watch-quiz-heading h2{margin:15px 0 13px}
+.watch-quiz-heading>p{max-width:320px}
