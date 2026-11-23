@@ -48,3 +48,33 @@ Row Level Security staat aan voor alle tabellen. Meetdata, aggregaten, integrati
 
 ## Huidige status
 De PWA is voorbereid voor mobiel en desktop, maar is geen native app uit de App Store/Google Play. De eerste versie blijft via de browser installeerbaar. Een native app store release kan later via Capacitor of een andere wrapper worden overwogen.
+
+
+## Accountlaag (frontend gereed, backend nog te activeren)
+De app bevat nu een accountvenster met:
+- e-mailregistratie en bevestigingsmail;
+- e-mail + wachtwoord inloggen;
+- uitloggen;
+- wachtwoord-herstellink en nieuw wachtwoord;
+- Supabase sessieherstel op hetzelfde apparaat;
+- ophalen en opslaan van het huishoudprofiel in de database, zodat het met dezelfde login op een tweede apparaat beschikbaar is.
+
+### Frontendconfiguratie
+Bestand: supabase-config.js. Vul na het aanmaken van het Supabase-project uitsluitend in:
+- projectUrl: de Project URL uit Project Settings → API;
+- publishableKey: de publieke publishable key (of legacy anon key als het dashboard die nog toont).
+
+Deze twee waarden zijn bedoeld voor frontendgebruik. Gebruik nooit de service_role key, databasewachtwoord of provider-/Home Assistant-tokens in dit bestand.
+
+### Supabase-project instellen
+1. Maak een project aan in Supabase.
+2. Open SQL Editor en voer de volledige migratie uit: supabase/migrations/202611230001_initial_mijn_energie.sql.
+3. Stel Authentication → URL Configuration in:
+   - Site URL: https://dullemondbas-dotcom.github.io
+   - Redirect URL: https://dullemondbas-dotcom.github.io/duurzaamkompas/energie-challenge.html
+   - Password reset URL: https://dullemondbas-dotcom.github.io/duurzaamkompas/energie-challenge.html?reset=1
+4. Laat e-mailbevestiging ingeschakeld. Configureer voor productie een eigen SMTP-provider; de standaard verzenddienst heeft beperkte testquota.
+5. Vul de project-URL en publishable key in supabase-config.js.
+6. Test registratie, bevestiging, login, wachtwoordreset en profielsync met twee testaccounts en op twee verschillende apparaten.
+
+De registratie- en logininterface is gepubliceerd, maar accountaanmaak en synchronisatie blijven uitgeschakeld zolang bovenstaande projectconfiguratie ontbreekt. De frontend laat dat expliciet zien.
