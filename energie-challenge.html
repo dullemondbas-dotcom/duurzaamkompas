@@ -4,9 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#173c31">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Mijn Energie">
 <meta name="description" content="Mijn Energie van DuurzaamKompas: krijg inzicht in je huishouden, volg je energieprestaties en doe mee aan Energie Challenges.">
 <title>Mijn Energie — DuurzaamKompas Energie Challenge</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="manifest" href="./energie-challenge.webmanifest">
+<link rel="apple-touch-icon" href="./assets/energie-challenge-icon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -18,10 +24,10 @@
 <header class="app-header">
   <a class="app-brand" href="index.html"><span class="brand-mark">DK<span>↗</span></span><span>duurzaam<span>kompas</span></span><small>MIJN ENERGIE</small></a>
   <nav class="app-nav" aria-label="Mijn Energie navigatie">
-    <button class="nav-tab active" data-view="dashboard">Overzicht</button>
-    <button class="nav-tab" data-view="household">Mijn huishouden</button>
-    <button class="nav-tab" data-view="challenges">Challenges</button>
-    <button class="nav-tab" data-view="connections">Koppelingen</button>
+    <button class="nav-tab active" data-view="dashboard"><span class="tab-icon">⌂</span><span>Overzicht</span></button>
+    <button class="nav-tab" data-view="household"><span class="tab-icon">⌑</span><span>Huishouden</span></button>
+    <button class="nav-tab" data-view="challenges"><span class="tab-icon">★</span><span>Challenges</span></button>
+    <button class="nav-tab" data-view="connections"><span class="tab-icon">⌁</span><span>Koppelen</span></button>
   </nav>
   <div class="app-user"><span class="avatar" id="avatarInitial">D</span><span id="headerNickname">Demo gebruiker</span></div>
 </header>
@@ -31,6 +37,11 @@
     <span class="note-icon">i</span>
     <div><strong>Je bekijkt de eerste prototypeversie.</strong> Alle voorbeeldmetingen en deelnemers zijn fictief. Je profiel en acties worden alleen lokaal in deze browser opgeslagen. Er is nog geen account, gedeelde ranglijst of live meterverbinding.</div>
     <button type="button" id="dismissNote" aria-label="Melding verbergen">×</button>
+  </section>
+  <section class="install-app-card" id="installAppCard" aria-label="Installeer Mijn Energie">
+    <span class="install-app-icon">↗</span>
+    <div class="install-app-copy"><strong>Gebruik Mijn Energie als app</strong><small>Voeg deze omgeving toe aan het beginscherm van je telefoon of installeer hem op je computer.</small><p id="installHelpText" hidden>Android: open het browser-menu en kies <b>App installeren</b> of <b>Toevoegen aan startscherm</b>. iPhone: open deze pagina in Safari, tik op <b>Deel</b> en kies <b>Zet op beginscherm</b>.</p></div>
+    <div class="install-app-actions"><button type="button" class="btn btn-primary" id="installAppButton" hidden>Installeer app</button><button type="button" class="text-button" id="installHelpButton">Installatiehulp</button></div>
   </section>
 
   <section class="view active" id="view-dashboard">
