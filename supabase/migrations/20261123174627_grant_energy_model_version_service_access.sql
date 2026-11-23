@@ -1,0 +1,1 @@
+grant all on private.energy_model_versions to service_role;
