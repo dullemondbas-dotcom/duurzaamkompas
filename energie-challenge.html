@@ -28,6 +28,7 @@
   <a class="app-brand" href="index.html"><span class="brand-mark">DK<span>↗</span></span><span>duurzaam<span>kompas</span></span><small>MIJN ENERGIE</small></a>
   <nav class="app-nav" aria-label="Mijn Energie navigatie">
     <button class="nav-tab active" data-view="dashboard"><span class="tab-icon">⌂</span><span>Overzicht</span></button>
+    <button class="nav-tab" data-view="history"><span class="tab-icon">↗</span><span>Geschiedenis</span></button>
     <button class="nav-tab" data-view="household"><span class="tab-icon">⌑</span><span>Huishouden</span></button>
     <button class="nav-tab" data-view="challenges"><span class="tab-icon">★</span><span>Challenges</span></button>
     <button class="nav-tab" data-view="connections"><span class="tab-icon">⌁</span><span>Koppelen</span></button>
@@ -84,9 +85,43 @@
       </article>
     </div>
     <div class="bottom-grid">
-      <article class="tip-card"><div class="tip-art">☀</div><div><p class="eyebrow">KLEINE STAP, GROOT INZICHT</p><h2>Begin met weten wat je al hebt.</h2><p>Vul je woning en apparaten in. Dan kunnen we straks beter uitleggen welke vergelijkingen eerlijk zijn en welke verbeteringen bij jouw situatie passen.</p><button class="text-button" data-go="household">Mijn huishouden invullen →</button></div></article>
-      <article class="connect-card"><div class="connect-icon">⌁</div><p class="eyebrow">VOLGENDE STAP</p><h2>Koppel je energiedata</h2><p>In een volgende ontwikkelfase koppelen we een Home Assistant-installatie. De koppeling is in dit prototype nog niet actief.</p><button class="btn btn-secondary" data-go="connections">Bekijk koppelingen</button></article>
+      <article class="tip-card" id="dashboardWeeklyTipCard"><div class="tip-art">☀</div><div><p class="eyebrow">JOUW TIP VAN DE WEEK</p><h2 id="dashboardWeeklyTipTitle">Een tip die bij jouw woning past.</h2><p id="dashboardWeeklyTipSummary">We verzamelen eerst betrouwbare gegevens. Daarna krijg je iedere week één persoonlijke, haalbare verduurzamingstip.</p><div class="weekly-tip-actions" id="dashboardWeeklyTipActions"><button class="text-button" data-go="connections">Koppel je meter om te beginnen →</button></div></div></article>
+      <article class="connect-card"><div class="connect-icon">⌁</div><p class="eyebrow">VOLGENDE STAP</p><h2>Koppel je energiedata</h2><p>Verbind Home Assistant of HomeWizard P1. Zodra er voldoende meetgegevens zijn, bouwen we jouw persoonlijke besparingsgeschiedenis op.</p><button class="btn btn-secondary" data-go="connections">Bekijk koppelingen</button></article>
     </div>
+  </section>
+
+
+  <section class="view" id="view-history">
+    <div class="page-heading">
+      <p class="eyebrow">JOUW VOORTGANG</p>
+      <h1>Je energiegeschiedenis.</h1>
+      <p class="lead">Bekijk hoe je stroom- en gasverbruik zich ontwikkelen. We vergelijken je gegevens met je eigen situatie, niet met een willekeurig huishouden.</p>
+    </div>
+    <div class="history-period-switch" role="group" aria-label="Periode kiezen">
+      <button type="button" class="active" data-history-period="month">Maanden</button>
+      <button type="button" data-history-period="week">Weken</button>
+      <button type="button" data-history-period="year">Jaren</button>
+    </div>
+    <div class="history-notice" id="historyLoginNotice" hidden>Log in om je persoonlijke geschiedenis op te halen.</div>
+    <section class="history-empty panel" id="historyEmptyState">
+      <div class="history-empty-icon">↗</div>
+      <p class="eyebrow">JOUW EERSTE INZICHT KOMT HIER</p>
+      <h2>We bouwen eerst een eerlijke nulmeting op.</h2>
+      <p>We tonen pas een besparing zodra er voldoende betrouwbare meetgegevens zijn. Zo verwarren we minder netafname, lagere energietarieven en écht lager energiegebruik niet met elkaar.</p>
+      <button type="button" class="btn btn-primary" data-go="connections">Koppel je energiedata <span>↗</span></button>
+      <p class="history-empty-foot">Zonder meter kun je alvast je woningprofiel invullen. Dan kunnen we wel praktische tips geven, maar nog geen gemeten besparing claimen.</p>
+    </section>
+    <section class="history-content" id="historyContent" hidden>
+      <div class="history-summary-grid">
+        <article class="history-summary-card"><span>Stroom t.o.v. referentie</span><strong id="historyElectricityValue">—</strong><small id="historyElectricityLabel">Nog geen vergelijking</small></article>
+        <article class="history-summary-card"><span>Gas t.o.v. referentie</span><strong id="historyGasValue">—</strong><small id="historyGasLabel">Nog geen vergelijking</small></article>
+        <article class="history-summary-card"><span>Financieel effect</span><strong id="historyCostValue">—</strong><small id="historyCostLabel">Alleen variabele energiekosten</small></article>
+      </div>
+      <div class="panel history-list-panel">
+        <div class="panel-heading"><div><p class="eyebrow">JOUW ONTWIKKELING</p><h2>Periodeoverzicht</h2><p id="historyQualityCaption">Datakwaliteit en meetdekking worden bij elke periode getoond.</p></div></div>
+        <div class="history-period-list" id="historyPeriodList"></div>
+      </div>
+    </section>
   </section>
 
   <section class="view" id="view-household">
