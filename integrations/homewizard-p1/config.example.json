@@ -1,0 +1,7 @@
+{
+  "integration_key": "VUL_HIER_DE_EENMALIGE_KOPPELSLEUTEL_IN",
+  "ingest_url": "https://qntmcqrwftrrrbyjlqis.supabase.co/functions/v1/ingest-energy-reading",
+  "poll_seconds": 30,
+  "device_ip": "",
+  "device_serial": ""
+}

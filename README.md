@@ -32,8 +32,11 @@ DuurzaamKompas is een gratis Nederlandstalig consumentenplatform over energie th
 - `bronnen.html` — bronbeleid, redactionele werkwijze, commerciële transparantie en publicatiestatus
 - `over.html` — missie, visie, platformprincipes en ontwikkelrichting
 
-- `energie-challenge.html` + `energie-challenge.css` + `energie-challenge.js` — eerste interactieve prototype van Mijn Energie / Energie Challenge: dashboard met fictieve voorbeelddata, huishoudprofiel, lokale test-challenges en de voorbereide Home Assistant-koppelpresentatie. Profiel en zelfgemaakte challenges worden uitsluitend lokaal in de browser opgeslagen. Er is nog geen online account, backend, echte meterdata of gedeelde competitie.
+- `energie-challenge.html` + `energie-challenge.css` + `energie-challenge.js` — de bestaande Mijn Energie / Energie Challenge-omgeving met accounts, huishoudprofiel, meetdata, persoonlijke tips en challenge-interface. Challenge-scores en communityfuncties blijven buiten productie totdat meetkwaliteit en scoremethodiek zijn gevalideerd.
+- `mijn-kompas.html` — uitgebreide persoonlijke energieomgeving met dashboard, HomeWizard P1-koppeling, maandelijkse besparingshistorie, weekcoach, woningprofiel, persoonlijke tarieven en opgeslagen rekentoolscenario’s.
 - `docs/ENERGIE_CHALLENGE_MVP_STATUS.md` — status, beperkingen en volgende technische stappen voor de Energie Challenge.
+- `docs/MIJN_KOMPAS_V3_GITHUB_IMPLEMENTATIE.md` — architectuur, datastromen, licentiegrenzen en status van Mijn Kompas V3.
+- `integrations/homewizard-p1/` — lokale Python-bridge, voorbeeldconfiguratie en tests voor opt-in HomeWizard P1-meetdata. De connectorbestanden en installatiehandleiding staan in `integrations/homewizard-p1/`.
 
 ## Redactionele uitgangspunten
 
@@ -90,7 +93,7 @@ Mijn Energie gebruikt Supabase Auth voor registratie, e-mailbevestiging, login, 
 De project-URL en publieke publishable key staan in `supabase-config.js`. Plaats nooit service_role keys of andere geheime sleutels in deze publieke repository.
 
 ### Status en grenzen
-Het eerste testaccount is aangemaakt en het opslaan van het huishoudprofiel is bevestigd. De PWA toont op het dashboard nog voorbeeldcijfers. De beveiligde meetdata-ontvangstroute voor Home Assistant en HomeWizard is voorbereid en gedeployed, maar nog niet met een echte meterinstallatie getest. Er is nog geen live besparingsberekening of challengecompetitie. Zie `docs/MIJN_ENERGIE_PWA_EN_INFRASTRUCTUUR.md` voor de actuele status.
+Mijn Kompas gebruikt hetzelfde Supabase-project en dezelfde publieke configuratie als de bestaande Mijn Energie-omgeving. Het nieuwe dashboard vraagt accounttoegang, gebruikt het opgeslagen woningprofiel en toont geen fictieve meterwaarden. Dagaggregaties, persoonlijke stroomreferenties en weektips komen uit de bestaande backend-engine. Historische grafieken blijven leeg totdat er voldoende echte meetdagen zijn. Scenario-uitkomsten uit de rekentool worden afzonderlijk opgeslagen en nadrukkelijk als scenario getoond, niet als gerealiseerde besparing. De HomeWizard-bridge is voorbereid en lokaal op datanormalisatie getest; een fysieke end-to-end-test met een P1-meter moet nog plaatsvinden.
 
 
 ### Volgende fase: besparing en persoonlijk advies
@@ -102,10 +105,25 @@ Het eerste testaccount is aangemaakt en het opslaan van het huishoudprofiel is b
 ### Energie-integraties Mijn Energie
 - Server-side meetdata-ingestie voorbereid voor Home Assistant en HomeWizard P1 via een Supabase Edge Function.
 - Persoonlijke koppelcodes per huishouden; alleen SHA-256-hashes worden opgeslagen.
-- HomeWizard P1 eerst via de officiële Home Assistant-integratie; lokale P1 API, geen meterpolling vanuit de publieke browser.
+- HomeWizard P1 kan opt-in via een lokale Python-bridge worden gekoppeld. De bridge leest de meter op het thuisnetwerk; de browser pollt het lokale apparaat niet.
 - Het providertype `duurzaamkompas_p1` is voorbereid voor een toekomstige eigen P1-meter; hardware en firmware zijn nog niet ontwikkeld.
-- HomeWizard API-licentie: commercieel gebruik vereist eerst schriftelijke toestemming of een passende licentie.
+- HomeWizard API-licentie: de huidige lokale API-licentie is persoonlijk en niet-commercieel. Voor een openbare of commerciële SaaS-route is vooraf schriftelijke toestemming of een passende commerciële overeenkomst nodig.
 
 
 ### Besparing en persoonlijke begeleiding
 De dagelijkse rekenengine, persoonlijke stroomreferentie, week-/maand-/jaarresultaten, profielgestuurde weektipselectie en Cron-planning zijn ingericht. De dashboardkaarten gebruiken echte dagaggregaten en blijven leeg totdat er een meter is gekoppeld. De eigenaar kan in een afgeschermde beheerpagina tips en bronvermelde rekenfactoren beheren. Er staan nog geen meterregels of besparingsperioden in de database.
+
+
+### Mijn Kompas V3 — persoonlijke energieomgeving
+- De browser gebruikt de centrale `supabase-config.js`; alleen de publieke publishable key staat client-side.
+- Woningprofielen en energietarieven zijn gekoppeld aan het eigen huishouden. De nieuwe tabellen `household_energy_tariffs` en `energy_scenario_snapshots` zijn voorzien van Row Level Security.
+- De bridge stuurt alleen genormaliseerde meetwaarden via HTTPS naar de bestaande `ingest-energy-reading` Edge Function. De HomeWizard-apparaat-token blijft lokaal; in de database staat alleen een hash van de intrekbare DuurzaamKompas-koppelsleutel.
+- Installatie en tests: zie `integrations/homewizard-p1/README.md`. De connector is niet geactiveerd of getest met een fysieke meter totdat de gebruiker zelf pairt met de P1-meter.
+- De migraties `20261123185840` en `20261123190218` zijn al toegepast op het gekoppelde Supabase-project; ze worden ook in deze repository bewaard voor reproduceerbaarheid. Voer ze niet opnieuw handmatig uit op die bestaande database.
+
+
+### Live synchronisatie Mijn Kompas
+- `mijn-kompas.html` toont naast de dagelijkse kWh-grafiek ook recente P1-vermogensmetingen in watt.
+- Nieuwe rijen in `energy_measurements` activeren Supabase Realtime-verversing. Wanneer realtime tijdelijk wegvalt, gebruikt de pagina een zichtbare-tab fallbackcontrole per minuut.
+- De lokale HomeWizard-bridge valideert na pairing de API-respons, bewaart het apparaat-token alleen lokaal en kan op Windows optioneel met Taakplanner bij aanmelden starten.
+- Tests voor import/export, driefasenvermogen, telwerken, gas en tijdzone-normalisatie staan in `integrations/homewizard-p1/test_normalize.py`.
