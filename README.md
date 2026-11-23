@@ -93,3 +93,11 @@ De project-URL en publieke publishable key staan in `supabase-config.js`. Plaats
 Het eerste testaccount is aangemaakt en e-mailbevestiging en login zijn gecontroleerd. Een eerste opslagtest bracht een RLS-blokkade bij de directe huishoudinsert aan het licht. De beveiligde huishoud-RPC is toegevoegd; de complete opslagflow moet na de reparatie opnieuw met het testaccount worden bevestigd.
 
 De PWA toont voorlopig nog voorbeeldcijfers. Er is nog geen echte meterdata, Home Assistant-koppeling of live challengecompetitie. Zie `docs/MIJN_ENERGIE_PWA_EN_INFRASTRUCTUUR.md` voor de actuele status.
+
+
+### Energie-integraties Mijn Energie
+- Server-side meetdata-ingestie voorbereid voor Home Assistant en HomeWizard P1 via een Supabase Edge Function.
+- Persoonlijke koppelcodes per huishouden; alleen SHA-256-hashes worden opgeslagen.
+- HomeWizard P1 eerst via de officiële Home Assistant-integratie; lokale P1 API, geen meterpolling vanuit de publieke browser.
+- Het providertype `duurzaamkompas_p1` is voorbereid voor een toekomstige eigen P1-meter; hardware en firmware zijn nog niet ontwikkeld.
+- HomeWizard API-licentie: commercieel gebruik vereist eerst schriftelijke toestemming of een passende licentie.
