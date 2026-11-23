@@ -4,6 +4,7 @@ Gratis Nederlandstalig consumentenplatform over thuisbatterijen, zonnepanelen, e
 
 ## Pagina's
 - `index.html` — homepage en platformoverzicht
+- `advies.html` + `advies.js` — interactieve vooradviesroute op basis van de woning, het verbruik, de doelen en de oriëntatiefase; antwoorden blijven in de browser
 - `vergelijker.html` + `vergelijker.js` — batterijcatalogus, zoeken, vergelijken en scenariorekentool
 - `kennisbank.html` — uitleg over batterijen, zonnepanelen, EMS, netcongestie, laden en veiligheid
 - `regelgeving.html` — salderen, terugleveren, energiecontracten, registratie en regionale flexibiliteitsregelingen
@@ -18,6 +19,13 @@ Gratis Nederlandstalig consumentenplatform over thuisbatterijen, zonnepanelen, e
 GitHub Pages wordt via GitHub Actions gepubliceerd vanuit branch `main`. De workflow staat in `.github/workflows/deploy.yml`.
 
 Website: https://dullemondbas-dotcom.github.io/duurzaamkompas/
+
+## Adviesfilosofie
+- Eerst de huishoudsituatie en het doel begrijpen, daarna pas producten of technieken vergelijken.
+- De adviesroute mag ook concluderen dat extra meetgegevens of geen aankoop de verstandigste eerste stap is.
+- Geen ranglijst die consumenten aanzet tot voortdurend wisselen van energieleverancier of aansturingspartij.
+- Leveranciers en EMS-oplossingen worden alleen besproken op technische compatibiliteit, voorwaarden en relevante verschillen.
+- Antwoorden uit de advieswizard worden lokaal in de browser verwerkt; ze gaan niet naar een server.
 
 ## Werkwijze voor inhoud
 - Productwaarden alleen opnemen als de exacte modelvariant en fabrikantbron duidelijk zijn.
