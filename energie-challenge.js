@@ -56,7 +56,7 @@
     const form = $("#householdForm");
     if (!form || !data) return;
     Object.entries(data).forEach(([key, value]) => {
-      const field = form.elements.namedItem(key);
+      const field = form.elements.namedItem(key) || (key === "localConsent" ? form.elements.namedItem("profileConsent") : null);
       if (!field) return;
       if (field.type === "checkbox") field.checked = Boolean(value);
       else field.value = value == null ? "" : String(value);
