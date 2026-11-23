@@ -17,6 +17,10 @@ DuurzaamKompas is een gratis Nederlandstalig consumentenplatform over energie th
 - `vergelijker.html` + `vergelijker.js` — thuisbatterijcatalogus, zoeken, vergelijken en indicatieve scenariocalculator; onderdeel van de bredere bibliotheek Slimme apparaten
 - `energieleveranciers.html` + `energieleveranciers.js` — energieleveranciersoverzicht, openbare compatibiliteitsmatrix voor Frank Energie en Tibber, Eneco BatterijSturing en de ACM-vergunninghouderslijst
 - `batterijbibliotheek.html` + `batterijbibliotheek.js` — batterijmerken, sterke punten, aandachtspunten, sturingsroutes en voorbereid datamodel voor onafhankelijke reviews en praktijkprestaties
+- `energiedashboard.html` + `energiedashboard.js` + `live-energy.css` — publiek dashboard voor NED, KNMI, TenneT-settlementprijzen en PVGIS-modelberekeningen
+- `.github/scripts/update_energy_data.py` + `.github/workflows/refresh-energy.yml` — server-side gegevensupdate, automatisch gepland iedere 15 minuten; API-sleutels worden uitsluitend via GitHub Actions secrets gebruikt
+- `data/energy-live.json` — openbare, niet-geheime gegevenssnapshot voor de website
+- `LIVE_ENERGY_SETUP.md` — instructies om API-sleutels als GitHub Actions secrets toe te voegen
 - `market.css` — gedeelde vormgeving voor de leveranciers- en batterijbibliotheek
 - `nieuws.html` — redactioneel overzicht van nieuws, achtergronden en uitlegdossiers. Dit is momenteel geen live nieuwsfeed.
 - `verdieping.html` — geselecteerde externe podcasts, webinars, kennisartikelen en onderzoeken met een eigen korte toelichting, doelgroep- en belangencontext
