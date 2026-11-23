@@ -25,5 +25,11 @@ class NormalizeTests(unittest.TestCase):
         self.assertAlmostEqual(result["grid_import_total_kwh"],156.0)
         self.assertAlmostEqual(result["grid_export_total_kwh"],22.5)
 
+    def test_event_id_is_stable_for_same_measurement(self):
+        reading={"timestamp":"2026-11-23T12:00:00+01:00","unique_id":"meter-5",
+            "power_w":120,"energy_import_kwh":20.5,"energy_export_kwh":3.2}
+        self.assertEqual(normalize(reading,"serial-5")["source_event_id"],
+            normalize(reading,"serial-5")["source_event_id"])
+
 if __name__ == "__main__":
     unittest.main()
