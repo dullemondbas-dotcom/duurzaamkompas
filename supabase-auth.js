@@ -21,6 +21,7 @@
   let householdId = null;
   let latestProfile = null;
   let sessionChangeSequence = 0;
+  let passwordRecoveryActive = false;
 
   const isConfigured = Boolean(
     typeof window.supabase?.createClient === "function" &&
@@ -155,6 +156,13 @@
     $("#accountOpenButton")?.setAttribute("aria-label", "Account van " + nickname);
     $("#accountEmail").textContent = currentUser.email || "";
     $("#accountNickname").textContent = "Nickname: " + nickname;
+    if (passwordRecoveryActive) {
+      authArea.hidden = false;
+      signedInArea.hidden = true;
+      $("#accountTitle").textContent = "Nieuw wachtwoord";
+      switchAuthView("updatePassword");
+      return;
+    }
     authArea.hidden = true;
     signedInArea.hidden = false;
     $("#accountTitle").textContent = "Mijn account";
@@ -395,6 +403,7 @@
       const { error } = await client.auth.updateUser({ password });
       if (error) throw error;
       form.reset();
+      passwordRecoveryActive = false;
       setStatus("Je wachtwoord is bijgewerkt. Je kunt nu veilig verder.", "success");
       setTimeout(closeDialog, 900);
     } catch (error) {
@@ -408,6 +417,7 @@
     });
     client.auth.onAuthStateChange((event, session) => {
       if (event === "PASSWORD_RECOVERY") {
+        passwordRecoveryActive = true;
         openDialog("updatePassword");
         switchAuthView("updatePassword");
       }
