@@ -105,3 +105,7 @@ Het eerste testaccount is aangemaakt en het opslaan van het huishoudprofiel is b
 - HomeWizard P1 eerst via de officiële Home Assistant-integratie; lokale P1 API, geen meterpolling vanuit de publieke browser.
 - Het providertype `duurzaamkompas_p1` is voorbereid voor een toekomstige eigen P1-meter; hardware en firmware zijn nog niet ontwikkeld.
 - HomeWizard API-licentie: commercieel gebruik vereist eerst schriftelijke toestemming of een passende licentie.
+
+
+### Besparing en persoonlijke begeleiding
+De interne basis bevat persoonlijke nulmetingen, berekende week-/maandresultaten, een tipcatalogus en een logboek voor uitgevoerde acties. De interface bevat een eerste geschiedenisweergave en een plek voor de weektip. Er worden nog geen besparingsbedragen of tips verzonnen: echte uitkomsten verschijnen pas na voldoende gevalideerde meetdata en een berekening met een vastgelegde modelversie.
