@@ -1128,3 +1128,14 @@ img,svg{max-width:100%}
   .deepening-bottom-note{padding:26px 6%}
 }
 @media(prefers-reduced-motion:reduce){.platform-feature-main,.platform-tool-card,.platform-story,.news-reading-card,.deepening-card,.tools-directory-card{transition:none!important}}
+
+/* Small utility refinements for research links and consumer-protection callouts */
+.editorial-footer-links{display:flex;align-items:center;gap:10px 22px;flex-wrap:wrap}
+.editorial-footer-links a{font-size:9px;font-weight:750;color:#d5e3c6}
+.editorial-footer-links a:hover{text-decoration:underline;text-underline-offset:3px}
+.consumer-warning{margin:18px 0;padding:19px 21px;border:1px solid #ead8ba;border-left:4px solid #bc9256;background:#fff5e7;border-radius:5px}
+.consumer-warning>div>span{display:block;font-size:8px;letter-spacing:.1em;font-weight:750;color:#977143}
+.consumer-warning b{display:block;font:750 15px/1.35 var(--display);color:#493a27;margin:7px 0}
+.consumer-warning p{font-size:10px;line-height:1.8;color:#77664e;margin:0 0 8px}
+.consumer-warning a{font-size:9px;font-weight:750;color:#8b6734;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:600px){.editorial-footer-links{flex-direction:column;align-items:flex-start;gap:10px}}
