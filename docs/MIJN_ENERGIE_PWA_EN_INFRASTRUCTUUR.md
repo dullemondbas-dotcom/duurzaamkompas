@@ -109,3 +109,15 @@ De belangrijkste randvoorwaarde bij commerciële HomeWizard-integratie staat in 
 
 ### Interne applicaties — volgende fase
 De berekeningsmethode, tipselectie en gewenste schermstructuur zijn vastgelegd in `docs/MIJN_ENERGIE_BESPARINGSMODEL_EN_PERSONALISATIE.md`. De besparingsengine en gepersonaliseerde weektips zijn nog niet geïmplementeerd. Dashboardwaarden blijven demo zolang er geen echte meetdata en berekeningen beschikbaar zijn.
+
+
+## Besparingsgeschiedenis en weektips
+
+Databasefundament toegevoegd:
+- `energy_baselines`: persoonlijke nulmetingen per energiedrager en methode (gemeten historisch, profielinschatting of handmatig).
+- `energy_savings_periods`: versies van week-, maand- en jaarsamenvattingen met werkelijk verbruik, referentie, verschil, financieel effect indien tariefdata aanwezig is en datakwaliteit.
+- `household_weekly_tips`: maximaal één tip per huishouden per week, met reden, verwachte impact, moeite, kostenband en bron.
+- `energy_tip_events`: geschiedenis van bewaren, accepteren, afronden, uitstellen en afwijzen.
+- `private.energy_tip_catalog`, `private.energy_calculation_factors` en `private.energy_model_versions`: interne catalogus, bronversies en rekenregels. Alleen server-side verwerking mag deze beheren.
+
+De app bevat een eerste lege Geschiedenis-weergave en een plek voor de weektip. De uitlees- en status-RPC's zijn klaar; het vullen van de tabellen door de reken- en tip-engine volgt nog. Tot die tijd worden geen fictieve besparingen of willekeurige tips getoond.
