@@ -14,6 +14,7 @@ DuurzaamKompas is een gratis Nederlandstalig consumentenplatform over energie th
 - `vergelijker.html` + `vergelijker.js` — batterijcatalogus, zoeken, vergelijken en indicatieve scenariocalculator
 - `nieuws.html` — redactioneel overzicht van nieuws, achtergronden en uitlegdossiers. Dit is momenteel geen live nieuwsfeed.
 - `verdieping.html` — geselecteerde externe podcasts, webinars, kennisartikelen en onderzoeken met een eigen korte toelichting, doelgroep- en belangencontext
+- `kijken.html` + `kijken.js` — interactieve bibliotheek met video’s, webinars en podcasts; onderwerpfilters, zoekfunctie, lokale kijklijst en korte kennistest
 - `onderzoek.html` — synthese van relevante praktijkproeven, modelstudies, marktdata en wetenschappelijke publicaties, met een bronnenregister
 - `kennisbank.html` — uitleg over thuisbatterijen, zonnepanelen, EMS, netcongestie, laden en veiligheid
 - `regelgeving.html` — salderen, terugleveren, contracten, registratie en relevante consumenteninformatie
@@ -37,7 +38,7 @@ De website is een statische site die via GitHub Actions op GitHub Pages wordt ge
 
 Op dit moment zijn er geen gebruikersaccounts, centrale database, live energieprijs-API, gekoppelde slimme meter, automatische nieuwsfeed, reviewformulier, nieuwsbriefsysteem of redactie-CMS. De adviesroute verwerkt antwoorden lokaal in de browser. De batterijcalculator geeft een scenario-indicatie op basis van ingevoerde aannames; geen garantie op besparing of terugverdientijd.
 
-De nieuws-, onderzoeks- en verdiepingspagina's zijn handmatig onderhouden. Externe podcasts, webinars en artikelen worden niet gekopieerd of gehost; de site biedt een korte eigen toelichting en linkt naar de oorspronkelijke maker. Video's en audio kunnen door de externe aanbieder worden gewijzigd of verwijderd.
+De nieuws-, onderzoeks-, verdiepings- en kijk/luisterpagina's zijn handmatig onderhouden. Externe podcasts, webinars en artikelen worden niet gekopieerd of gehost; de site biedt een korte eigen toelichting en linkt naar de oorspronkelijke maker. Video's en audio kunnen door de externe aanbieder worden gewijzigd of verwijderd.
 
 ## Product- en onderzoeksinformatie
 
