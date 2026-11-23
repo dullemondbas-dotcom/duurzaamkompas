@@ -139,6 +139,8 @@
     if (!currentUser) {
       householdId = null;
       latestProfile = null;
+      authArea.hidden = false;
+      signedInArea.hidden = true;
       $("#accountButtonLabel").textContent = "Mijn account";
       $("#headerNickname").textContent = "Demo gebruiker";
       $("#avatarInitial").textContent = "D";
