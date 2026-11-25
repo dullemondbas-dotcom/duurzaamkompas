@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-25T21:24:36Z",
+  "generated_at": "2026-11-25T22:22:47Z",
   "refresh_interval_minutes": 15,
   "description": "Openbare energiesnapshot; API-sleutels worden alleen server-side door GitHub Actions gebruikt.",
   "sources": {
